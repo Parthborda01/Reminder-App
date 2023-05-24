@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ThemeManager with ChangeNotifier{
+enum ThemeModes {
+  system,
+  light,
+  dark,
+}
 
-  ThemeMode _themeMode = ThemeMode.light;
+class ThemeCubit extends Cubit<ThemeModes> {
+  ThemeCubit() : super(ThemeModes.system);
 
+  void setThemeMode(ThemeModes themeMode) {
+    emit(themeMode);
+  }
 }

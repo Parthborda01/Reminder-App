@@ -15,8 +15,6 @@ final HexColor darkBackgroundPrimary = HexColor("#000000");
 final HexColor darkBackgroundSecondary = HexColor("#171717");
 
 class ThemeConstants {
-
-
   static final lightTheme = ThemeData(
     useMaterial3: true,
     androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
