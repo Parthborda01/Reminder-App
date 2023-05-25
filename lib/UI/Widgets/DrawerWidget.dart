@@ -1,7 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_dudes/UI/Theme/ThemeManager.dart';
+import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
 
 class SlidingDrawer extends StatefulWidget {
   const SlidingDrawer({Key? key}) : super(key: key);
@@ -35,29 +35,44 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                         if (themeMode == ThemeModes.system) {
                           if (MediaQuery.of(context).platformBrightness == Brightness.dark) {
                             themeCubit.setThemeMode(ThemeModes.dark);
-                            return IconButton(icon: Icon(Icons.dark_mode), onPressed: () {
-                              themeCubit.setThemeMode(ThemeModes.light);
-                            },);
+                            return IconButton(
+                              icon: Icon(Icons.dark_mode),
+                              onPressed: () {
+                                themeCubit.setThemeMode(ThemeModes.light);
+                              },
+                            );
                           } else {
                             themeCubit.setThemeMode(ThemeModes.light);
-                            return IconButton(icon: Icon(Icons.light_mode), onPressed: () {
-                              themeCubit.setThemeMode(ThemeModes.dark);
-                            },);
+                            return IconButton(
+                              icon: Icon(Icons.light_mode),
+                              onPressed: () {
+                                themeCubit.setThemeMode(ThemeModes.dark);
+                              },
+                            );
                           }
                         } else if (themeMode == ThemeModes.dark) {
-                          return IconButton(icon: Icon(Icons.dark_mode), onPressed: () {
-                            themeCubit.setThemeMode(ThemeModes.light);
-                          },);
+                          return IconButton(
+                            icon: Icon(Icons.dark_mode),
+                            onPressed: () {
+                              themeCubit.setThemeMode(ThemeModes.light);
+                            },
+                          );
                         } else if (themeMode == ThemeModes.light) {
-                          return IconButton(icon: Icon(Icons.light_mode), onPressed: () {
-                            themeCubit.setThemeMode(ThemeModes.dark);
-                          },);
-                        }else{
+                          return IconButton(
+                            icon: Icon(Icons.light_mode),
+                            onPressed: () {
+                              themeCubit.setThemeMode(ThemeModes.dark);
+                            },
+                          );
+                        } else {
                           return SizedBox();
                         }
                       },
                     ),
-                    IconButton(icon: Icon(Icons.settings), onPressed: () {  },),
+                    IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: () {},
+                    ),
                   ],
                 ),
                 SizedBox(height: 10),

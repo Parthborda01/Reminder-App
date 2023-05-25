@@ -70,7 +70,7 @@ class ThemeConstants {
       ),
       switchTheme: SwitchThemeData(
         splashRadius: 2,
-        trackOutlineColor: MaterialStateProperty.all<Color>(darkBackgroundPrimary.withAlpha(30)),
+        trackOutlineColor: MaterialStateProperty.all<Color>(darkBackgroundPrimary.withAlpha(00)),
 
         thumbColor: MaterialStateProperty.all<Color>(lightBackgroundPrimary),
         trackColor: MaterialStateProperty.all<Color>(Colors.blue.withOpacity(0.8)),
