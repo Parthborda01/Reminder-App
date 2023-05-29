@@ -1,0 +1,877 @@
+{
+  "classroom": "E-306",
+  "classname": "3-IT-A",
+  "days": {
+    "monday": {
+      "slot1": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot2": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot3": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      }
+    },"saturday": {
+      "slot1": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot2": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot3": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      }
+    },"tuesday": {
+      "slot1": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot2": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot3": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      }
+    },"wednusday": {
+      "slot1": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot2": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot3": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      }
+    },"thursday": {
+      "slot1": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot2": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot3": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      }
+    },"friday": {
+      "slot1": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot2": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      },
+      "slot3": {
+        "islab": false,
+        "lab": {
+
+          "b1": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b2": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b3": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b4": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          },
+          "b5": {
+            "subjectName": "CN",
+            "facultyName": "",
+            "location": "",
+            "time": "8:30 to 9:30"
+          }
+        },
+        "lecture1": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        },
+        "lecture2": {
+          "subjectName": "",
+          "facultyName": "",
+          "location": "",
+          "time": "8:30 to 9:30"
+        }
+      }
+    }
+  }
+}
