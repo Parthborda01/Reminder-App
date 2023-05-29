@@ -2,29 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
-import 'package:student_dudes/UI/Widgets/TaskTile.dart';
-import 'package:student_dudes/Util/Cubits/HomePage/animationHelperCubit.dart';
+import 'package:student_dudes/UI/Widgets/HomePage/TaskTile.dart';
+import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 
-import '../../Widgets/DrawerWidget.dart';
+import '../../Widgets/HomePage/DrawerWidget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  GlobalKey<SliderDrawerState> _drwerButtonkey = GlobalKey<SliderDrawerState>();
+
+  final GlobalKey<SliderDrawerState> _drwerButtonkey = GlobalKey<SliderDrawerState>();
 
   @override
   Widget build(BuildContext context) {
+
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
     ScrollController _sliverScrollController = ScrollController();
     _sliverScrollController.addListener(() {
-      if (_sliverScrollController.offset >= 200 &&
+      if (_sliverScrollController.offset >= 100 &&
           !_sliverScrollController.position.outOfRange) {
         BlocProvider.of<SliverScrolled>(context).Add();
       } else {
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SliderDrawer(
-          slider: SlidingDrawer(),
+          slider: SlidingDrawer(drwerButtonkey: _drwerButtonkey),
           key: _drwerButtonkey,
           appBar: Container(),
           isDraggable: true,
@@ -88,7 +89,18 @@ class _HomePageState extends State<HomePage> {
                   flexibleSpace: FlexibleSpaceBar(
                     collapseMode: CollapseMode.parallax,
                     background: Center(
-                        child: Text("Reminder",style: Theme.of(context).textTheme.titleLarge,)),
+                        child: BlocBuilder<SliverScrolled, bool>(
+                          builder: (context, state) {
+                            return AnimatedOpacity(
+                              opacity: state ? 0.0 : 1.0,
+                              duration: Duration(milliseconds: 100),
+                              child: Text(
+                                "Reminder",
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            );
+                          },
+                        )),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -99,40 +111,42 @@ class _HomePageState extends State<HomePage> {
                       color: Theme.of(context).scaffoldBackgroundColor,
                       boxShadow: [BoxShadow(spreadRadius: 1,color: Theme.of(context).scaffoldBackgroundColor)]
                     ),
-                    child: ListView(
-                      physics: NeverScrollableScrollPhysics(),
-                      children: const [
-                        TaskLectureTile(
-                          Lecture: '',
-                          LectureTime: '10:45 TO 12:45',
-                          LectureLocation: 'E-306',
-                        ),
-                        TaskLectureTile(
-                          Lecture: '',
-                          LectureTime: '10:45 TO 12:45',
-                          LectureLocation: 'E-306',
-                        ),
-                        TaskLectureTile(
-                          Lecture: '',
-                          LectureTime: '10:45 TO 12:45',
-                          LectureLocation: 'E-306',
-                        ),
-                        TaskLectureTile(
-                          Lecture: '',
-                          LectureTime: '10:45 TO 12:45',
-                          LectureLocation: 'L-17,18',
-                        ),
-                        TaskLectureTile(
-                          Lecture: '',
-                          LectureTime: '10:45 TO 12:45',
-                          LectureLocation: 'E-306',
-                        ),
-                        TaskLectureTile(
-                          Lecture: '',
-                          LectureTime: '10:45 TO 12:45',
-                          LectureLocation: 'E-306',
-                        ),
-                      ],
+                    child: ClipRRect(
+                      child: ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        children: const [
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'L-17,18',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

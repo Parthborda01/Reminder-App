@@ -85,7 +85,9 @@ class _TaskLectureTileState extends State<TaskLectureTile> {
                 ),
                 Switch(
                   value: notifier,
-                  inactiveTrackColor: deadColor,
+                  inactiveTrackColor: Colors.transparent,
+                  // trackOutlineColor: MaterialStateProperty.all<Color>((notifier ? Colors.lightBlueAccent : deadColor)),
+                  inactiveThumbColor: ((notifier ? Colors.lightBlueAccent : deadColor)),
                   onChanged: (value) {
                     setState(() {
                       notifier = value;

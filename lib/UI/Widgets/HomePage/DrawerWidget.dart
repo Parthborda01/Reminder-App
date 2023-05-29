@@ -1,11 +1,14 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
 
 class SlidingDrawer extends StatefulWidget {
-  const SlidingDrawer({Key? key}) : super(key: key);
+  final GlobalKey<SliderDrawerState> drwerButtonkey;
 
+  const SlidingDrawer({Key? key, required this.drwerButtonkey}) : super(key: key);
   @override
   State<SlidingDrawer> createState() => _SlidingDrawerState();
 }
@@ -34,7 +37,6 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                         final themeCubit = BlocProvider.of<ThemeCubit>(context);
                         if (themeMode == ThemeModes.system) {
                           if (MediaQuery.of(context).platformBrightness == Brightness.dark) {
-                            themeCubit.setThemeMode(ThemeModes.dark);
                             return IconButton(
                               icon: Icon(Icons.dark_mode),
                               onPressed: () {
@@ -42,7 +44,6 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                               },
                             );
                           } else {
-                            themeCubit.setThemeMode(ThemeModes.light);
                             return IconButton(
                               icon: Icon(Icons.light_mode),
                               onPressed: () {
@@ -71,7 +72,10 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                     ),
                     IconButton(
                       icon: Icon(Icons.settings),
-                      onPressed: () {},
+                      onPressed: () {
+                        widget.drwerButtonkey.currentState?.toggle();
+                        Navigator.pushNamed(context, RouteNames.setting);
+                      },
                     ),
                   ],
                 ),

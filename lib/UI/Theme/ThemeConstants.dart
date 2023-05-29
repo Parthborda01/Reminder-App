@@ -5,7 +5,7 @@ const Color transparent = Colors.transparent;
 final HexColor deadColor = HexColor("#999999");
 
 final HexColor lightTextPrimary = HexColor("#000000");
-final HexColor lightTextSecondary = HexColor("#cccccc");
+final HexColor lightTextSecondary = HexColor("#aaaaaa");
 final HexColor lightBackgroundPrimary = HexColor("#f4f4f4");
 final HexColor lightBackgroundSecondary = HexColor("#ffffff");
 
@@ -36,13 +36,16 @@ class ThemeConstants {
       bodyLarge: TextStyle(letterSpacing: 5, fontSize: 32, color: lightTextSecondary, fontWeight: FontWeight.w400),
       bodyMedium: TextStyle(letterSpacing: 2, fontSize: 24, color: lightTextSecondary, fontWeight: FontWeight.w400),
       bodySmall: TextStyle(letterSpacing: 1, fontSize: 20, color: lightTextSecondary, fontWeight: FontWeight.w400),
+
+      labelLarge: TextStyle(fontSize: 24,fontWeight: FontWeight.w500,color: lightTextSecondary),
+      labelMedium: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: lightTextSecondary),
+      labelSmall: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: lightTextSecondary),
     ),
     switchTheme: SwitchThemeData(
       splashRadius: 2,
-      trackOutlineColor: MaterialStateProperty.all<Color>(darkBackgroundPrimary.withAlpha(30)),
-
-      thumbColor: MaterialStateProperty.all<Color>(lightBackgroundPrimary),
-      trackColor: MaterialStateProperty.all<Color>(Colors.blue.withOpacity(0.8)),
+      trackOutlineColor: MaterialStateProperty.all<Color>(lightTextPrimary),
+      thumbColor: MaterialStateProperty.all<Color>(Colors.lightBlueAccent),
+      trackColor: MaterialStateProperty.all<Color>(Colors.transparent),
     )
 
   );
@@ -67,13 +70,16 @@ class ThemeConstants {
         bodyMedium: TextStyle(letterSpacing: 2, fontSize: 26, color: darkTextSecondary, fontWeight: FontWeight.w400),
         bodySmall: TextStyle(letterSpacing: 1, fontSize: 20, color: darkTextSecondary, fontWeight: FontWeight.w400),
 
+        labelLarge: TextStyle(fontSize: 24,fontWeight: FontWeight.w500,color: darkTextSecondary),
+        labelMedium: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color: darkTextSecondary),
+        labelSmall: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: darkTextSecondary),
+
       ),
       switchTheme: SwitchThemeData(
         splashRadius: 2,
-        trackOutlineColor: MaterialStateProperty.all<Color>(darkBackgroundPrimary.withAlpha(00)),
-
-        thumbColor: MaterialStateProperty.all<Color>(lightBackgroundPrimary),
-        trackColor: MaterialStateProperty.all<Color>(Colors.blue.withOpacity(0.8)),
+        trackOutlineColor: MaterialStateProperty.all<Color>(lightBackgroundSecondary),
+        thumbColor: MaterialStateProperty.all<Color>(Colors.lightGreenAccent),
+        trackColor: MaterialStateProperty.all<Color>(Colors.transparent),
       ),
       dividerColor: deadColor,
       );

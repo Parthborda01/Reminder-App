@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
-import 'package:student_dudes/Util/Cubits/HomePage/animationHelperCubit.dart';
-import 'UI/Pages/HomePage/HomePage.dart';
+import 'Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 
 void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -31,7 +31,8 @@ void main() async {
       child: BlocBuilder<ThemeCubit, ThemeModes>(
         builder: (context, themeMode) {
           return MaterialApp(
-            home: HomePage(),
+            initialRoute: RouteNames.home,
+            onGenerateRoute: RouteGenerator.generateRoute,
             debugShowCheckedModeBanner: false,
             themeMode: getThemeMode(themeMode),
             theme: ThemeConstants.lightTheme,
