@@ -34,22 +34,25 @@ class Days {
 
   Days(
       {this.monday,
+
         this.tuesday,
         this.wednesday,
         this.thursday,
-        this.friday,
-        this.saturday});
+        this.friday,this.saturday});
 
   Days.fromJson(Map<String, dynamic> json) {
-    monday = json['monday'] != null ? new Day.fromJson(json['monday']) : null;
+    monday =
+    json['monday'] != null ? new Day.fromJson(json['monday']) : null;
 
     tuesday =
     json['tuesday'] != null ? new Day.fromJson(json['tuesday']) : null;
-    wednesday =
-    json['wednusday'] != null ? new Day.fromJson(json['wednusday']) : null;
+    wednesday = json['wednusday'] != null
+        ? new Day.fromJson(json['wednusday'])
+        : null;
     thursday =
     json['thursday'] != null ? new Day.fromJson(json['thursday']) : null;
-    friday = json['friday'] != null ? new Day.fromJson(json['friday']) : null;
+    friday =
+    json['friday'] != null ? new Day.fromJson(json['friday']) : null;
     saturday =
     json['saturday'] != null ? new Day.fromJson(json['saturday']) : null;
   }
@@ -109,35 +112,26 @@ class Day {
 
 class Slot {
   bool? islab;
-  bool? isFullSession;
-  List<LabSession>? lab;
+  Lab? lab;
   Session? lecture1;
   Session? lecture2;
-  Session? slotlecture;
 
   Slot({this.islab, this.lab, this.lecture1, this.lecture2});
 
   Slot.fromJson(Map<String, dynamic> json) {
     islab = json['islab'];
-    if (json['lab'] != null) {
-      lab = <LabSession>[];
-      json['lab'].forEach((v) {
-        lab!.add(new LabSession.fromJson(v));
-      });
-    }
-    lecture1 = json['lecture1'] != null
-        ? new Session.fromJson(json['lecture1'])
-        : null;
-    lecture2 = json['lecture2'] != null
-        ? new Session.fromJson(json['lecture2'])
-        : null;
+    lab = json['lab'] != null ? new Lab.fromJson(json['lab']) : null;
+    lecture1 =
+    json['lecture1'] != null ? new Session.fromJson(json['lecture1']) : null;
+    lecture2 =
+    json['lecture2'] != null ? new Session.fromJson(json['lecture2']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['islab'] = this.islab;
     if (this.lab != null) {
-      data['lab'] = this.lab!.map((v) => v.toJson()).toList();
+      data['lab'] = this.lab!.toJson();
     }
     if (this.lecture1 != null) {
       data['lecture1'] = this.lecture1!.toJson();
@@ -147,45 +141,63 @@ class Slot {
     }
     return data;
   }
+}
 
-  fromTextBlock(
-      {required Textblock textblock, required time1, required time2,location}) {
-    String? time;
-    List batches= [];
+class Lab {
+  Session? b1;
+  Session? b2;
+  Session? b3;
+  Session? b4;
+  Session? b5;
 
-    //time merge
-    time = time1.text.split("to")[0] + "to" + time2.text.split("to")[1];
-    print("🟩🟦 $time");
+  Lab({this.b1, this.b2, this.b3, this.b4, this.b5});
 
-    // lab splitting
-    RegExp labExpression = RegExp(r'^B[0-9]\:{1}.*\([A-Z]+\);$');
-    RegExp forBatchSplit = RegExp(r'B[0-9]:|;');
-    RegExp forBatchName = RegExp(r'B[0-9]');
+  Lab.fromJson(Map<String, dynamic> json) {
+    b1 = json['b1'] != null ? new Session.fromJson(json['b1']) : null;
+    b2 = json['b2'] != null ? new Session.fromJson(json['b2']) : null;
+    b3 = json['b3'] != null ? new Session.fromJson(json['b3']) : null;
+    b4 = json['b4'] != null ? new Session.fromJson(json['b4']) : null;
+    b5 = json['b5'] != null ? new Session.fromJson(json['b5']) : null;
+  }
 
-    if(!labExpression.hasMatch(textblock.text)) {
-      isFullSession=true;
-      slotlecture = Session.fromTextBlockForLec(textblock, time,location: location);
-      return;
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.b1 != null) {
+      data['b1'] = this.b1!.toJson();
     }
-    else{
-      Iterable<RegExpMatch> matches = forBatchName.allMatches(textblock.text);
-      for (final m in matches) {
-        batches.add(m[0]);
-      }
-      List batchdata = textblock.text.split(forBatchSplit);
-
-      print("🟩🟥 $batches");
-      print("🟩🟥 $batchdata");
-
+    if (this.b2 != null) {
+      data['b2'] = this.b2!.toJson();
     }
+    if (this.b3 != null) {
+      data['b3'] = this.b3!.toJson();
+    }
+    if (this.b4 != null) {
+      data['b4'] = this.b4!.toJson();
+    }
+    if (this.b5 != null) {
+      data['b5'] = this.b5!.toJson();
+    }
+    return data;
+  }
 
+  Lab.fromTextBlock({required Textblock textblock,required time1,required time2 }){
+
+       RegExp exp = RegExp(r'B[0-9].*\([A-Z]+\)');
+       Iterable<RegExpMatch> matches = exp.allMatches(textblock.text);
+
+       for (final m in matches) {
+            // if(){
+            //
+            // }
+            // else{
+            //
+            // }
+       }
 
 
 
   }
 }
-
-
 
 class Session {
   String? subjectName;
@@ -211,16 +223,17 @@ class Session {
     return data;
   }
 
-  Session.fromTextBlockForLec(Textblock block, time1, {String? location}) {
-    String text = block.text;
+
+  Session.fromTextBlockForLec(Textblock block,time1,{String? location}){
+    String text= block.text;
     // extracting the classroom name
     var classstring;
-    if (location != null) {
-      String classname = location;
-      List items = classname.split(RegExp(r"(\(|\))"));
-      for (String i in items) {
-        if (i.toLowerCase().contains("classroom")) {
-          classstring = i;
+    if(location!=null){
+      String classname=location;
+      List items= classname.split(RegExp(r"(\(|\))"));
+      for(String i in items){
+        if(i.toLowerCase().contains("classroom")){
+          classstring=i;
           print("🟨🟨🟨${classstring.split(":").last}");
         }
       }
@@ -228,86 +241,73 @@ class Session {
     RegExp lecpattern = RegExp(r"^[A-Za-z]+.*\([A-Z]+\)$");
     RegExp onlylecpattern = RegExp(r"^[^()]*$");
     RegExp onlyfacpattern = RegExp(r"^\([A-Z]+\)$");
-    String subname = "ERR";
-    String facName = "ERR";
-    if (lecpattern.hasMatch(text)) {
-      List textlist = text.split(RegExp(r"(\(|\))"));
+    String subname= "ERR";
+    String facName= "ERR";
+   if(lecpattern.hasMatch(text)){
+     List textlist = text.split(RegExp(r"(\(|\))"));
 
-      subname = textlist[0];
-      facName = textlist[1];
-    } else if (onlyfacpattern.hasMatch(text)) {
-      subname = "ERROR";
-      facName = text;
-    } else if (onlylecpattern.hasMatch(text)) {
-      subname = text;
-      facName = "ERROR";
-    } else {
-      subname = "ERROR";
-      facName = "ERROR";
-    }
+     subname= textlist[0];
+     facName= textlist[1];
+   }else if(onlyfacpattern.hasMatch(text)){
+     subname= "ERROR";
+     facName= text;
+   }
+   else if(onlylecpattern.hasMatch(text)){
+     subname= text;
+     facName= "ERROR";
+   }
+   else{
+     subname= "ERROR";
+     facName= "ERROR";
+   }
     //exporting fields
-    subjectName = subname;
-    facultyName = facName;
-    time = time1;
-    this.location = classstring.split(":").last.trim();
+    subjectName=subname;
+    facultyName=facName;
+    time=time1.text;
+    this.location=classstring.split(":").last.trim();
   }
-
-}
-class LabSession {
-  String? batchName;
-  String? subjectName;
-  String? facultyName;
-  String? location;
-  String? time;
-
-  LabSession({this.batchName,this.subjectName, this.facultyName, this.location, this.time});
-
-  LabSession.fromJson(Map<String, dynamic> json) {
-    subjectName = json['batchName'];
-    subjectName = json['subjectName'];
-    facultyName = json['facultyName'];
-    location = json['location'];
-    time = json['time'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['batchName'] = this.batchName;
-    data['subjectName'] = this.subjectName;
-    data['facultyName'] = this.facultyName;
-    data['location'] = this.location;
-    data['time'] = this.time;
-    return data;
-  }
-
-  LabSession.fromTextBlockForLab(batchName,String text, String time1) {
+  Session.fromTextBlockForLab(String text,time1,{String? location}){
     // extracting the classroom name
     var classstring;
-
+    if(location!=null){
+      String classname=location;
+      List items= classname.split(RegExp(r"(\(|\))"));
+      for(String i in items){
+        if(i.toLowerCase().contains("classroom")){
+          classstring=i;
+          print("🟨🟨🟨${classstring.split(":").last}");
+        }
+      }
+    }
     RegExp lecpattern = RegExp(r"^[A-Za-z]+.*\([A-Z]+\)$");
     RegExp onlylecpattern = RegExp(r"^[^()]*$");
     RegExp onlyfacpattern = RegExp(r"^\([A-Z]+\)$");
-    String subname = "ERR";
-    String facName = "ERR";
-    if (lecpattern.hasMatch(text)) {
-      List textlist = text.split(RegExp(r"(\(|\))"));
+    String subname= "ERR";
+    String facName= "ERR";
+   if(lecpattern.hasMatch(text)){
+     List textlist = text.split(RegExp(r"(\(|\))"));
 
-      subname = textlist[0];
-      facName = textlist[1];
-    } else if (onlyfacpattern.hasMatch(text)) {
-      subname = "ERROR";
-      facName = text;
-    } else if (onlylecpattern.hasMatch(text)) {
-      subname = text;
-      facName = "ERROR";
-    } else {
-      subname = "ERROR";
-      facName = "ERROR";
-    }
+     subname= textlist[0];
+     facName= textlist[1];
+   }else if(onlyfacpattern.hasMatch(text)){
+     subname= "ERROR";
+     facName= text;
+   }
+   else if(onlylecpattern.hasMatch(text)){
+     subname= text;
+     facName= "ERROR";
+   }
+   else{
+     subname= "ERROR";
+     facName= "ERROR";
+   }
     //exporting fields
-    subjectName = subname;
-    facultyName = facName;
-    time = time1;
-    this.location = classstring.split(":").last.trim();
+    subjectName=subname;
+    facultyName=facName;
+    time=time1.text;
+    this.location=classstring.split(":").last.trim();
   }
+
+
+
 }
