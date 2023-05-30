@@ -112,11 +112,41 @@ class _HomePageState extends State<HomePage> {
                       boxShadow: [BoxShadow(spreadRadius: 1,color: Theme.of(context).scaffoldBackgroundColor)]
                     ),
                     child: ClipRRect(
-                      child:  PageView.builder(itemcount ,itemBuilder: (context, index) {
-
-
-
-                      },),
+                      child: ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        children: const [
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'L-17,18',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                          TaskLectureTile(
+                            Lecture: '',
+                            LectureTime: '10:45 TO 12:45',
+                            LectureLocation: 'E-306',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -156,9 +186,3 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 }
-//
-// TaskLectureTile(
-// Lecture: '',
-// LectureTime: '10:45 TO 12:45',
-// LectureLocation: 'E-306',
-// ),
