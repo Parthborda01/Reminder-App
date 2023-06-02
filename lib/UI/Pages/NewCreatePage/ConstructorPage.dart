@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_dudes/Data/Model/timeTableModel.dart';
+import 'package:student_dudes/UI/Widgets/HomePage/TaskTile.dart';
+import 'package:student_dudes/UI/Widgets/HomePage/tempTile.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 import 'package:student_dudes/Util/Cubits/fileDataFetch/file_data_fetch_cubit.dart';
 import 'package:student_dudes/Util/PdfToImage/PickHelper.dart';
@@ -125,7 +128,60 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                 }
                                 else if(state is FileDataFetchLoaded){
                                   print("🟩🟩🟩Loaded");
-                                  return Text(state.timeTable.toJson().toString());
+                                  return PageView.builder(
+                                    itemCount: state.timeTable.weekDays?.toJson().length,
+                                    itemBuilder: (context, index1) {
+                                      if (state.timeTable != null) {
+                                        var daykey =
+                                        state.timeTable.weekDays?.toJson().keys.toList()[index1];
+                                        print(daykey);
+                                        Map day = state.timeTable.weekDays?.toJson()[daykey];
+                                        return ListView.builder(
+
+
+
+                                          itemCount: day.length,
+                                          itemBuilder: (context, index2) {
+                                            var slotkey = day.keys.toList()[index2];
+                                            var slotInMap = day[slotkey];
+                                            Slot slot = Slot.fromJson(slotInMap);
+                                            if (slot.isLab == false) {
+                                              //for lecture
+                                              if(slot.lecture1!=null && slot.lecture2!= null){
+                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture: slot.lecture1!),TaskLectureTiletemp(Lecture: slot.lecture2!)]);
+                                              }else if(slot.lecture1!=null){
+                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture: slot.lecture1!),TaskLectureTiletemp(Lecture: Session(facultyName: "free",location: "free",subjectName: "free",time: "free"))]);
+
+                                              }else if(slot.lecture2!=null){
+                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture: Session(facultyName: "free",location: "free",subjectName: "free",time: "free")),TaskLectureTiletemp(Lecture: slot.lecture2!)]);
+
+                                              }else{
+                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture:  Session(facultyName: "free",location: "free",subjectName: "free",time: "free")),TaskLectureTiletemp(Lecture:  Session(facultyName: "free",location: "free",subjectName: "free",time: "free")) ]);
+
+                                              }
+                                            } else if (slot.isLab == true&&
+                                                slot.isFullSession == false) {
+                                              //for lab
+                                              return TaskLectureTiletemp(Lecture: slot.lab![0]);
+                                            } else if (slot.isLab == true &&
+                                                slot.isFullSession == true) {
+                                              // for Full Session
+                                              return TaskLectureTiletemp(Lecture: slot.slotLecture!);
+
+                                            } else {
+                                              //for free lecture
+                                              return TaskLectureTiletemp(Lecture: Session(facultyName: "free",location: "free",subjectName: "free",time: "free"));
+                                            }
+                                          },
+                                        );
+                                        //Container(decoration: BoxDecoration(border: Border.all(color: Colors.black)),child: Center(child: Text("${slot}"),),)
+
+
+                                      } else {
+                                        return Center(child: Text("null"));
+                                      }
+                                    },
+                                  );
                                 }
                                 else if(state is FileDataFetchError){
                                   print("🟥🟥🟥Error $state");
