@@ -1,22 +1,33 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
-
-import '../../Widgets/HomePage/DrawerWidget.dart';
+import 'package:student_dudes/Util/Cubits/fileDataFetch/file_data_fetch_cubit.dart';
+import 'package:student_dudes/Util/PdfToImage/PickHelper.dart';
 
 class ConstructorPage extends StatefulWidget {
-  const ConstructorPage({Key? key}) : super(key: key);
+  const ConstructorPage({Key? key, required this.fileData}) : super(key: key);
+  final FileData fileData;
 
   @override
   State<ConstructorPage> createState() => _ConstructorPageState();
 }
 
 class _ConstructorPageState extends State<ConstructorPage> {
+  @override
+  void initState() {
+    File image = widget.fileData.imageFile;
+    double width = widget.fileData.width;
+    double height = widget.fileData.height;
+    BlocProvider.of<FileDataFetchCubit>(context)
+        .fetchData(image, width, height);
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
@@ -37,69 +48,102 @@ class _ConstructorPageState extends State<ConstructorPage> {
                   spreadRadius: 1,
                   color: Theme.of(context).scaffoldBackgroundColor)
             ]),
-            child: CustomScrollView(
-                controller: _sliverScrollController,
-                slivers: [
-                  SliverAppBar(
-                    pinned: true,
-                    backgroundColor:
-                        Theme.of(context).scaffoldBackgroundColor,
-                    surfaceTintColor:
-                        Theme.of(context).scaffoldBackgroundColor,
-                    elevation: 0,
-                    expandedHeight: 300,
-                    leading: IconButton(
-                        onPressed: () {
+            child:
+                CustomScrollView(controller: _sliverScrollController, slivers: [
+              SliverAppBar(
+                pinned: true,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
+                elevation: 0,
+                expandedHeight: 300,
+                leading: IconButton(
+                    onPressed: () {},
+                    highlightColor: Colors.transparent,
+                    icon: Icon(
+                      Icons.menu,
+                      color: Theme.of(context).iconTheme.color,
+                    )),
+                bottom: PreferredSize(
+                  preferredSize: Size(deviceWidth, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      BlocBuilder<SliverScrolled, bool>(
+                          builder: (context, state) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: AnimatedOpacity(
+                                    opacity: state ? 1.0 : 0.0,
+                                    duration: Duration(milliseconds: 200),
+                                    child: Text("Tasks",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall)),
+                              )),
+                      Spacer(),
+                      IconButton(onPressed: () {
 
-                        },
-                        highlightColor: Colors.transparent,
-                        icon: Icon(
-                          Icons.menu,
-                          color: Theme.of(context).iconTheme.color,
-                        )),
-                    bottom: PreferredSize(
-                      preferredSize: Size(deviceWidth, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          BlocBuilder<SliverScrolled, bool>(
-                              builder: (context, state) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: AnimatedOpacity(
-                                        opacity: state ? 1.0 : 0.0,
-                                        duration:
-                                            Duration(milliseconds: 200),
-                                        child: Text("Tasks",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall)),
-                                  )),
-                          Spacer(),
-                          IconButton(
-                              onPressed: () {}, icon: Icon(Icons.add)),
-                        ],
+                      }, icon: Icon(Icons.add)),
+                    ],
+                  ),
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.parallax,
+                  background: Center(child: BlocBuilder<SliverScrolled, bool>(
+                    builder: (context, state) {
+                      return AnimatedOpacity(
+                        opacity: state ? 0.0 : 1.0,
+                        duration: Duration(milliseconds: 100),
+                        child: Text(
+                          "Reminder",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      );
+                    },
+                  )),
+                ),
+              ),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            height: deviceHeight * 0.6,
+                            color: Theme.of(context).backgroundColor,
+                            child: BlocBuilder<FileDataFetchCubit, FileDataFetchState>(
+                              builder: (context, state) {
+                                if (state is FileDataFetchInitial){
+                                  print("🟨🟨🟨");
+                                  return CircularProgressIndicator();
+                                }
+                                else if(state is FileDataFetchLoading){
+                                  print('🟨🟨🟨Loading....');
+                                  return CircularProgressIndicator();
+                                }
+                                else if(state is FileDataFetchLoaded){
+                                  print("🟩🟩🟩Loaded");
+                                  return Text(state.timeTable.toJson().toString());
+                                }
+                                else if(state is FileDataFetchError){
+                                  print("🟥🟥🟥Error $state");
+                                  return SizedBox();
+                                }
+                                else{
+                                  print("🚫🚫Other");
+                                  return SizedBox();
+                                }
+                              },
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    flexibleSpace: FlexibleSpaceBar(
-                      collapseMode: CollapseMode.parallax,
-                      background:
-                          Center(child: BlocBuilder<SliverScrolled, bool>(
-                        builder: (context, state) {
-                          return AnimatedOpacity(
-                            opacity: state ? 0.0 : 1.0,
-                            duration: Duration(milliseconds: 100),
-                            child: Text(
-                              "Reminder",
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          );
-                        },
-                      )),
-                    ),
                   ),
-                ]
-            )
+
+            ])
         )
     );
   }

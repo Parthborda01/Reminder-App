@@ -3,10 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
-import 'package:student_dudes/Util/PdfToText/PickHelper.dart';
-
 import '../../../Util/Cubits/Theme/ThemeManager.dart';
-import '../../Pages/NewCreatePage/PDFChooser.dart';
 
 class CreateChooser extends StatefulWidget {
   const CreateChooser({Key? key}) : super(key: key);

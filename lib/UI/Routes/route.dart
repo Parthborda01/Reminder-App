@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_dudes/UI/Pages/HomePage/HomePage.dart';
-import 'package:student_dudes/Util/PdfToText/PickHelper.dart';
+import 'package:student_dudes/UI/Pages/NewCreatePage/ConstructorPage.dart';
+import 'package:student_dudes/Util/PdfToImage/PickHelper.dart';
 import '../Pages/NewCreatePage/PDFChooser.dart';
 import '../Pages/SettingPage/SettingPage.dart';
 
@@ -27,8 +28,8 @@ class RouteGenerator {
         return _createRoute(PDFChooser());
       // case RouteNames.logIn:
       //   return _createRoute();
-      // case RouteNames.tableBuild:
-      //   return _createRoute();
+      case RouteNames.tableBuild:
+        return _createRoute(ConstructorPage(fileData: args as FileData));
       default:
         return null;
     }

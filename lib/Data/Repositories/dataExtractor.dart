@@ -5,8 +5,8 @@ import 'dart:math';
 
 import 'package:google_ml_kit/google_ml_kit.dart';
 
-import '../../Data/Model/lecturePositionModel.dart';
-import '../../Data/Model/timeTableModel.dart';
+import '../Model/lecturePositionModel.dart';
+import '../Model/timeTableModel.dart';
 
 class TextExtractor{
   String? classRoom;
@@ -565,7 +565,7 @@ class TextExtractor{
         //checks if textblock is lab
         else if (time2 != null &&
             ((time1.ymean + time2.ymean) / 2 - current.ymean).abs() <
-                height / 100) {
+                height / 60) {
           if (itime == 1) {
             slot1.isLab = true;
 

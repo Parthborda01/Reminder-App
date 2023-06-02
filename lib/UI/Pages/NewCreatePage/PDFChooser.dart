@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:slider_button/slider_button.dart';
+import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
-
-import '../../../Util/PdfToText/PickHelper.dart';
+import '../../../Util/PdfToImage/PickHelper.dart';
 
 class PDFChooser extends StatefulWidget {
   const PDFChooser({
@@ -102,7 +102,9 @@ class _PDFChooserState extends State<PDFChooser> {
                                 dismissible: true,
                                 buttonSize: 60,
                                 vibrationFlag: true,
-                                action: () {},
+                                action: () {
+                                  Navigator.pushNamed(context, RouteNames.tableBuild,arguments: fileData);
+                                },
                                 label: Text(
                                   "Slide to Load!",
                                   style: Theme.of(context).textTheme.headlineMedium,
