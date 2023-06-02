@@ -8,11 +8,13 @@ final HexColor lightTextPrimary = HexColor("#000000");
 final HexColor lightTextSecondary = HexColor("#aaaaaa");
 final HexColor lightBackgroundPrimary = HexColor("#f4f4f4");
 final HexColor lightBackgroundSecondary = HexColor("#ffffff");
+final HexColor lightBackgroundDip = HexColor("#e4e4e4");
 
 final HexColor darkTextPrimary = HexColor("#ffffff");
 final HexColor darkTextSecondary = HexColor("#333333");
 final HexColor darkBackgroundPrimary = HexColor("#000000");
 final HexColor darkBackgroundSecondary = HexColor("#171717");
+final HexColor darkBackgroundDip = HexColor("#2e2e2e");
 
 class ThemeConstants {
   static final lightTheme = ThemeData(
@@ -20,6 +22,7 @@ class ThemeConstants {
     androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
     scaffoldBackgroundColor: lightBackgroundPrimary,
     backgroundColor: lightBackgroundSecondary,
+    canvasColor: lightBackgroundDip,
     iconTheme: IconThemeData(
       color: lightTextPrimary,
     ),
@@ -46,6 +49,16 @@ class ThemeConstants {
       trackOutlineColor: MaterialStateProperty.all<Color>(lightTextPrimary),
       thumbColor: MaterialStateProperty.all<Color>(Colors.lightBlueAccent),
       trackColor: MaterialStateProperty.all<Color>(Colors.transparent),
+    ),
+    dividerColor: deadColor,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(lightBackgroundSecondary),
+        surfaceTintColor: MaterialStateProperty.all(lightBackgroundPrimary),
+        iconColor: MaterialStateProperty.all(lightTextPrimary),
+        overlayColor: MaterialStateProperty.all(deadColor.withOpacity(0.2)),
+        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10,horizontal: 20)),
+      ),
     )
 
   );
@@ -55,6 +68,7 @@ class ThemeConstants {
       androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
       scaffoldBackgroundColor: darkBackgroundPrimary,
       backgroundColor: darkBackgroundSecondary,
+      canvasColor: darkBackgroundDip,
       iconTheme: IconThemeData(color: darkTextPrimary),
       brightness: Brightness.dark,
       textTheme: TextTheme(
@@ -82,5 +96,14 @@ class ThemeConstants {
         trackColor: MaterialStateProperty.all<Color>(Colors.transparent),
       ),
       dividerColor: deadColor,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(darkBackgroundSecondary),
+          surfaceTintColor: MaterialStateProperty.all(darkBackgroundPrimary),
+          iconColor: MaterialStateProperty.all(darkTextPrimary),
+          overlayColor: MaterialStateProperty.all(deadColor.withOpacity(0.2)),
+          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10,horizontal: 20)),
+        ),
+      ),
       );
 }

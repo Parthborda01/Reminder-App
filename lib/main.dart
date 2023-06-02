@@ -7,7 +7,7 @@ import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
 import 'Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 
 void main() async {
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent,

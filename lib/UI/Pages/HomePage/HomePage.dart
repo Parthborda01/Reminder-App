@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
         BlocProvider.of<SliverScrolled>(context).clear();
       }
     });
+
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SliderDrawer(

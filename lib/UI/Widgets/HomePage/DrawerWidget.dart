@@ -2,13 +2,17 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:student_dudes/UI/Pages/NewCreatePage/PDFChooser.dart';
+import 'package:student_dudes/UI/Widgets/DialogBox/WayChoosers.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
 
 class SlidingDrawer extends StatefulWidget {
   final GlobalKey<SliderDrawerState> drwerButtonkey;
 
-  const SlidingDrawer({Key? key, required this.drwerButtonkey}) : super(key: key);
+  const SlidingDrawer({Key? key, required this.drwerButtonkey})
+      : super(key: key);
+
   @override
   State<SlidingDrawer> createState() => _SlidingDrawerState();
 }
@@ -36,7 +40,8 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                       builder: (context, themeMode) {
                         final themeCubit = BlocProvider.of<ThemeCubit>(context);
                         if (themeMode == ThemeModes.system) {
-                          if (MediaQuery.of(context).platformBrightness == Brightness.dark) {
+                          if (MediaQuery.of(context).platformBrightness ==
+                              Brightness.dark) {
                             return IconButton(
                               icon: Icon(Icons.dark_mode),
                               onPressed: () {
@@ -86,6 +91,22 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                     dashRadius: 4,
                     dashGapLength: 4,
                     dashLength: 2),
+                Spacer(),
+                Material(
+                  color: Theme.of(context).backgroundColor,
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    titleAlignment: ListTileTitleAlignment.center,
+                    title: Text('Create Time Table',
+                        style: Theme.of(context).textTheme.titleSmall,textAlign: TextAlign.center),
+                    tileColor: Theme.of(context).scaffoldBackgroundColor,
+                    onTap: () async {
+                      widget.drwerButtonkey.currentState?.toggle();
+                      Future.delayed(const Duration(milliseconds: 300),() => showDialog(context: context, builder: (context) => CreateChooser()));
+                    },
+                  ),
+                ),
               ],
             ),
           ),

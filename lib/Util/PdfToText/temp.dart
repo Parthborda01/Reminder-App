@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -91,6 +90,8 @@ class _secondState extends State<second> {
     // closing the document
     document.close();
 
+
+
     setState(() {
       // save the imgfile to the class variable to access the image inside the class
       _imageFile = imgfile;
@@ -98,6 +99,7 @@ class _secondState extends State<second> {
   }
 
   Future<void> _textOcr() async {
+
     setState(() => _mlResult = '<no result>');
 
     //vertical positions of the all days monday to saturaday
@@ -711,7 +713,6 @@ class _secondState extends State<second> {
               child: const Text("refresh")),
           SelectableText(
             _mlResult,
-            style: GoogleFonts.notoSansGrantha(),
           ),
         ],
       ),

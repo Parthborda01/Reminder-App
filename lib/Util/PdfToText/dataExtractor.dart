@@ -16,7 +16,7 @@ class TextExtractor{
 
 
 
-  Future<TimeTable> fetchTimeTable({required File image,required width,required double height}) async {
+  Future<TimeTable> fetchTimeTable({required File image,required double width,required double height}) async {
     this.image = image;
     this.width = width;
     this.height = height;

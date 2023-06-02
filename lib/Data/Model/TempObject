@@ -1,0 +1,498 @@
+final TimeTable tempObject = TimeTable();
+tempObject.classname = "3-IT-A";
+tempObject.classroom = "E-306";
+
+WeekDays weekDays = WeekDays();
+tempObject.days = weekDays;
+
+DayOfWeek monDay = DayOfWeek();
+weekDays.monday = monDay;
+
+Slot slot1Monday = Slot();
+Slot slot2Monday = Slot();
+Slot slot3Monday = Slot();
+
+monDay.slot1 = slot1Monday;
+monDay.slot2 = slot2Monday;
+monDay.slot3 = slot3Monday;
+
+slot1Monday.isLab = true;
+slot1Monday.lab = [
+LabSession(
+batchName: "B1",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B2",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B3",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B4",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B5",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+)
+];
+slot2Monday.isLab = false;
+Session sessionForSlot2Monday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "10:45 to 11:45"
+);
+Session sessionForSlot2Monday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "11:45 to 12:45"
+);
+slot2Monday.lecture1 = sessionForSlot2Monday1;
+slot2Monday.lecture2 = sessionForSlot2Monday2;
+
+slot3Monday.isLab = false;
+Session sessionForSlot3Monday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "01:30 to 02:30"
+);
+Session sessionForSlot3Monday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "02:30 to 03:30"
+);
+slot3Monday.lecture1 = sessionForSlot3Monday1;
+slot3Monday.lecture2 = sessionForSlot3Monday2;
+
+//------------------------Tuesday----------------------------------------
+
+DayOfWeek tuesDay = DayOfWeek();
+weekDays.tuesday = tuesDay;
+Slot slot1Tuesday = Slot();
+Slot slot2Tuesday = Slot();
+Slot slot3Tuesday = Slot();
+
+tuesDay.slot1 = slot1Tuesday;
+tuesDay.slot2 = slot2Tuesday;
+tuesDay.slot3 = slot3Tuesday;
+
+slot1Tuesday.isLab = false;
+Session sessionForSlot1Tuesday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "10:45 to 11:45"
+);
+Session sessionForSlot1Tuesday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "11:45 to 12:45"
+);
+slot2Tuesday.lecture1 = sessionForSlot1Tuesday1;
+slot2Tuesday.lecture2 = sessionForSlot1Tuesday2;
+
+slot1Tuesday.isLab = true;
+slot2Tuesday.lab = [
+LabSession(
+batchName: "B1",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B2",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B3",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B4",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B5",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+)
+];
+
+slot3Tuesday.isLab = false;
+Session sessionForSlot3Tuesday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "01:30 to 02:30"
+);
+Session sessionForSlot3Tuesday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "02:30 to 03:30"
+);
+slot3Tuesday.lecture1 = sessionForSlot3Tuesday1;
+slot3Tuesday.lecture2 = sessionForSlot3Tuesday2;
+
+
+//--------------------------Wednesday--------------------------------------
+
+DayOfWeek wednesDay = DayOfWeek();
+weekDays.wednesday = wednesDay;
+
+Slot slot1Wednesday = Slot();
+Slot slot2Wednesday = Slot();
+Slot slot3Wednesday = Slot();
+
+wednesDay.slot1 = slot1Wednesday;
+wednesDay.slot2 = slot2Wednesday;
+wednesDay.slot3 = slot3Wednesday;
+
+slot1Wednesday.isLab = true;
+slot1Wednesday.lab = [
+LabSession(
+batchName: "B1",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B2",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B3",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B4",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B5",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+)
+];
+
+slot2Wednesday.isLab = false;
+Session sessionForSlot2Wednesday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "10:45 to 11:45"
+);
+Session sessionForSlot2Wednesday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "11:45 to 12:45"
+);
+slot2Wednesday.lecture1 = sessionForSlot2Wednesday1;
+slot2Wednesday.lecture2 = sessionForSlot2Wednesday2;
+
+slot2Wednesday.isLab = true;
+slot3Wednesday.lab = [
+LabSession(
+batchName: "B1",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B2",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B3",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B4",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B5",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+)
+];
+
+//------------------------Thursday----------------------------------------
+
+DayOfWeek thursDay = DayOfWeek();
+weekDays.thursday = thursDay;
+Slot slot1Thursday = Slot();
+Slot slot2Thursday = Slot();
+Slot slot3Thursday = Slot();
+
+thursDay.slot1 = slot1Thursday;
+thursDay.slot2 = slot2Thursday;
+thursDay.slot3 = slot3Thursday;
+
+slot1Thursday.isLab = false;
+Session sessionForSlot1Thursday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "10:45 to 11:45"
+);
+Session sessionForSlot1Thursday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "11:45 to 12:45"
+);
+slot2Thursday.lecture1 = sessionForSlot1Thursday1;
+slot2Thursday.lecture2 = sessionForSlot1Thursday2;
+
+slot1Thursday.isLab = true;
+slot2Thursday.lab = [
+LabSession(
+batchName: "B1",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B2",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B3",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B4",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B5",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+)
+];
+
+slot3Thursday.isLab = false;
+Session sessionForSlot3Thursday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "01:30 to 02:30"
+);
+Session sessionForSlot3Thursday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "02:30 to 03:30"
+);
+slot3Thursday.lecture1 = sessionForSlot3Thursday1;
+slot3Thursday.lecture2 = sessionForSlot3Thursday2;
+
+//_________________________Friday_______________________________________
+
+DayOfWeek friDay = DayOfWeek();
+weekDays.friday = friDay;
+
+Slot slot1Friday = Slot();
+Slot slot2Friday = Slot();
+Slot slot3Friday = Slot();
+
+friDay.slot1 = slot1Friday;
+friDay.slot2 = slot1Friday;
+friDay.slot3 = slot3Friday;
+
+slot1Friday.isLab = false;
+Session sessionForSlot1Friday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "10:45 to 11:45"
+);
+Session sessionForSlot1Friday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "11:45 to 12:45"
+);
+slot1Friday.lecture1 = sessionForSlot1Friday1;
+slot1Friday.lecture2 = sessionForSlot1Friday2;
+
+slot3Friday.isLab = false;
+Session sessionForSlot2Friday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "01:30 to 02:30"
+);
+Session sessionForSlot2Friday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "02:30 to 03:30"
+);
+slot3Friday.lecture1 = sessionForSlot2Friday1;
+slot3Friday.lecture2 = sessionForSlot2Friday2;
+
+slot3Friday.isLab = true;
+slot3Friday.lab = [
+LabSession(
+batchName: "B1",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B2",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B3",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B4",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+),
+LabSession(
+batchName: "B5",
+subjectName: "PWP",
+facultyName: "PVD",
+location: "L-17,18",
+time: "08:30 to 10:30"
+)
+];
+
+//_________________________________Saturday_______________________________________
+
+DayOfWeek saturDay = DayOfWeek();
+weekDays.saturday = saturDay;
+Slot slot1Saturday = Slot();
+Slot slot2Saturday = Slot();
+Slot slot3Saturday = Slot();
+
+saturDay.slot1 = slot1Saturday;
+saturDay.slot2 = slot2Saturday;
+saturDay.slot3 = slot3Saturday;
+
+slot1Saturday.isLab = true;
+Session sessionForSlot1Saturday1 = Session(
+facultyName: "CCNA session",
+location: "L-17,18",
+subjectName: "JRP",
+time: "10:45 to 11:45"
+);
+
+slot2Saturday.isLab = false;
+Session sessionForSlot2Saturday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "01:30 to 02:30"
+);
+Session sessionForSlot2Saturday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "02:30 to 03:30"
+);
+slot3Saturday.lecture1 = sessionForSlot2Saturday1;
+slot3Saturday.lecture2 = sessionForSlot2Saturday2;
+
+slot3Saturday.isLab = false;
+Session sessionForSlot3Saturday1 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "01:30 to 02:30"
+);
+Session sessionForSlot3Saturday2 = Session(
+facultyName: "PVD",
+location: "L-17,18",
+subjectName: "PWP",
+time: "02:30 to 03:30"
+);
+slot3Saturday.lecture1 = sessionForSlot3Saturday1;
+slot3Saturday.lecture2 = sessionForSlot3Saturday2;
+
