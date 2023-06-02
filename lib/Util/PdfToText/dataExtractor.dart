@@ -596,29 +596,4 @@ class TextExtractor{
     DayOfWeek dayfinal = DayOfWeek(slot1: slot1, slot2: slot2, slot3: slot3);
     return dayfinal;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
