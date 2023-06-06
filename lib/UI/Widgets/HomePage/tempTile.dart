@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
+import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
 
 
 class TaskLectureTiletemp extends StatefulWidget {
@@ -48,24 +49,24 @@ class _TaskLectureTiletempState extends State<TaskLectureTiletemp> {
                       blankSpace: 20,
                       text: "${widget.Lecture.subjectName}",
                       velocity: 60,
-                      // style: Theme.of(context).textTheme.headlineSmall,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   )
                 else
                   Text(
                     "${widget.Lecture.subjectName}",
-                    // style: Theme.of(context).textTheme.headlineSmall,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 SizedBox(
                   height: 2,
                 ),
                 Text(
                   "${widget.Lecture.facultyName}",
-                  // style: Theme.of(context).textTheme.headlineSmall,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Text(
                   "${widget.Lecture.time}",
-                  // style: Theme.of(context).textTheme.headlineSmall,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 )
               ],
             ),
@@ -78,21 +79,9 @@ class _TaskLectureTiletempState extends State<TaskLectureTiletemp> {
                   padding: const EdgeInsets.all(0.0),
                   child: Text(
                     widget.Lecture.location,
-                    // style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
-                Switch(
-                  value: notifier,
-                  inactiveTrackColor: Colors.transparent,
-                  // trackOutlineColor: MaterialStateProperty.all<Color>((notifier ? Colors.lightBlueAccent : deadColor)),
-                  inactiveThumbColor:
-                  ((notifier ? Colors.lightBlueAccent : Colors.grey)),
-                  onChanged: (value) {
-                    setState(() {
-                      notifier = value;
-                    });
-                  },
-                )
               ],
             )
           ],

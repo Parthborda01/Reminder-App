@@ -21,8 +21,6 @@ class _CreateChooserState extends State<CreateChooser> {
         insetPadding: EdgeInsets.symmetric(horizontal: 10),
         elevation: 5,
         title: Text("Create new by"),
-        backgroundColor: Theme.of(context).backgroundColor,
-        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         content: Row(
           children: [
             Expanded(child: BlocBuilder<ThemeCubit, ThemeModes>(

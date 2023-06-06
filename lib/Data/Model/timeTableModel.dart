@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'lecturePositionModel.dart';
+
+TimeTable timeTableFromJson(String str) => TimeTable.fromJson(json.decode(str));
+
+String timeTableToJson(TimeTable data) => json.encode(data.toJson());
 
 class TimeTable {
   String? classRoom;
@@ -244,6 +250,11 @@ class Session {
     return data;
   }
 
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+
   Session.fromTextBlockForLec(Textblock block, time1, {String? location}) {
     String text = block.text;
     // extracting the classroom name
@@ -261,22 +272,22 @@ class Session {
     RegExp lecPattern = RegExp(r"^[A-Za-z]+.*\([A-Z]+\)$");
     RegExp onlyLecPattern = RegExp(r"^[^()]*$");
     RegExp onlyFacultyPattern = RegExp(r"^\([A-Z]+\)$");
-    String subName = "ERR🟥⬜😅🤣";
-    String facName = "ERR🟥";
+    String subName = "error⚠️";
+    String facName = "error⚠️";
     if (lecPattern.hasMatch(text)) {
       List textList = text.split(RegExp(r"(\(|\))"));
 
       subName = textList[0];
       facName = textList[1];
     } else if (onlyFacultyPattern.hasMatch(text)) {
-      subName = "ERROR🟥";
+      subName = "error⚠️";
       facName = text;
     } else if (onlyLecPattern.hasMatch(text)) {
       subName = text;
-      facName = "ERROR🟥";
+      facName = "error⚠️";
     } else {
-      subName = "ERROR🟥";
-      facName = "ERROR🟥";
+      subName = "error⚠️";
+      facName = "error⚠️";
     }
     //exporting fields
     subjectName = subName;
@@ -318,6 +329,11 @@ class LabSession {
     return data;
   }
 
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+
   LabSession.fromTextBlockForLab(batchName, String text, String? time1) {
     // extracting the classroom name
 
@@ -329,9 +345,9 @@ class LabSession {
 
 
 
-    String subName = "ERR🟥";
-    String locationName= "ERR🟥";
-    String facName = "ERR🟥";
+    String subName = "error⚠️";
+    String locationName= "error⚠️";
+    String facName = "error⚠️";
     Iterable<RegExpMatch> submatches = onlyLabPattern.allMatches(text);
     for (final m in submatches) {
       subName = m[0].toString();

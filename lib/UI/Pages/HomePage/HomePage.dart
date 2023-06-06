@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: ClipRRect(
                       child: ListView(
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         children: const [
                           TaskLectureTile(
                             Lecture: '',

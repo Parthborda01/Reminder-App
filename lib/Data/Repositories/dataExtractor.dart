@@ -21,7 +21,7 @@ class TextExtractor{
     this.width = width;
     this.height = height;
 
-    return await _textOcr(image: image);;
+    return await _textOcr(image: image);
   }
 
 

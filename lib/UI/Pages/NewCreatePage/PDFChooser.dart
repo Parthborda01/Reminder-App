@@ -62,6 +62,7 @@ class _PDFChooserState extends State<PDFChooser> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(25),
                             child: PhotoView(
+                              filterQuality: FilterQuality.high,
                               minScale: PhotoViewComputedScale.contained * 1,
                               maxScale: PhotoViewComputedScale.contained * 2.2,
                               backgroundDecoration: BoxDecoration(
@@ -103,7 +104,7 @@ class _PDFChooserState extends State<PDFChooser> {
                                 buttonSize: 60,
                                 vibrationFlag: true,
                                 action: () {
-                                  Navigator.pushNamed(context, RouteNames.tableBuild,arguments: fileData);
+                                  Navigator.pushNamed(context, RouteNames.tableBuild,arguments: fileData).then((value) => Navigator.of(context).pop());
                                 },
                                 label: Text(
                                   "Slide to Load!",

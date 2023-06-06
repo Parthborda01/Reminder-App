@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
-import 'package:student_dudes/UI/Widgets/HomePage/TaskTile.dart';
-import 'package:student_dudes/UI/Widgets/HomePage/tempTile.dart';
+import 'package:student_dudes/UI/Routes/route.dart';
+import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLab.dart';
+import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLecture.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 import 'package:student_dudes/Util/Cubits/fileDataFetch/file_data_fetch_cubit.dart';
 import 'package:student_dudes/Util/PdfToImage/PickHelper.dart';
@@ -59,11 +60,24 @@ class _ConstructorPageState extends State<ConstructorPage> {
                 surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
                 expandedHeight: 300,
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, RouteNames.pdfSelect).then((value) => Navigator.pop(context));
+                      },
+                      highlightColor: Colors.transparent,
+                      icon: Icon(
+                        Icons.refresh_rounded,
+                        color: Theme.of(context).iconTheme.color,
+                      ))
+                ],
                 leading: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     highlightColor: Colors.transparent,
                     icon: Icon(
-                      Icons.menu,
+                      Icons.arrow_back_ios_new_rounded,
                       color: Theme.of(context).iconTheme.color,
                     )),
                 bottom: PreferredSize(
@@ -73,8 +87,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                     children: [
                       BlocBuilder<SliverScrolled, bool>(
                           builder: (context, state) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: AnimatedOpacity(
                                     opacity: state ? 1.0 : 0.0,
                                     duration: Duration(milliseconds: 200),
@@ -84,9 +97,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                             .titleSmall)),
                               )),
                       Spacer(),
-                      IconButton(onPressed: () {
-
-                      }, icon: Icon(Icons.add)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.add)),
                     ],
                   ),
                 ),
@@ -106,101 +117,133 @@ class _ConstructorPageState extends State<ConstructorPage> {
                   )),
                 ),
               ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            height: deviceHeight * 0.6,
-                            color: Theme.of(context).backgroundColor,
-                            child: BlocBuilder<FileDataFetchCubit, FileDataFetchState>(
-                              builder: (context, state) {
-                                if (state is FileDataFetchInitial){
-                                  print("🟨🟨🟨");
-                                  return CircularProgressIndicator();
+              SliverToBoxAdapter(
+                child: Container(
+                  height: deviceHeight * 2,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: BlocBuilder<FileDataFetchCubit, FileDataFetchState>(
+                    builder: (context, state) {
+                      if (state is FileDataFetchLoading) {
+                        return CircularProgressIndicator();
+                      }
+                      else if (state is FileDataFetchLoaded) {
+
+                        Map<String, dynamic> weekdays = state.timeTable.weekDays!.toJson();
+
+                        return PageView.builder(
+                          itemCount: weekdays.length,
+                          itemBuilder: (BuildContext context, int indexPage) {
+
+                            String dayKey = weekdays.keys.toList()[indexPage];  // Name of the day
+                            Map dayOfWeek = weekdays[dayKey];                   // Data for the day
+                            /*
+
+                            for(int slotNumber = 0; slotNumber < dayOfWeek.length; slotNumber++){
+                              String slotKey = dayOfWeek.keys.toList()[slotNumber];
+                              Map<String, dynamic> slotInMap = dayOfWeek[slotKey];
+                              Slot slot = Slot.fromJson(slotInMap);
+                              if(slot.isLab == false){
+                                  print(slot.lecture1?.toJson());
+                                  print(slot.lecture2?.toJson());
+                              }
+                              else if(slot.isLab == true){
+                                if(slot.isFullSession == false) {
+                                  List<LabSession>? labSession = slot.lab
+                                      ?.toList();
+                                  for (int labNumber = 0; labNumber <
+                                      labSession!.length; labNumber++) {
+                                    print(labSession[labNumber].subjectName);
+                                  }
                                 }
-                                else if(state is FileDataFetchLoading){
-                                  print('🟨🟨🟨Loading....');
-                                  return CircularProgressIndicator();
+                                else if(slot.isFullSession == true){
+                                  print(slot.slotLecture?.toJson());
                                 }
-                                else if(state is FileDataFetchLoaded){
-                                  print("🟩🟩🟩Loaded");
-                                  return PageView.builder(
-                                    itemCount: state.timeTable.weekDays?.toJson().length,
-                                    itemBuilder: (context, index1) {
-                                      if (state.timeTable != null) {
-                                        var daykey =
-                                        state.timeTable.weekDays?.toJson().keys.toList()[index1];
-                                        print(daykey);
-                                        Map day = state.timeTable.weekDays?.toJson()[daykey];
-                                        return ListView.builder(
+                              }
+                            }
+*/    //secret Code
 
+                            return
+                              Column(
+                                children: [
+                                  Text(dayKey.toUpperCase(),style: Theme.of(context).textTheme.titleMedium),
+                                  Flexible(
+                                    child: ListView.builder(
+                                    itemCount: dayOfWeek.length,
+                                    physics: const NeverScrollableScrollPhysics(),
 
+                                    itemBuilder: (context, indexList) {
 
-                                          itemCount: day.length,
-                                          itemBuilder: (context, index2) {
-                                            var slotkey = day.keys.toList()[index2];
-                                            var slotInMap = day[slotkey];
-                                            Slot slot = Slot.fromJson(slotInMap);
-                                            if (slot.isLab == false) {
-                                              //for lecture
-                                              if(slot.lecture1!=null && slot.lecture2!= null){
-                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture: slot.lecture1!),TaskLectureTiletemp(Lecture: slot.lecture2!)]);
-                                              }else if(slot.lecture1!=null){
-                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture: slot.lecture1!),TaskLectureTiletemp(Lecture: Session(facultyName: "free",location: "free",subjectName: "free",time: "free"))]);
+                                      var slotKey = dayOfWeek.keys.toList()[indexList]; //Name of slot
+                                      var slotInMap = dayOfWeek[slotKey];               //Data for slot
+                                      Slot slot = Slot.fromJson(slotInMap);             //Data to json
 
-                                              }else if(slot.lecture2!=null){
-                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture: Session(facultyName: "free",location: "free",subjectName: "free",time: "free")),TaskLectureTiletemp(Lecture: slot.lecture2!)]);
+                                      if (slot.isLab == false) {                        //It's a lecture
 
-                                              }else{
-                                                return ListView(physics: NeverScrollableScrollPhysics(),shrinkWrap: true,children: [TaskLectureTiletemp(Lecture:  Session(facultyName: "free",location: "free",subjectName: "free",time: "free")),TaskLectureTiletemp(Lecture:  Session(facultyName: "free",location: "free",subjectName: "free",time: "free")) ]);
+                                        if (slot.lecture1 != null && slot.lecture2 != null) {
 
-                                              }
-                                            } else if (slot.isLab == true&&
-                                                slot.isFullSession == false) {
-                                              //for lab
-                                              return TaskLectureTiletemp(Lecture: slot.lab![0]);
-                                            } else if (slot.isLab == true &&
-                                                slot.isFullSession == true) {
-                                              // for Full Session
-                                              return TaskLectureTiletemp(Lecture: slot.slotLecture!);
-
-                                            } else {
-                                              //for free lecture
-                                              return TaskLectureTiletemp(Lecture: Session(facultyName: "free",location: "free",subjectName: "free",time: "free"));
-                                            }
-                                          },
-                                        );
-                                        //Container(decoration: BoxDecoration(border: Border.all(color: Colors.black)),child: Center(child: Text("${slot}"),),)
-
-
+                                          return ListView(
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              children: [
+                                                ConstructorTileLecture(lectureData: slot.lecture1?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty")),
+                                                ConstructorTileLecture(lectureData: slot.lecture2?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty"))
+                                              ]);
+                                        }
+                                        else if (slot.lecture1 != null) {
+                                          return ListView(
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              children: [
+                                                ConstructorTileLecture(lectureData: slot.lecture1?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty")),
+                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free"))
+                                              ]);
+                                        }
+                                        else if (slot.lecture2 != null) {
+                                          return ListView(
+                                              physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              children: [
+                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free")),
+                                                ConstructorTileLecture(lectureData: slot.lecture2?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty"))
+                                              ]);
+                                        } else {
+                                          return ListView(
+                                              physics:
+                                              NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              children: [
+                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free")),
+                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free"))
+                                              ]);
+                                        }
+                                      }
+                                      else if (slot.isLab == true && slot.isFullSession == false) {//for lab
+                                        return ConstructorTileLab(labData: slot.lab?? []);
+                                      } else if (slot.isLab == true && slot.isFullSession == true) {
+                                        // for Full Session
+                                        return ConstructorTileLecture(lectureData: slot.slotLecture?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty"));
                                       } else {
-                                        return Center(child: Text("null"));
+                                        //for free lecture
+                                        return ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free"));
                                       }
                                     },
-                                  );
-                                }
-                                else if(state is FileDataFetchError){
-                                  print("🟥🟥🟥Error $state");
-                                  return SizedBox();
-                                }
-                                else{
-                                  print("🚫🚫Other");
-                                  return SizedBox();
-                                }
-                              },
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                                  ),
+                                ],
+                              );
+                          },
+                        );
+                      } else if (state is FileDataFetchError) {
+                        print("🟥🟥🟥Error $state");
+                        return SizedBox();
+                      } else {
+                        print("🚫🚫Other");
+                        return SizedBox();
+                      }
+                    },
                   ),
-
-            ])
-        )
-    );
+                ),
+              ),
+            ])));
   }
 }

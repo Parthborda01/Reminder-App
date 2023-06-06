@@ -5,7 +5,7 @@
     "monday": {
       "slot1": {
         "islab": false,
-        "isFullSession": "false",
+        "isFullSession": false,
         "lab": [
           {
             "batchName": "B1",
