@@ -1,34 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Util {
 
-  static int setNumberOfHours(String timeString) {
+  static String calculatePeriod(String startTime, int duration) {
+    final formatter = DateFormat('hh:mm');
 
-    DateTime parseTime(String timeString) {
-      List<String> timeParts = timeString.split(':');
-      int hours = int.parse(timeParts[0]);
-      int minutes = int.parse(timeParts[1]);
-      DateTime now = DateTime.now();
-      return DateTime(now.year, now.month, now.day, hours, minutes);
-    }
+    // Parse start time into DateTime object
+    DateTime startDateTime = formatter.parse(startTime);
 
-    List<String> times = timeString.split(' to ');
-    DateTime startTime = parseTime(times[0]);
-    DateTime endTime = parseTime(times[1]);
-    Duration duration = endTime.difference(startTime);
-    if(duration == const Duration(hours: 1)){
-      return 1;
-    }
-    else{
-      return 2;
-    }
+    // Add duration in hours to the start time
+    DateTime endDateTime = startDateTime.add(Duration(hours: duration));
+
+    // Format start and end times into the desired string format
+    String startTimeString = formatter.format(startDateTime);
+    String endTimeString = formatter.format(endDateTime);
+
+    return '$startTimeString TO $endTimeString';
   }
 
   static TimeOfDay convertToTimeOfDay(String timeString) {
-    List<String> timeParts = timeString.split(' to ');
-    String startTime = timeParts[0];
-    List<String> timeValues = startTime.split(':');
 
+    String startTime = timeString;
+    List<String> timeValues = startTime.split(':');
 
     int h = int.parse(timeValues[0]);
     int hours = h < 6? h+12 : h;

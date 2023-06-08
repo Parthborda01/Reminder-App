@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:marquee/marquee.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/ConstructorDialogLab.dart';
+import 'package:student_dudes/Util/Util.dart';
+
+import '../../../Util/LabSessionHelper.dart';
 
 class ConstructorTileLab extends StatefulWidget {
-  const ConstructorTileLab({super.key, required this.labData});
+  const ConstructorTileLab(
+      {super.key, required this.labData, required this.onChanged});
 
-  final List<LabSession> labData;
+  final Session? labData;
+  final Function(Session) onChanged;
 
   @override
   State<ConstructorTileLab> createState() => _ConstructorTileLabState();
@@ -14,21 +18,35 @@ class ConstructorTileLab extends StatefulWidget {
 
 class _ConstructorTileLabState extends State<ConstructorTileLab> {
   bool checkError(String input) {
-    return input.contains("error");
+    return input.isEmpty;
+  }
+  List<Session> data = [];
+  @override
+  void initState() {
+    data = LabUtils.labToSessions(widget.labData!);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var deviceWidth = MediaQuery.of(context).size.width;
-    var deviceHeight = MediaQuery.of(context).size.height;
-
     return InkWell(
-      onTap: () => showDialog(context: context, builder: (context) => ConstructorDialogLab(labData: widget.labData)),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) => ConstructorDialogLab(
+                  labData: widget.labData,
+                  onChanged: (p0) {
+                    data = LabUtils.labToSessions(p0);
+                    setState(() {});
+                    widget.onChanged(p0);
+                  },
+                ));
+      },
       child: Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
                 color: checkError(widget.labData.toString())
@@ -42,18 +60,22 @@ class _ConstructorTileLabState extends State<ConstructorTileLab> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text("Lab Session",
                       style: Theme.of(context).textTheme.headlineLarge),
-                  Text(widget.labData[0].time ?? "",
+                  Text(
+                      widget.labData?.time != null &&
+                              widget.labData!.time!.trim().isNotEmpty
+                          ? Util.calculatePeriod(widget.labData!.time!, widget.labData!.duration!)
+                          : "⚠️⚠️⚠️",
                       style: Theme.of(context).textTheme.headlineSmall,
                       textAlign: TextAlign.start)
                 ]),
+                const SizedBox(height: 10),
                 ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   separatorBuilder: (context, index) => const Divider(),
-                  itemCount: widget.labData.length,
+                  itemCount: data.length,
                   itemBuilder: (context, index) {
-                    LabSession labSession = widget.labData[index];
-                    return batchDataTile(labSession);
+                    return batchDataTile(context, data[index]);
                   },
                 ),
               ],
@@ -62,34 +84,42 @@ class _ConstructorTileLabState extends State<ConstructorTileLab> {
     );
   }
 
-  Widget batchDataTile(LabSession labSession) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Batch: ${labSession.batchName.toString()}",
-                  style: Theme.of(context).textTheme.headlineMedium),
-              Text(labSession.subjectName.toString(),
-                  style: Theme.of(context).textTheme.headlineMedium),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(labSession.location.toString(),
-                  style: Theme.of(context).textTheme.headlineMedium),
-              Text(
-                  labSession.facultyName
-                      .toString()
-                      .replaceAll(RegExp(r'[()]'), ''),
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ],
-          ),
-        ],
-      ),
+  Widget batchDataTile(context, Session labSession) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                "Batch: ${labSession.time != null && labSession.time!.trim().isNotEmpty ? labSession.time! : "⚠️⚠️⚠️"}",
+                style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+                labSession.subjectName != null &&
+                        labSession.subjectName!.trim().isNotEmpty
+                    ? labSession.subjectName!
+                    : "⚠️⚠️⚠️",
+                style: Theme.of(context).textTheme.headlineMedium),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+                labSession.location != null &&
+                        labSession.location!.trim().isNotEmpty
+                    ? labSession.location!
+                    : "⚠️⚠️⚠️",
+                style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+                labSession.facultyName
+                        ?.toString()
+                        .replaceAll(RegExp(r'[()]'), '') ??
+                    "⚠️⚠️⚠️",
+                style: Theme.of(context).textTheme.headlineSmall),
+          ],
+        ),
+      ],
     );
   }
 }

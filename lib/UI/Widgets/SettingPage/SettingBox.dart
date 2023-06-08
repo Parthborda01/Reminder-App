@@ -28,7 +28,7 @@ class _SettingBoxState extends State<SettingBox> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(25),
                 child: Container(
-                  color: Theme.of(context).backgroundColor,
+                  color: Theme.of(context).colorScheme.background,
                   child: Column(
                     children: widget.children,
                   ),

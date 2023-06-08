@@ -105,7 +105,7 @@ class _SettingPageState extends State<SettingPage> {
                       borderRadius: BorderRadius.circular(25),
                       child: Container(
                         height: deviceHeight * 0.6,
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                       ),
                     ),
                   ),
@@ -131,7 +131,7 @@ class _SettingPageState extends State<SettingPage> {
                       borderRadius: BorderRadius.circular(25),
                       child: Container(
                         height: deviceHeight * 0.6,
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                       ),
                     ),
                   ),
@@ -157,7 +157,7 @@ class _SettingPageState extends State<SettingPage> {
                       borderRadius: BorderRadius.circular(25),
                       child: Container(
                         height: deviceHeight * 0.6,
-                        color: Theme.of(context).backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                       ),
                     ),
                   ),

@@ -38,7 +38,7 @@ class _TaskLectureTileState extends State<TaskLectureTile> {
       alignment: Alignment.center,
       margin: EdgeInsets.only(bottom: 20, left: 10, right: 10),
       decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),

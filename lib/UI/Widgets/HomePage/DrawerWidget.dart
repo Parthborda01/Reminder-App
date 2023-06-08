@@ -29,7 +29,7 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
           child: Container(
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).colorScheme.background,
             ),
             child: Column(
               children: [
@@ -93,7 +93,7 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                     dashLength: 2),
                 Spacer(),
                 Material(
-                  color: Theme.of(context).backgroundColor,
+                  color: Theme.of(context).colorScheme.background,
                   child: ListTile(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),

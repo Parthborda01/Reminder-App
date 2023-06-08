@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
+import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/ConstructorDialogLecture.dart';
 import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLab.dart';
 import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLecture.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
@@ -19,6 +21,10 @@ class ConstructorPage extends StatefulWidget {
 }
 
 class _ConstructorPageState extends State<ConstructorPage> {
+  TimeTable? weekdays;
+
+  List<Session> selectedItem = [];
+
   @override
   void initState() {
     File image = widget.fileData.imageFile;
@@ -63,7 +69,8 @@ class _ConstructorPageState extends State<ConstructorPage> {
                 actions: [
                   IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.pdfSelect).then((value) => Navigator.pop(context));
+                        Navigator.pushNamed(context, RouteNames.pdfSelect)
+                            .then((value) => Navigator.pop(context));
                       },
                       highlightColor: Colors.transparent,
                       icon: Icon(
@@ -87,7 +94,8 @@ class _ConstructorPageState extends State<ConstructorPage> {
                     children: [
                       BlocBuilder<SliverScrolled, bool>(
                           builder: (context, state) => Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
                                 child: AnimatedOpacity(
                                     opacity: state ? 1.0 : 0.0,
                                     duration: Duration(milliseconds: 200),
@@ -124,117 +132,124 @@ class _ConstructorPageState extends State<ConstructorPage> {
                   child: BlocBuilder<FileDataFetchCubit, FileDataFetchState>(
                     builder: (context, state) {
                       if (state is FileDataFetchLoading) {
-                        return CircularProgressIndicator();
-                      }
-                      else if (state is FileDataFetchLoaded) {
-
-                        Map<String, dynamic> weekdays = state.timeTable.weekDays!.toJson();
-
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is FileDataFetchLoaded) {
+                        weekdays = state.timeTable;
                         return PageView.builder(
-                          itemCount: weekdays.length,
+                          itemCount: weekdays!.weekDays!.length,
                           itemBuilder: (BuildContext context, int indexPage) {
-
-                            String dayKey = weekdays.keys.toList()[indexPage];  // Name of the day
-                            Map dayOfWeek = weekdays[dayKey];                   // Data for the day
-                            /*
-
-                            for(int slotNumber = 0; slotNumber < dayOfWeek.length; slotNumber++){
-                              String slotKey = dayOfWeek.keys.toList()[slotNumber];
-                              Map<String, dynamic> slotInMap = dayOfWeek[slotKey];
-                              Slot slot = Slot.fromJson(slotInMap);
-                              if(slot.isLab == false){
-                                  print(slot.lecture1?.toJson());
-                                  print(slot.lecture2?.toJson());
-                              }
-                              else if(slot.isLab == true){
-                                if(slot.isFullSession == false) {
-                                  List<LabSession>? labSession = slot.lab
-                                      ?.toList();
-                                  for (int labNumber = 0; labNumber <
-                                      labSession!.length; labNumber++) {
-                                    print(labSession[labNumber].subjectName);
-                                  }
-                                }
-                                else if(slot.isFullSession == true){
-                                  print(slot.slotLecture?.toJson());
-                                }
-                              }
-                            }
-*/    //secret Code
-
-                            return
-                              Column(
-                                children: [
-                                  Text(dayKey.toUpperCase(),style: Theme.of(context).textTheme.titleMedium),
-                                  Flexible(
-                                    child: ListView.builder(
-                                    itemCount: dayOfWeek.length,
-                                    physics: const NeverScrollableScrollPhysics(),
-
+                            return Column(
+                              children: [
+                                Text(
+                                    weekdays!.weekDays![indexPage].day!
+                                        .toUpperCase(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium),
+                                Flexible(
+                                  child: ListView.builder(
+                                    itemCount: weekdays!
+                                        .weekDays![indexPage].sessions!.length,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, indexList) {
+                                      //Data to json
 
-                                      var slotKey = dayOfWeek.keys.toList()[indexList]; //Name of slot
-                                      var slotInMap = dayOfWeek[slotKey];               //Data for slot
-                                      Slot slot = Slot.fromJson(slotInMap);             //Data to json
-
-                                      if (slot.isLab == false) {                        //It's a lecture
-
-                                        if (slot.lecture1 != null && slot.lecture2 != null) {
-
-                                          return ListView(
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              children: [
-                                                ConstructorTileLecture(lectureData: slot.lecture1?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty")),
-                                                ConstructorTileLecture(lectureData: slot.lecture2?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty"))
-                                              ]);
-                                        }
-                                        else if (slot.lecture1 != null) {
-                                          return ListView(
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              children: [
-                                                ConstructorTileLecture(lectureData: slot.lecture1?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty")),
-                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free"))
-                                              ]);
-                                        }
-                                        else if (slot.lecture2 != null) {
-                                          return ListView(
-                                              physics: NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              children: [
-                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free")),
-                                                ConstructorTileLecture(lectureData: slot.lecture2?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty"))
-                                              ]);
-                                        } else {
-                                          return ListView(
-                                              physics:
-                                              NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              children: [
-                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free")),
-                                                ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free"))
-                                              ]);
-                                        }
-                                      }
-                                      else if (slot.isLab == true && slot.isFullSession == false) {//for lab
-                                        return ConstructorTileLab(labData: slot.lab?? []);
-                                      } else if (slot.isLab == true && slot.isFullSession == true) {
-                                        // for Full Session
-                                        return ConstructorTileLecture(lectureData: slot.slotLecture?? Session(facultyName: "Empty", location: "Empty", subjectName: "Empty", time: "Empty"));
+                                      if (!(weekdays?.weekDays?[indexPage]
+                                              .sessions?[indexList].isLab ??
+                                          false)) {
+                                        //It's a lecture
+                                        return InkWell(
+                                          onLongPress: () {
+                                            if (selectedItem.isEmpty) {
+                                              selectedItem.add(weekdays!
+                                                  .weekDays![indexPage]
+                                                  .sessions![indexList]);
+                                              setState(() {});
+                                            }
+                                          },
+                                          onTap: () {
+                                            if (selectedItem.isEmpty) {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ConstructorDialogLecture(
+                                                        lectureData: weekdays!
+                                                                .weekDays![
+                                                                    indexPage]
+                                                                .sessions![
+                                                            indexList],
+                                                        onChanged: (session) {
+                                                          weekdays!
+                                                                  .weekDays![
+                                                                      indexPage]
+                                                                  .sessions![
+                                                              indexList] = session;
+                                                          setState(() {});
+                                                        },
+                                                      ));
+                                            } else {
+                                              if (selectedItem
+                                                  .where((element) =>
+                                                      element.id ==
+                                                      weekdays!
+                                                          .weekDays![indexPage]
+                                                          .sessions![indexList]
+                                                          .id)
+                                                  .isNotEmpty) {
+                                                selectedItem.removeWhere(
+                                                    (element) =>
+                                                        element.id ==
+                                                        weekdays!
+                                                            .weekDays![
+                                                                indexPage]
+                                                            .sessions![
+                                                                indexList]
+                                                            .id);
+                                              } else {
+                                                selectedItem.add(weekdays!
+                                                    .weekDays![indexPage]
+                                                    .sessions![indexList]);
+                                              }
+                                              setState(() {});
+                                            }
+                                          },
+                                          child: ConstructorTileLecture(
+                                            isSelected: selectedItem
+                                                .where((element) =>
+                                                    element.id ==
+                                                    weekdays!
+                                                        .weekDays![indexPage]
+                                                        .sessions![indexList]
+                                                        .id)
+                                                .isNotEmpty,
+                                            lectureData: weekdays!
+                                                .weekDays![indexPage]
+                                                .sessions![indexList],
+                                          ),
+                                        );
                                       } else {
-                                        //for free lecture
-                                        return ConstructorTileLecture(lectureData: Session(facultyName: "free", location: "free", subjectName: "free", time: "free"));
+                                        //for lab
+                                        return ConstructorTileLab(
+                                          labData: weekdays!
+                                              .weekDays?[indexPage]
+                                              .sessions?[indexList],
+                                          onChanged: (p0) {
+                                            weekdays!.weekDays?[indexPage]
+                                                .sessions?[indexList] = p0;
+                                            setState(() {});
+                                          },
+                                        );
                                       }
                                     },
-                            ),
                                   ),
-                                ],
-                              );
+                                ),
+                              ],
+                            );
                           },
                         );
                       } else if (state is FileDataFetchError) {
-                        print("🟥🟥🟥Error $state");
+                        print("🟥🟥🟥Error ${state.errorMessage}");
                         return SizedBox();
                       } else {
                         print("🚫🚫Other");

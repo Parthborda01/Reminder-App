@@ -25,7 +25,7 @@ class _TaskLectureTiletempState extends State<TaskLectureTiletemp> {
       alignment: Alignment.center,
       margin: EdgeInsets.only(bottom: 2, left: 10, right: 10),
       decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),

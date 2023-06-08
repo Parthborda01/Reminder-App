@@ -22,8 +22,8 @@ class PickHelper {
       final page = await document.getPage(1);
       //pdf into image
 
-      double cropWidth = page.width * 5;
-      double cropHeight = page.height * 5;
+      double cropWidth = page.width * 3;
+      double cropHeight = page.height * 3;
 
       final pageImage = await page.render(
         width: cropWidth, // rendered image width resolution, required

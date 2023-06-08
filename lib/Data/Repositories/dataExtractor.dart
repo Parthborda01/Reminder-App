@@ -1,22 +1,21 @@
-
-
+import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:google_ml_kit/google_ml_kit.dart';
 
 import '../Model/lecturePositionModel.dart';
 import '../Model/timeTableModel.dart';
 
-class TextExtractor{
+class TextExtractor {
   String? classRoom;
   double width = 1584.0;
   double height = 1190.0;
   File? image;
 
-
-
-  Future<TimeTable> fetchTimeTable({required File image,required double width,required double height}) async {
+  Future<TimeTable> fetchTimeTable(
+      {required File image,
+      required double width,
+      required double height}) async {
     this.image = image;
     this.width = width;
     this.height = height;
@@ -24,22 +23,16 @@ class TextExtractor{
     return await _textOcr(image: image);
   }
 
-
   Future<TimeTable> _textOcr({required File image}) async {
-
-
     //vertical positions of the all days monday to saturaday
     List xPositionsOfDays = [0, 0, 0, 0, 0, 0, 0];
-    double xPosSemester=0;
-    String className="";
+    double xPosSemester = 0;
+    String className = "";
     //ending position that will tell the model the last block to  fetch
     double endpos = 0.0;
     double ylunch = 0.0;
     double ybreak = 0.0;
-    String breaktime = "";
-    String lunchtime = "";
     //this will store the result on ml_kit_image_to_text in string format
-    String result = '';
 
     List<Textblock> time = [];
     List<Textblock> mon = [];
@@ -57,30 +50,23 @@ class TextExtractor{
 
     //this linw will process the image and store the fetched data in recognizedText format
     final RecognizedText recognizedText =
-    await textDetector.processImage(inputImage);
+        await textDetector.processImage(inputImage);
 
     //fetch text from recognized_text object
-    final String text = recognizedText.text;
 
     //fetch blocks objects from recognized_text object
-    final List<TextBlock> textblocks = recognizedText.blocks;
 
     //this will add the fetched text to the results variable for
     // later retrieval
-    result += 'Detected ${recognizedText.blocks.length} text blocks.\n';
 
     //this for loop will iterate all the blocks and add the
     // x(vertical position of all the days in x list)
     for (final TextBlock block in recognizedText.blocks) {
-      final boundingBox = block.boundingBox;
-      final List<Point<int>> cornerPoints = block.cornerPoints;
       final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
       final yPosMean =
           ((block.boundingBox.top) + (block.boundingBox.bottom)) / 2;
       final xPosMean =
           ((block.boundingBox.left) + (block.boundingBox.right)) / 2;
-      result += '$text\n' 'x position=$xPosMean\n' 'y position=$yPosMean\n';
       if (text.toLowerCase() == "time") {
         xPositionsOfDays[0] = xPosMean;
       }
@@ -105,7 +91,8 @@ class TextExtractor{
       }
       if (text.toLowerCase() == "saturday") {
         xPositionsOfDays[6] = xPosMean;
-      }if (text.toLowerCase() == "semester") {
+      }
+      if (text.toLowerCase() == "semester") {
         xPosSemester = xPosMean;
       }
       if (text.toLowerCase() == 'subject' ||
@@ -121,29 +108,11 @@ class TextExtractor{
       }
       if (text.toLowerCase().contains("classroom")) {
         classRoom = text;
-
       }
-      // result += '\n# Text block:\n '
-      //     'bbox=$boundingBox\n '
-      //     'cornerPoints=$cornerPoints\n '
-      //     'text=$text\n '
-      // 'x position=$xPosMean\n'
-      // 'y position=$yPosMean\n';
-
-      // 'languages=$languages';
-      // for (TextLine line in block.lines) {
-      //   // Same getters as TextBlock
-      //   for (TextElement element in line.elements) {
-      //     // Same getters as TextBlock
-      //   }
-      // }
     }
 
     for (final TextBlock block in recognizedText.blocks) {
-      final boundingBox = block.boundingBox;
-      final List<Point<int>> cornerPoints = block.cornerPoints;
       final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
       final yup = block.boundingBox.top;
       final ydown = block.boundingBox.bottom;
       final xleft = block.boundingBox.left;
@@ -158,10 +127,8 @@ class TextExtractor{
           yPosMean < endpos) {
         if (-(width / 400) < ybreak - yPosMean &&
             ybreak - yPosMean < width / 400) {
-          breaktime = text;
         } else if (-(width / 400) < ylunch - yPosMean &&
             ylunch - yPosMean < width / 400) {
-          lunchtime = text;
         } else {
           time.add(Textblock(
             text: text,
@@ -252,11 +219,10 @@ class TextExtractor{
           xmean: xPosMean,
         ));
       }
-      if(-(width / 200) < xPosMean - xPosSemester &&
+      if (-(width / 200) < xPosMean - xPosSemester &&
           xPosMean - xPosSemester < (width / 200) &&
-          yPosMean < endpos){
+          yPosMean < endpos) {
         className = text;
-
       }
     }
 
@@ -280,7 +246,6 @@ class TextExtractor{
       // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-
     lecset(wed);
     for (var i = 0; i < wed.length; i++) {
       wed[i].text = wed[i].text.replaceAll("\n", " ");
@@ -289,10 +254,9 @@ class TextExtractor{
       if (wed[i].text.toLowerCase() == "break" ||
           wed[i].text.toLowerCase() == "lunch break") {
         // print(" ${wed[i].text} removed🟩");
-        wed.remove(i);
+        wed.removeAt(i);
       }
     }
-
 
     lecset(thu);
     for (var i in thu) {
@@ -301,7 +265,6 @@ class TextExtractor{
       // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-
     lecset(fri);
     for (var i in fri) {
       i.text = i.text.replaceAll("\n", " ");
@@ -309,151 +272,27 @@ class TextExtractor{
       // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-
     lecset(sat);
     for (var i in sat) {
       i.text = i.text.replaceAll("\n", " ");
 
       // print("${i.text} 🟩${i.ymean} 🟩");
     }
-    print("");
-    DayOfWeek monfinal = daymaker(time, mon);
-    DayOfWeek tuefinal = daymaker(time, tue);
-    DayOfWeek wedfinal = daymaker(time, wed);
-    DayOfWeek thufinal = daymaker(time, thu);
-    DayOfWeek frifinal = daymaker(time, fri);
-    DayOfWeek satfinal = daymaker(time, sat);
-    WeekDays daylist = WeekDays(
-        monday: monfinal,
-        tuesday: tuefinal,
-        wednesday: wedfinal,
-        thursday: thufinal,
-        friday: frifinal,
-        saturday: satfinal);
-    return TimeTable(weekDays:daylist,className: className,classRoom: classRoom);
-    daylist.toJson().forEach((key, value) {
-      DayOfWeek dayhere = DayOfWeek.fromJson(value);
-      print(" 🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥$key");
-      print("🟦🟦 slot 1 is lab?  ${dayhere.slot1?.isLab } is slot lecture? ${dayhere.slot1?.isFullSession}");
-      if (dayhere.slot1?.isLab!=null && dayhere.slot1!.isLab!) {
-        if(dayhere.slot1?.isFullSession==true){
-          print("🟩🟩🟩🟩🟩🟩🟩🟩🟩🟦🟦🟦🟦🟦🟦🟦🟦🟦");
-          print(dayhere.slot1?.slotLecture?.subjectName);
-          print(dayhere.slot1?.slotLecture?.facultyName);
-          print(dayhere.slot1?.slotLecture?.location);
-          print(dayhere.slot1?.slotLecture?.time);
-          print("");
-        }
-        else {
-          if(dayhere.slot1!=null && dayhere.slot1!.lab!=null ){
-            print(dayhere.slot1!.lab);
-            for(int i=0; i<dayhere.slot1!.lab!.length;i++){
-              print("🟩🟩🟩🟩🟩🟩🟥🟥🟥🟥🟥🟥🟥🟥");
+    List<DayOfWeek> dayList = [
+      dayMaker(time, mon, "monday"),
+      dayMaker(time, tue, "tuesday"),
+      dayMaker(time, wed, "wednesday"),
+      dayMaker(time, thu, "thursday"),
+      dayMaker(time, fri, "friday"),
+      dayMaker(time, sat, "saturday"),
+    ];
 
-              print(dayhere.slot1?.lab?[i].batchName);
-              print(dayhere.slot1?.lab?[i].subjectName);
-              print(dayhere.slot1?.lab?[i].facultyName);
-              print(dayhere.slot1?.lab?[i].location);
-              print(dayhere.slot1?.lab?[i].time);
-              print("");
-            }}
-          print("🟨🟨🟨🟨🟨🟨🟨🟨🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥  lab");
-        }
-      } else {
-        print(dayhere.slot1?.lecture1?.subjectName);
-        print(dayhere.slot1?.lecture1?.facultyName);
-        print(dayhere.slot1?.lecture1?.location);
-        print(dayhere.slot1?.lecture1?.time);
-        print("");
-        print(dayhere.slot1?.lecture2?.subjectName);
-        print(dayhere.slot1?.lecture2?.facultyName);
-        print(dayhere.slot1?.lecture2?.location);
-        print(dayhere.slot1?.lecture2?.time);
-        print("");
-        print("");
-      }
-
-      print("🟦🟦 slot 2 is lab?  ${dayhere.slot2?.isLab} is slot lecture? ${dayhere.slot1?.isFullSession}");
-      if (dayhere.slot2?.isLab!=null && dayhere.slot2!.isLab!  ) {
-        if(dayhere.slot2?.isFullSession==true){
-          print("🟩🟩🟩🟩🟩🟩🟩🟩🟩🟦🟦🟦🟦🟦🟦🟦🟦🟦");
-          print(dayhere.slot2?.slotLecture?.subjectName);
-          print(dayhere.slot2?.slotLecture?.facultyName);
-          print(dayhere.slot2?.slotLecture?.location);
-          print(dayhere.slot2?.slotLecture?.time);
-          print("");
-        }
-        else {
-          if(dayhere.slot2!=null && dayhere.slot2!.lab!=null ){
-            print(dayhere.slot2!.lab);
-            for(int i=0; i<dayhere.slot2!.lab!.length;i++){
-              print("🟩🟩🟩🟩🟩🟩🟥🟥🟥🟥🟥🟥🟥🟥");
-
-              print(dayhere.slot2?.lab?[i].batchName);
-              print(dayhere.slot2?.lab?[i].subjectName);
-              print(dayhere.slot2?.lab?[i].facultyName);
-              print(dayhere.slot2?.lab?[i].location);
-              print(dayhere.slot2?.lab?[i].time);
-              print("");
-            }}
-          print("🟨🟨🟨🟨🟨🟨🟨🟨🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥  lab");
-        }
-      } else {
-        print(dayhere.slot2?.lecture1?.subjectName);
-        print(dayhere.slot2?.lecture1?.facultyName);
-        print(dayhere.slot2?.lecture1?.location);
-        print(dayhere.slot2?.lecture1?.time);
-        print("");
-        print(dayhere.slot2?.lecture2?.subjectName);
-        print(dayhere.slot2?.lecture2?.facultyName);
-        print(dayhere.slot2?.lecture2?.location);
-        print(dayhere.slot2?.lecture2?.time);
-        print("");
-        print("");
-      }
-      print("🟦🟦 slot 3 is lab?  ${dayhere.slot3?.isLab} is slot lecture? ${dayhere.slot1?.isFullSession}");
-      if (dayhere.slot3?.isLab!=null && dayhere.slot3!.isLab! ) {
-        if(dayhere.slot3?.isFullSession==true){
-          print("🟩🟩🟩🟩🟩🟩🟩🟩🟩🟦🟦🟦🟦🟦🟦🟦🟦🟦");
-          print(dayhere.slot3?.slotLecture?.subjectName);
-          print(dayhere.slot3?.slotLecture?.facultyName);
-          print(dayhere.slot3?.slotLecture?.location);
-          print(dayhere.slot3?.slotLecture?.time);
-          print("");
-        }
-        else {
-          if(dayhere.slot3!=null && dayhere.slot3!.lab!=null ){
-            print(dayhere.slot3!.lab);
-            for(int i=0; i<dayhere.slot3!.lab!.length;i++){
-              print("🟩🟩🟩🟩🟩🟩🟥🟥🟥🟥🟥🟥🟥🟥");
-
-              print(dayhere.slot3?.lab?[i].batchName);
-              print(dayhere.slot3?.lab?[i].subjectName);
-              print(dayhere.slot3?.lab?[i].facultyName);
-              print(dayhere.slot3?.lab?[i].location);
-              print(dayhere.slot3?.lab?[i].time);
-              print("");
-            }}
-          print("🟨🟨🟨🟨🟨🟨🟨🟨🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥  lab");
-        }
-      } else {
-        print(dayhere.slot3?.lecture1?.subjectName);
-        print(dayhere.slot3?.lecture1?.facultyName);
-        print(dayhere.slot3?.lecture1?.location);
-        print(dayhere.slot3?.lecture1?.time);
-        print("");
-        print(dayhere.slot3?.lecture2?.subjectName);
-        print(dayhere.slot3?.lecture2?.facultyName);
-        print(dayhere.slot3?.lecture2?.location);
-        print(dayhere.slot3?.lecture2?.time);
-        print("");
-        print("");
-      }
-    });
-
+    return TimeTable(
+        weekDays: dayList, className: className, classRoom: classRoom);
   }
 
   void lecset(List daylist) {
+
     for (var i = 0; i < daylist.length - 1; i++) {
       Textblock current = daylist[i];
       Textblock next = daylist[i + 1];
@@ -484,17 +323,13 @@ class TextExtractor{
               daylist[k].append(daylist[k + 1]);
               daylist.remove(daylist[k + 1]);
               break;
-            }
-            else {
+            } else {
               daylist[k].append(daylist[k + 1]);
               daylist.remove(daylist[k + 1]);
             }
           }
         }
-      }
-
-
-      else if (facultynamepattern.hasMatch(next.text.trim()) &&
+      } else if (facultynamepattern.hasMatch(next.text.trim()) &&
           !facultynamepattern.hasMatch(current.text.trim()) &&
           next.ymean - current.ymean < height / 30) {
         current.append(next);
@@ -503,97 +338,120 @@ class TextExtractor{
     }
   }
 
-  DayOfWeek daymaker(List<Textblock> time, List<Textblock> day) {
-    Slot slot1 = Slot();
-    Slot slot2 = Slot();
-    Slot slot3 = Slot();
+  DayOfWeek dayMaker(List<Textblock> time, List<Textblock> day, String d) {
 
+    List<Session> session = [];
 
-    for (var itime = 1; itime < time.length; itime++) {
-      for (var iday = 1; iday < day.length; iday++) {
+    for (int itime = 1; itime < time.length; itime++) {
+      for (int iday = 1; iday < day.length; iday++) {
+
         Textblock time1 = time[itime];
         Textblock? time2;
+
         if (itime < time.length - 1) {
           time2 = time[itime + 1];
         }
 
         Textblock current = day[iday];
-        // textblock next = day[iday+1];
+        String id = DateTime.now().microsecondsSinceEpoch.toString();
+        if ((time1.ymean - current.ymean).abs() < 25) {
 
-        //checks if textblock is lacturee
-        if ((time1.ymean - current.ymean).abs() < height / 60) {
-          if (itime == 1 || itime == 2) {
-            //slot 1
-            slot1.isLab = false;
 
-            if (itime == 1) {
-              slot1.lecture1 = Session.fromTextBlockForLec(
-                  current, time[itime].text,
-                  location: classRoom);
-            } else {
-              slot1.lecture2 = Session.fromTextBlockForLec(
-                  current, time[itime].text,
-                  location: classRoom);
-            }
-          } else if (itime == 3 || itime == 4) {
-            //slot 2
-            slot2.isLab = false;
-            if (itime == 3) {
-              slot2.lecture1 = Session.fromTextBlockForLec(
-                  current, time[itime].text,
-                  location: classRoom);
-            } else {
-              slot2.lecture2 = Session.fromTextBlockForLec(
-                  current, time[itime].text,
-                  location: classRoom);
-            }
-          } else if (itime == 5 || itime == 6) {
-            //slot 3
-            slot3.isLab = false;
-            if (itime == 5) {
-              slot3.lecture1 = Session.fromTextBlockForLec(
-                  current, time[itime].text,
-                  location: classRoom);
-            } else {
-              slot3.lecture2 = Session.fromTextBlockForLec(
-                  current, time[itime].text,
-                  location: classRoom);
-            }
-          }
-        }
+          // Is one hour Lecture
+          session.add(Session(
+            id: id,
+            isLab: false,
+            facultyName: RegExp(r'\((.*?)\)')
+                .stringMatch(current.text)
+                ?.replaceAll(RegExp(r'[()]'), ''),
 
-        //checks if textblock is lab
-        else if (time2 != null &&
-            ((time1.ymean + time2.ymean) / 2 - current.ymean).abs() <
-                height / 60) {
-          if (itime == 1) {
-            slot1.isLab = true;
+            location: RegExp(r'\b([A-Z]-\d+(?:,\d+)?)\b')
+                    .firstMatch(current.text)
+                    ?.group(1) ??
+                (classRoom?.substring(
+                        classRoom!.indexOf(":") + 1, classRoom!.indexOf(")")))
+                    ?.replaceAll(" ", ""),
 
-            slot1.fromTextBlock(
-                textblock: current,
-                time1: time1,
-                time2: time2,
-                location: classRoom);
-          } else if (itime == 3) {
-            slot2.isLab = true;
-            slot2.fromTextBlock(
-                textblock: current,
-                time1: time1,
-                time2: time2,
-                location: classRoom);
-          } else if (itime == 5) {
-            slot3.isLab = true;
-            slot3.fromTextBlock(
-                textblock: current,
-                time1: time1,
-                time2: time2,
-                location: classRoom);
+            subjectName: current.text.contains("(")
+                ? RegExp(r"([A-Z]-\d+)$").hasMatch(current.text.substring(0, current.text.indexOf("(")).trim())
+                ? current.text
+                .substring(0, current.text.indexOf("("))
+                .substring(
+                0,
+                current.text
+                    .substring(0, current.text.indexOf("("))
+                    .indexOf("-") -
+                    1)
+                : current.text.substring(0, current.text.indexOf("("))
+                : current.text.contains(RegExp(r"([A-Z]-/d+)$"))
+                ? current.text.substring(
+                0,
+                current.text
+                    .substring(0, current.text.indexOf("("))
+                    .indexOf("-") -
+                    1)
+                : current.text,
+            time: time1.text.trim().replaceAll(" ", "").split("to").first,
+            duration: 1,
+          ));
+
+        } else if (time2 != null &&
+            ((((time1.ymean + time2.ymean) / 2) - current.ymean).abs() < 25)) {
+
+          if (!RegExp(r'^B\d:').hasMatch(current.text)) {
+            // Is Two hour Lecture
+            session.add(Session(
+              id: id,
+              isLab: false,
+              facultyName: RegExp(r'\((.*?)\)')
+                  .stringMatch(current.text)
+                  ?.replaceAll(RegExp(r'[()]'), ''),
+              location: RegExp(r'\b([A-Z]-\d+(?:,\d+)?)\b')
+                      .firstMatch(current.text)
+                      ?.group(1) ??
+                  (classRoom?.substring(
+                          classRoom!.indexOf(":") + 1, classRoom!.indexOf(")")))
+                      ?.replaceAll(" ", ""),
+              subjectName: current.text.contains("(")
+                  ? RegExp(r"([A-Z]-\d+)$").hasMatch(current.text.substring(0, current.text.indexOf("(")).trim())
+                  ? current.text
+                  .substring(0, current.text.indexOf("("))
+                  .substring(
+                  0,
+                  current.text
+                      .substring(0, current.text.indexOf("("))
+                      .indexOf("-") -
+                      1)
+                  : current.text.substring(0, current.text.indexOf("("))
+                  : current.text.contains(RegExp(r"([A-Z]-/d+)$"))
+                  ? current.text.substring(
+                  0,
+                  current.text.
+                  substring(0, current.text.indexOf("("))
+                      .indexOf("-") -
+                      1)
+                  : current.text,
+              time: time1.text.trim().replaceAll(" ", "").split("to").first,
+              duration: 2,
+            ));
+          } else {
+            // Is Lab
+            session.add(Session(
+              id: id,
+              isLab: true,
+              location: (classRoom?.substring(
+                      classRoom!.indexOf(":") + 1, classRoom!.indexOf(")")))
+                  ?.replaceAll(" ", ""),
+              subjectName: current.text,
+              time: time1.text.trim().replaceAll(" ", "").split("to").first,
+              duration: 2,
+            ));
           }
         }
       }
     }
 
-    DayOfWeek dayfinal = DayOfWeek(slot1: slot1, slot2: slot2, slot3: slot3);
+    DayOfWeek dayfinal = DayOfWeek(day: d, sessions: session);
     return dayfinal;
   }
-}
+} /**/

@@ -18,7 +18,7 @@ class _SettingTileState extends State<SettingTile> {
             style: ListTileStyle.drawer,
             title: Text(widget.title,
                 style: Theme.of(context).textTheme.headlineMedium),
-            tileColor: Theme.of(context).backgroundColor,
+            tileColor: Theme.of(context).colorScheme.background,
             onTap: () {
               Navigator.push(
                 context,
@@ -30,7 +30,7 @@ class _SettingTileState extends State<SettingTile> {
                         child: Material(
                           child: ListTile(
                             title: Text(widget.title ?? "", style: Theme.of(context).textTheme.headlineMedium),
-                            tileColor: Theme.of(context).backgroundColor,
+                            tileColor: Theme.of(context).colorScheme.background,
                             onTap: () {
                               Navigator.pop(context);
                             },

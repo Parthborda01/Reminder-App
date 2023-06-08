@@ -98,7 +98,7 @@ class _PDFChooserState extends State<PDFChooser> {
                             ? const SizedBox()
                             : SliderButton(
                                 backgroundColor: Theme.of(context).canvasColor,
-                                buttonColor: Theme.of(context).backgroundColor,
+                                buttonColor: Theme.of(context).colorScheme.background,
                                 baseColor: deadColor,
                                 dismissible: true,
                                 buttonSize: 60,

@@ -21,7 +21,10 @@ class ThemeConstants {
       useMaterial3: true,
       androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
       scaffoldBackgroundColor: lightBackgroundPrimary,
-      backgroundColor: lightBackgroundSecondary,
+      colorScheme: ColorScheme.light(
+        brightness: Brightness.light,
+        background: lightBackgroundSecondary
+      ),
       canvasColor: lightBackgroundDip,
       iconTheme: IconThemeData(
         color: lightTextPrimary,
@@ -136,7 +139,10 @@ class ThemeConstants {
       useMaterial3: true,
       androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
       scaffoldBackgroundColor: darkBackgroundPrimary,
-      backgroundColor: darkBackgroundSecondary,
+      colorScheme: ColorScheme.light(
+        brightness: Brightness.dark,
+          background: darkBackgroundSecondary
+      ),
       canvasColor: darkBackgroundDip,
       iconTheme: IconThemeData(color: darkTextPrimary),
       brightness: Brightness.dark,
@@ -219,8 +225,8 @@ class ThemeConstants {
       ),
       dialogBackgroundColor: darkBackgroundSecondary,
       dialogTheme: DialogTheme(
-        surfaceTintColor: darkBackgroundSecondary.withOpacity(0.8),
-        backgroundColor: darkBackgroundSecondary.withOpacity(0.8)
+        surfaceTintColor: darkBackgroundSecondary.withOpacity(0.9),
+        backgroundColor: darkBackgroundSecondary.withOpacity(0.9)
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
