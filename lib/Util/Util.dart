@@ -25,7 +25,7 @@ class Util {
     List<String> timeValues = startTime.split(':');
 
     int h = int.parse(timeValues[0]);
-    int hours = h < 6? h+12 : h;
+    int hours = h < 6 ? h+12 : h;
     int minutes = int.parse(timeValues[1]);
     return TimeOfDay(hour: hours, minute: minutes);
   }

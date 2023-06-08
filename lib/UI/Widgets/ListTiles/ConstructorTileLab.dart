@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
-import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/ConstructorDialogLab.dart';
+import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 import 'package:student_dudes/Util/Util.dart';
 
 import '../../../Util/LabSessionHelper.dart';
 
 class ConstructorTileLab extends StatelessWidget {
   const ConstructorTileLab(
-      {super.key, required this.labData, required this.isSelected});
-  final bool isSelected;  final Session? labData;
+      {super.key, required this.labData, required this.isSelected, required this.fileData});
 
+
+  final bool isSelected;  final Session? labData;
+  final FileData fileData;
 
   bool checkError(String input) {
     return input.isEmpty;

@@ -105,7 +105,31 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                             .titleSmall)),
                               )),
                       const Spacer(),
-                      IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+                      TextButton(
+                          onPressed: () {
+                            //Todo: Save to Fire Based
+                          },
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.focused)) {
+                                    return Colors.white12;
+                                  }
+                                  if (states.contains(MaterialState.hovered)) {
+                                    return Colors.white12;
+                                  }
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.white12;
+                                  }
+                                  return Colors.white12; // Defer to the widget's default.
+                                }),
+                          ),
+                          child: Row(
+                          children: [
+                          Text("Done",style: Theme.of(context).textTheme.titleSmall),
+                          Icon(Icons.save_alt_rounded,color: Theme.of(context).iconTheme.color),
+                        ],
+                      )),
                     ],
                   ),
                 ),
@@ -234,7 +258,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         return InkWell(
                                           onLongPress: () {
                                             if (selectedItems.isEmpty) {
-                                              selectedItems.add(weekdays!
+                                              selectedItems.add(timeTable!
                                                   .weekDays![indexPage]
                                                   .sessions![indexList]);
                                               setState(() {});
@@ -246,20 +270,20 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                   context: context,
                                                   builder: (context) =>
                                                       ConstructorDialogLab(
-                                                        labData: weekdays!
+                                                        labData: timeTable!
                                                             .weekDays?[indexPage]
                                                             .sessions?[indexList],
                                                         onChanged: (p0) {
-                                                          weekdays!.weekDays?[indexPage]
+                                                          timeTable!.weekDays?[indexPage]
                                                               .sessions?[indexList] = p0;
                                                           setState(() {});
-                                                        },
+                                                        }, fileData: widget.fileData,
                                                       ));
                                             } else {
                                               if (selectedItems
                                                   .where((element) =>
                                               element.id ==
-                                                  weekdays!
+                                                  timeTable!
                                                       .weekDays![indexPage]
                                                       .sessions![indexList]
                                                       .id)
@@ -267,14 +291,14 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                 selectedItems.removeWhere(
                                                         (element) =>
                                                     element.id ==
-                                                        weekdays!
+                                                        timeTable!
                                                             .weekDays![
                                                         indexPage]
                                                             .sessions![
                                                         indexList]
                                                             .id);
                                               } else {
-                                                selectedItems.add(weekdays!
+                                                selectedItems.add(timeTable!
                                                     .weekDays![indexPage]
                                                     .sessions![indexList]);
                                               }
@@ -282,16 +306,17 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                             }
                                           },
                                           child: ConstructorTileLab(
+                                            fileData: widget.fileData,
                                            isSelected: selectedItems
                                               .where((element) =>
                                             element.id ==
-                                            weekdays!
+                                            timeTable!
                                                 .weekDays![indexPage]
                                             .sessions![indexList]
                                             .id)
                                             .isNotEmpty,
 
-                                            labData: weekdays!
+                                            labData: timeTable!
                                                 .weekDays?[indexPage]
                                                 .sessions?[indexList],
                                           ),
