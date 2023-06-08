@@ -1,15 +1,25 @@
+import 'dart:io';
 import 'dart:ui';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:pdfx/pdfx.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
 import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
+import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
+import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 import 'package:student_dudes/Util/Util.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class ConstructorDialogLecture extends StatefulWidget {
-  const ConstructorDialogLecture({super.key, required this.lectureData, required this.onChanged});
+  const ConstructorDialogLecture(
+      {super.key,
+      required this.lectureData,
+      required this.onChanged,
+      required this.fileData});
 
+  final FileData fileData;
   final Session lectureData;
   final Function(Session) onChanged;
 
@@ -37,10 +47,9 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
   }
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  
+
   @override
   Widget build(BuildContext context) {
-
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
@@ -55,6 +64,51 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                AspectRatio(
+                  aspectRatio: widget.fileData!.width / widget.fileData!.height,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+
+                    child: BlocBuilder<ThemeCubit, ThemeModes>(
+                      builder: (context, ThemeMode) {
+                        return Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),border: Border.all(color: Colors.black),color: ThemeMode == ThemeModes.system
+                              ? MediaQuery.of(context).platformBrightness ==
+                              Brightness.dark
+                              ? Colors.white
+                              : Colors.white
+                              : ThemeMode == ThemeModes.light
+                              ? Colors.transparent
+                              : Theme.of(context).dividerColor,),
+
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                            blendMode: ThemeMode == ThemeModes.system
+                                ? MediaQuery.of(context).platformBrightness ==
+                                        Brightness.dark
+                                    ? BlendMode.difference
+                                    : BlendMode.darken
+                                : ThemeMode == ThemeModes.light
+                                    ? BlendMode.multiply
+                                    : BlendMode.darken,
+                            child: PhotoView(
+                              filterQuality: FilterQuality.high,
+                              minScale: PhotoViewComputedScale.contained * 1.1,
+                              maxScale: PhotoViewComputedScale.contained * 2.2,
+                              backgroundDecoration: BoxDecoration(
+                                  color: Colors.white),
+                              imageProvider:
+                                  FileImage(widget.fileData!.imageFile),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Form(
                   key: _key,
                   child: Row(
@@ -63,18 +117,25 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                       Expanded(
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-
                           validator: (value) {
-                            if(value == null || value.isEmpty) {
+                            if (value == null || value.isEmpty) {
                               return "Required";
-                            }else{
+                            } else {
                               return null;
                             }
                           },
                           decoration: InputDecoration(
-                            errorStyle: const TextStyle(fontSize: 12,height: 1),
-                              prefixIcon: Icon(Icons.subject,color: Theme.of(context).textTheme.titleLarge?.color),
-                              label: const Text("Subject",style: TextStyle(letterSpacing: 1),)),
+                              errorStyle:
+                                  const TextStyle(fontSize: 12, height: 1),
+                              prefixIcon: Icon(Icons.subject,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.color),
+                              label: const Text(
+                                "Subject",
+                                style: TextStyle(letterSpacing: 1),
+                              )),
                           controller: subjectNameController,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
@@ -83,8 +144,15 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.person_outline_rounded,color: Theme.of(context).textTheme.titleLarge?.color),
-                              label: const Text("Faculty",style: TextStyle(letterSpacing: 1),)),
+                              prefixIcon: Icon(Icons.person_outline_rounded,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.color),
+                              label: const Text(
+                                "Faculty",
+                                style: TextStyle(letterSpacing: 1),
+                              )),
                           controller: facultyNameController,
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
@@ -96,8 +164,13 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: TextField(
                     decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.location_pin,color: Theme.of(context).textTheme.titleLarge?.color),
-                        label: const Text("Location",style: TextStyle(letterSpacing: 1),)),
+                        prefixIcon: Icon(Icons.location_pin,
+                            color:
+                                Theme.of(context).textTheme.titleLarge?.color),
+                        label: const Text(
+                          "Location",
+                          style: TextStyle(letterSpacing: 1),
+                        )),
                     controller: locationController,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
@@ -114,7 +187,8 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                       is24HourMode: false,
                       isForce2Digits: true,
                       minutesInterval: 15,
-                      time: Util.convertToDateTime( Util.convertToTimeOfDay(time), DateTime.now()),
+                      time: Util.convertToDateTime(
+                          Util.convertToTimeOfDay(time), DateTime.now()),
                       onTimeChange: (p0) {
                         time = DateFormat("hh:mm").format(p0);
                         setState(() {});
@@ -126,7 +200,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                             style: Theme.of(context).textTheme.labelLarge),
                         ToggleSwitch(
                           isVertical: true,
-                          labels: const ["One", "Twice"],
+                          labels: const ["One", "Two"],
                           initialLabelIndex: numberOfHours - 1,
                           totalSwitches: 2,
                           activeBgColor: [deadColor],
@@ -152,21 +226,22 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                         TextButton(
                           style: ButtonStyle(
                             fixedSize: MaterialStatePropertyAll(
-                                Size.fromWidth(deviceWidth * 0.35)
-                            ),
-                            overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                Size.fromWidth(deviceWidth * 0.35)),
+                            overlayColor:
+                                MaterialStateProperty.resolveWith<Color>(
                                     (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.focused)) {
-                                    return Colors.transparent;
-                                  }
-                                  if (states.contains(MaterialState.hovered)) {
-                                    return Colors.transparent;
-                                  }
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.transparent;
-                                  }
-                                  return Colors.transparent; // Defer to the widget's default.
-                                }),
+                              if (states.contains(MaterialState.focused)) {
+                                return Colors.transparent;
+                              }
+                              if (states.contains(MaterialState.hovered)) {
+                                return Colors.transparent;
+                              }
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.transparent;
+                              }
+                              return Colors
+                                  .transparent; // Defer to the widget's default.
+                            }),
                           ),
                           child: Text("Cancel",
                               style: Theme.of(context).textTheme.bodyMedium,
@@ -178,24 +253,19 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                         ElevatedButton(
                           onPressed: () {
                             if (_key.currentState!.validate()) {
-                              widget.onChanged(
-                                Session(
-                                    id: widget.lectureData.id,
-                                    facultyName: facultyNameController.text,
-                                    location: locationController.text,
-                                    subjectName: subjectNameController.text,
-                                    duration: numberOfHours,
-                                    time: time
-                                )
-                              );
+                              widget.onChanged(Session(
+                                  id: widget.lectureData.id,
+                                  facultyName: facultyNameController.text,
+                                  location: locationController.text,
+                                  subjectName: subjectNameController.text,
+                                  duration: numberOfHours,
+                                  time: time));
                               Navigator.of(context).pop();
                             }
                           },
                           style: ButtonStyle(
                               fixedSize: MaterialStatePropertyAll(
-                                  Size.fromWidth(deviceWidth * 0.35)
-                              )
-                          ),
+                                  Size.fromWidth(deviceWidth * 0.35))),
                           child: Text("Save",
                               style: Theme.of(context).textTheme.titleMedium,
                               textAlign: TextAlign.center),

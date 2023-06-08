@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_dudes/UI/Pages/HomePage/HomePage.dart';
 import 'package:student_dudes/UI/Pages/NewCreatePage/ConstructorPage.dart';
-import 'package:student_dudes/Util/PdfToImage/PickHelper.dart';
+import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 import '../Pages/NewCreatePage/PDFChooser.dart';
 import '../Pages/SettingPage/SettingPage.dart';
 

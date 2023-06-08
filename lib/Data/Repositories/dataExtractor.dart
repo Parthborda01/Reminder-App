@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:student_dudes/Util/ImageHelper/ImageConverter.dart';
 
 import '../Model/lecturePositionModel.dart';
 import '../Model/timeTableModel.dart';
@@ -286,8 +287,7 @@ class TextExtractor {
       dayMaker(time, fri, "friday"),
       dayMaker(time, sat, "saturday"),
     ];
-
-    return TimeTable(
+    return TimeTable(image: ImageConverter().imageToString(image),
         weekDays: dayList, className: className, classRoom: classRoom);
   }
 

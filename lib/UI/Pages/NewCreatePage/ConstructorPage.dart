@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,7 @@ import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLab.dart';
 import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLecture.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 import 'package:student_dudes/Util/Cubits/fileDataFetch/file_data_fetch_cubit.dart';
-import 'package:student_dudes/Util/PdfToImage/PickHelper.dart';
+import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 
 class ConstructorPage extends StatefulWidget {
   const ConstructorPage({Key? key, required this.fileData}) : super(key: key);
@@ -20,7 +21,7 @@ class ConstructorPage extends StatefulWidget {
 }
 
 class _ConstructorPageState extends State<ConstructorPage> {
-  TimeTable? weekdays;
+  TimeTable? timeTable;
 
   List<Session> selectedItems = [];
 
@@ -133,35 +134,35 @@ class _ConstructorPageState extends State<ConstructorPage> {
                       if (state is FileDataFetchLoading) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (state is FileDataFetchLoaded) {
-                        weekdays = state.timeTable;
+                        timeTable = state.timeTable;
                         return PageView.builder(
-                          itemCount: weekdays!.weekDays!.length,
+                          itemCount: timeTable!.weekDays!.length,
                           itemBuilder: (BuildContext context, int indexPage) {
                             return Column(
                               children: [
                                 Text(
-                                    weekdays!.weekDays![indexPage].day!
+                                    timeTable!.weekDays![indexPage].day!
                                         .toUpperCase(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium),
                                 Flexible(
                                   child: ListView.builder(
-                                    itemCount: weekdays!
+                                    itemCount: timeTable!
                                         .weekDays![indexPage].sessions!.length,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, indexList) {
                                       //Data to json
 
-                                      if (!(weekdays?.weekDays?[indexPage]
+                                      if (!(timeTable?.weekDays?[indexPage]
                                               .sessions?[indexList].isLab ??
                                           false)) {
                                         //It's a lecture
                                         return InkWell(
                                           onLongPress: () {
                                             if (selectedItems.isEmpty) {
-                                              selectedItems.add(weekdays!
+                                              selectedItems.add(timeTable!
                                                   .weekDays![indexPage]
                                                   .sessions![indexList]);
                                               setState(() {});
@@ -173,13 +174,14 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                   context: context,
                                                   builder: (context) =>
                                                       ConstructorDialogLecture(
-                                                        lectureData: weekdays!
+                                                        fileData: widget.fileData,
+                                                        lectureData: timeTable!
                                                                 .weekDays![
                                                                     indexPage]
                                                                 .sessions![
                                                             indexList],
                                                         onChanged: (session) {
-                                                          weekdays!
+                                                          timeTable!
                                                                   .weekDays![
                                                                       indexPage]
                                                                   .sessions![
@@ -191,7 +193,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                               if (selectedItems
                                                   .where((element) =>
                                                       element.id ==
-                                                      weekdays!
+                                                      timeTable!
                                                           .weekDays![indexPage]
                                                           .sessions![indexList]
                                                           .id)
@@ -199,14 +201,14 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                 selectedItems.removeWhere(
                                                     (element) =>
                                                         element.id ==
-                                                        weekdays!
+                                                        timeTable!
                                                             .weekDays![
                                                                 indexPage]
                                                             .sessions![
                                                                 indexList]
                                                             .id);
                                               } else {
-                                                selectedItems.add(weekdays!
+                                                selectedItems.add(timeTable!
                                                     .weekDays![indexPage]
                                                     .sessions![indexList]);
                                               }
@@ -217,12 +219,12 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                             isSelected: selectedItems
                                                 .where((element) =>
                                                     element.id ==
-                                                    weekdays!
+                                                    timeTable!
                                                         .weekDays![indexPage]
                                                         .sessions![indexList]
                                                         .id)
                                                 .isNotEmpty,
-                                            lectureData: weekdays!
+                                            lectureData: timeTable!
                                                 .weekDays![indexPage]
                                                 .sessions![indexList],
                                           ),
