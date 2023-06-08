@@ -28,7 +28,7 @@ class _ConstructorTileLectureState extends State<ConstructorTileLecture> {
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
               color: widget.isSelected
-                  ? Colors.red.withOpacity(0.8)
+                  ? Colors.blue.withOpacity(0.8)
                   : Colors.transparent)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),

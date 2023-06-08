@@ -1,9 +1,9 @@
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
+import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/ConstructorDialogLab.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/ConstructorDialogLecture.dart';
 import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLab.dart';
 import 'package:student_dudes/UI/Widgets/ListTiles/ConstructorTileLecture.dart';
@@ -229,15 +229,70 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         );
                                       } else {
                                         //for lab
-                                        return ConstructorTileLab(
-                                          labData: weekdays!
-                                              .weekDays?[indexPage]
-                                              .sessions?[indexList],
-                                          onChanged: (p0) {
-                                            weekdays!.weekDays?[indexPage]
-                                                .sessions?[indexList] = p0;
-                                            setState(() {});
+                                        return InkWell(
+                                          onLongPress: () {
+                                            if (selectedItems.isEmpty) {
+                                              selectedItems.add(weekdays!
+                                                  .weekDays![indexPage]
+                                                  .sessions![indexList]);
+                                              setState(() {});
+                                            }
                                           },
+                                          onTap: () {
+                                            if (selectedItems.isEmpty) {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      ConstructorDialogLab(
+                                                        labData: weekdays!
+                                                            .weekDays?[indexPage]
+                                                            .sessions?[indexList],
+                                                        onChanged: (p0) {
+                                                          weekdays!.weekDays?[indexPage]
+                                                              .sessions?[indexList] = p0;
+                                                          setState(() {});
+                                                        },
+                                                      ));
+                                            } else {
+                                              if (selectedItems
+                                                  .where((element) =>
+                                              element.id ==
+                                                  weekdays!
+                                                      .weekDays![indexPage]
+                                                      .sessions![indexList]
+                                                      .id)
+                                                  .isNotEmpty) {
+                                                selectedItems.removeWhere(
+                                                        (element) =>
+                                                    element.id ==
+                                                        weekdays!
+                                                            .weekDays![
+                                                        indexPage]
+                                                            .sessions![
+                                                        indexList]
+                                                            .id);
+                                              } else {
+                                                selectedItems.add(weekdays!
+                                                    .weekDays![indexPage]
+                                                    .sessions![indexList]);
+                                              }
+                                              setState(() {});
+                                            }
+                                          },
+                                          child: ConstructorTileLab(
+                                           isSelected: selectedItems
+                                              .where((element) =>
+                                            element.id ==
+                                            weekdays!
+                                                .weekDays![indexPage]
+                                            .sessions![indexList]
+                                            .id)
+                                            .isNotEmpty,
+
+                                            labData: weekdays!
+                                                .weekDays?[indexPage]
+                                                .sessions?[indexList],
+                                          ),
                                         );
                                       }
                                     },

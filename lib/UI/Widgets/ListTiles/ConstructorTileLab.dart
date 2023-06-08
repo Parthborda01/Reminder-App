@@ -5,82 +5,57 @@ import 'package:student_dudes/Util/Util.dart';
 
 import '../../../Util/LabSessionHelper.dart';
 
-class ConstructorTileLab extends StatefulWidget {
+class ConstructorTileLab extends StatelessWidget {
   const ConstructorTileLab(
-      {super.key, required this.labData, required this.onChanged});
+      {super.key, required this.labData, required this.isSelected});
+  final bool isSelected;  final Session? labData;
 
-  final Session? labData;
-  final Function(Session) onChanged;
 
-  @override
-  State<ConstructorTileLab> createState() => _ConstructorTileLabState();
-}
-
-class _ConstructorTileLabState extends State<ConstructorTileLab> {
   bool checkError(String input) {
     return input.isEmpty;
-  }
-  List<Session> data = [];
-  @override
-  void initState() {
-    data = LabUtils.labToSessions(widget.labData!);
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showDialog(
-            context: context,
-            builder: (context) => ConstructorDialogLab(
-                  labData: widget.labData,
-                  onChanged: (p0) {
-                    data = LabUtils.labToSessions(p0);
-                    setState(() {});
-                    widget.onChanged(p0);
-                  },
-                ));
-      },
-      child: Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-                color: checkError(widget.labData.toString())
-                    ? Colors.red.withOpacity(0.8)
-                    : Colors.transparent)),
-        child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text("Lab Session",
-                      style: Theme.of(context).textTheme.headlineLarge),
-                  Text(
-                      widget.labData?.time != null &&
-                              widget.labData!.time!.trim().isNotEmpty
-                          ? Util.calculatePeriod(widget.labData!.time!, widget.labData!.duration!)
-                          : "⚠️⚠️⚠️",
-                      style: Theme.of(context).textTheme.headlineSmall,
-                      textAlign: TextAlign.start)
-                ]),
-                const SizedBox(height: 10),
-                ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return batchDataTile(context, data[index]);
-                  },
-                ),
-              ],
-            )),
-      ),
+    List<Session> data = LabUtils.labToSessions(labData!);
+    return Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+              color: isSelected
+                  ? Colors.blue.withOpacity(0.8)
+                  : Colors.transparent)),
+      child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text("Lab Session",
+                    style: Theme.of(context).textTheme.headlineLarge),
+                Text(
+                    labData?.time != null &&
+                            labData!.time!.trim().isNotEmpty
+                        ? Util.calculatePeriod(labData!.time!, labData!.duration!)
+                        : "⚠️⚠️⚠️",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    textAlign: TextAlign.start)
+              ]),
+              const SizedBox(height: 10),
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return batchDataTile(context, data[index]);
+                },
+              ),
+            ],
+          )),
     );
   }
 
