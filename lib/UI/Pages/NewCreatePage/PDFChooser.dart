@@ -5,7 +5,8 @@ import 'package:pdfx/pdfx.dart';
 import 'package:slider_button/slider_button.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
-import '../../../Util/PdfToImage/PickHelper.dart';
+import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
+
 
 class PDFChooser extends StatefulWidget {
   const PDFChooser({

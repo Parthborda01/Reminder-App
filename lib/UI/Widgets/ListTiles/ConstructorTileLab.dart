@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/ConstructorDialogLab.dart';
+import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 import 'package:student_dudes/Util/Util.dart';
 
 import '../../../Util/LabSessionHelper.dart';
 
 class ConstructorTileLab extends StatefulWidget {
   const ConstructorTileLab(
-      {super.key, required this.labData, required this.onChanged});
-
+      {super.key, required this.labData, required this.onChanged,required this.fileData});
+  final FileData fileData;
   final Session? labData;
   final Function(Session) onChanged;
 
@@ -34,6 +35,7 @@ class _ConstructorTileLabState extends State<ConstructorTileLab> {
         showDialog(
             context: context,
             builder: (context) => ConstructorDialogLab(
+              fileData: widget.fileData,
                   labData: widget.labData,
                   onChanged: (p0) {
                     data = LabUtils.labToSessions(p0);

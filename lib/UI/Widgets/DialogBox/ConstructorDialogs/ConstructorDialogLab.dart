@@ -1,19 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
+import 'package:pdfx/pdfx.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
 import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
 import 'package:student_dudes/UI/Widgets/Helper/ExpandablePageView.dart';
+import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
+import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 import 'package:student_dudes/Util/Util.dart';
 import 'package:student_dudes/Util/LabSessionHelper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class ConstructorDialogLab extends StatefulWidget {
-  const ConstructorDialogLab({super.key, required this.labData, required this.onChanged});
+  const ConstructorDialogLab({super.key, required this.labData, required this.onChanged,required this.fileData});
   final Function(Session) onChanged;
   final Session? labData;
-
+  final FileData fileData;
   @override
   State<ConstructorDialogLab> createState() => _ConstructorDialogLabState();
 }
@@ -44,6 +48,51 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              AspectRatio(
+                aspectRatio: widget.fileData!.width / widget.fileData!.height,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+
+                  child: BlocBuilder<ThemeCubit, ThemeModes>(
+                    builder: (context, ThemeMode) {
+                      return Container(
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),border: Border.all(color: Colors.black),color: ThemeMode == ThemeModes.system
+                            ? MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark
+                            ? Colors.white
+                            : Colors.white
+                            : ThemeMode == ThemeModes.light
+                            ? Colors.transparent
+                            : Theme.of(context).dividerColor,),
+
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                          blendMode: ThemeMode == ThemeModes.system
+                              ? MediaQuery.of(context).platformBrightness ==
+                              Brightness.dark
+                              ? BlendMode.difference
+                              : BlendMode.darken
+                              : ThemeMode == ThemeModes.light
+                              ? BlendMode.multiply
+                              : BlendMode.darken,
+                          child: PhotoView(
+                            filterQuality: FilterQuality.high,
+                            minScale: PhotoViewComputedScale.contained * 1.1,
+                            maxScale: PhotoViewComputedScale.contained * 2.2,
+                            backgroundDecoration: BoxDecoration(
+                                color: Colors.white),
+                            imageProvider:
+                            FileImage(widget.fileData!.imageFile),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -39,6 +39,7 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                     BlocBuilder<ThemeCubit, ThemeModes>(
                       builder: (context, themeMode) {
                         final themeCubit = BlocProvider.of<ThemeCubit>(context);
+
                         if (themeMode == ThemeModes.system) {
                           if (MediaQuery.of(context).platformBrightness ==
                               Brightness.dark) {

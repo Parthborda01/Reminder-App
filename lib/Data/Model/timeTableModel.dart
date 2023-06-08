@@ -9,15 +9,15 @@ String timeTableToJson(TimeTable data) => json.encode(data.toJson());
 class TimeTable {
   String? classRoom;
   String? className;
-  String? img;
+  String? image;
   List<DayOfWeek>? weekDays;
 
-  TimeTable({this.classRoom, this.className, this.weekDays});
+  TimeTable({this.classRoom,this.image, this.className, this.weekDays});
 
   TimeTable.fromJson(Map<String, dynamic> json) {
     classRoom = json['classroom'];
     className = json['classname'];
-    img = json['image'];
+    image = json['image'];
     weekDays =
         List<DayOfWeek>.from(json["days"].map((x) => DayOfWeek.fromJson(x)));
   }
@@ -26,7 +26,7 @@ class TimeTable {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['classroom'] = classRoom;
     data['classname'] = className;
-    data['image'] = img;
+    data['image'] = image;
     if (weekDays != null) {
       data['days'] = List<dynamic>.from(weekDays!.map((x) => x.toJson()));
     }
