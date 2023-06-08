@@ -1,6 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_dudes/Data/Model/timeTableModel.dart';
@@ -23,7 +22,7 @@ class ConstructorPage extends StatefulWidget {
 class _ConstructorPageState extends State<ConstructorPage> {
   TimeTable? weekdays;
 
-  List<Session> selectedItem = [];
+  List<Session> selectedItems = [];
 
   @override
   void initState() {
@@ -41,10 +40,10 @@ class _ConstructorPageState extends State<ConstructorPage> {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
-    ScrollController _sliverScrollController = ScrollController();
-    _sliverScrollController.addListener(() {
-      if (_sliverScrollController.offset >= 100 &&
-          !_sliverScrollController.position.outOfRange) {
+    ScrollController sliverScrollController = ScrollController();
+    sliverScrollController.addListener(() {
+      if (sliverScrollController.offset >= 100 &&
+          !sliverScrollController.position.outOfRange) {
         BlocProvider.of<SliverScrolled>(context).Add();
       } else {
         BlocProvider.of<SliverScrolled>(context).clear();
@@ -59,7 +58,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                   color: Theme.of(context).scaffoldBackgroundColor)
             ]),
             child:
-                CustomScrollView(controller: _sliverScrollController, slivers: [
+                CustomScrollView(controller: sliverScrollController, slivers: [
               SliverAppBar(
                 pinned: true,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -98,14 +97,14 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 child: AnimatedOpacity(
                                     opacity: state ? 1.0 : 0.0,
-                                    duration: Duration(milliseconds: 200),
+                                    duration: const Duration(milliseconds: 200),
                                     child: Text("Tasks",
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall)),
                               )),
-                      Spacer(),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+                      const Spacer(),
+                      IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
                     ],
                   ),
                 ),
@@ -115,7 +114,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                     builder: (context, state) {
                       return AnimatedOpacity(
                         opacity: state ? 0.0 : 1.0,
-                        duration: Duration(milliseconds: 100),
+                        duration: const Duration(milliseconds: 100),
                         child: Text(
                           "Reminder",
                           style: Theme.of(context).textTheme.titleLarge,
@@ -161,15 +160,15 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         //It's a lecture
                                         return InkWell(
                                           onLongPress: () {
-                                            if (selectedItem.isEmpty) {
-                                              selectedItem.add(weekdays!
+                                            if (selectedItems.isEmpty) {
+                                              selectedItems.add(weekdays!
                                                   .weekDays![indexPage]
                                                   .sessions![indexList]);
                                               setState(() {});
                                             }
                                           },
                                           onTap: () {
-                                            if (selectedItem.isEmpty) {
+                                            if (selectedItems.isEmpty) {
                                               showDialog(
                                                   context: context,
                                                   builder: (context) =>
@@ -189,7 +188,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                         },
                                                       ));
                                             } else {
-                                              if (selectedItem
+                                              if (selectedItems
                                                   .where((element) =>
                                                       element.id ==
                                                       weekdays!
@@ -197,7 +196,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                           .sessions![indexList]
                                                           .id)
                                                   .isNotEmpty) {
-                                                selectedItem.removeWhere(
+                                                selectedItems.removeWhere(
                                                     (element) =>
                                                         element.id ==
                                                         weekdays!
@@ -207,7 +206,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                 indexList]
                                                             .id);
                                               } else {
-                                                selectedItem.add(weekdays!
+                                                selectedItems.add(weekdays!
                                                     .weekDays![indexPage]
                                                     .sessions![indexList]);
                                               }
@@ -215,7 +214,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                             }
                                           },
                                           child: ConstructorTileLecture(
-                                            isSelected: selectedItem
+                                            isSelected: selectedItems
                                                 .where((element) =>
                                                     element.id ==
                                                     weekdays!
@@ -249,11 +248,11 @@ class _ConstructorPageState extends State<ConstructorPage> {
                           },
                         );
                       } else if (state is FileDataFetchError) {
-                        print("🟥🟥🟥Error ${state.errorMessage}");
-                        return SizedBox();
+                        // print("🟥🟥🟥Error ${state.errorMessage}");
+                        return const SizedBox();
                       } else {
-                        print("🚫🚫Other");
-                        return SizedBox();
+                        // print("🚫🚫Other");
+                        return const SizedBox();
                       }
                     },
                   ),
