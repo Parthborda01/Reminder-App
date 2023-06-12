@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:pdfx/pdfx.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
 import 'package:student_dudes/Data/Repositories/calc_success_rate.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
+import 'package:student_dudes/UI/Theme/theme_constants.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/constructor_dialog_lab.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/constructor_dialog_lecture.dart';
 import 'package:student_dudes/UI/Widgets/Helper/expandable_pageView.dart';
@@ -18,17 +18,26 @@ import 'package:student_dudes/Util/Cubits/fileDataFetch/file_data_fetch_cubit.da
 import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 import 'package:student_dudes/Util/lab_session_util.dart';
 import 'package:student_dudes/Util/time_util.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class ConstructorPage extends StatefulWidget {
-  const ConstructorPage({Key? key, required this.fileData}) : super(key: key);
-  final FileData fileData;
+  const ConstructorPage({Key? key, this.fileData}) : super(key: key);
+  final FileData? fileData;
 
   @override
   State<ConstructorPage> createState() => _ConstructorPageState();
 }
 
 class _ConstructorPageState extends State<ConstructorPage> {
-  TimeTable? timeTable;
+  int semester = 0;
+  TimeTable? timeTable = TimeTable(weekDays: [
+    DayOfWeek(day: "Monday", sessions: []),
+    DayOfWeek(day: "Tuesday", sessions: []),
+    DayOfWeek(day: "Wednesday", sessions: []),
+    DayOfWeek(day: "Thursday", sessions: []),
+    DayOfWeek(day: "Friday", sessions: []),
+    DayOfWeek(day: "Saturday", sessions: []),
+  ]);
   int currentPage = 0;
   List<Session> selectedItems = [];
   PageController controller = PageController();
@@ -65,12 +74,16 @@ class _ConstructorPageState extends State<ConstructorPage> {
   }
 
   TextEditingController departmentNameController = TextEditingController();
-  TextEditingController semesterController = TextEditingController();
   TextEditingController classNameController = TextEditingController();
+  TextEditingController classroomController = TextEditingController();
 
   @override
   void initState() {
-    initMethod(widget.fileData);
+    if (widget.fileData != null) {
+      initMethod(widget.fileData!);
+    } else {
+      BlocProvider.of<FileDataFetchCubit>(context).clearData();
+    }
     super.initState();
   }
 
@@ -119,7 +132,8 @@ class _ConstructorPageState extends State<ConstructorPage> {
       onWillPop: showExitPopup,
       child: Scaffold(
           body: Container(
-              decoration: BoxDecoration(boxShadow: [BoxShadow(spreadRadius: 1, color: Theme.of(context).scaffoldBackgroundColor)]),
+              decoration:
+                  BoxDecoration(boxShadow: [BoxShadow(spreadRadius: 1, color: Theme.of(context).scaffoldBackgroundColor)]),
               child: CustomScrollView(controller: sliverScrollController, slivers: [
                 SliverAppBar(
                   pinned: true,
@@ -138,7 +152,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                         },
                         highlightColor: Colors.transparent,
                         icon: Icon(
-                          Icons.refresh_rounded,
+                          widget.fileData != null ? Icons.refresh_rounded : Icons.add_photo_alternate_rounded,
                           color: Theme.of(context).iconTheme.color,
                         ))
                   ],
@@ -180,7 +194,8 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                             builder: (context) => ConstructorDialogLecture(
                                                   dayOfWeek: timeTable!.weekDays![currentPage].day ?? "",
                                                   fileData: widget.fileData,
-                                                  lectureData: Session(id: DateTime.now().microsecondsSinceEpoch.toString(), time: "0:00"),
+                                                  lectureData:
+                                                      Session(id: DateTime.now().microsecondsSinceEpoch.toString(), time: "0:00"),
                                                   onChanged: (session) {
                                                     timeTable!.weekDays![currentPage].sessions!.add(session);
                                                     editingFlag = true;
@@ -244,19 +259,21 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         } else {
                                           showDialog(
                                               context: context,
-                                              builder: (context) => BackdropFilter(
-                                                    filter: ImageFilter.blur(sigmaY: 4, sigmaX: 4),
-                                                    child: Dialog(
-                                                      insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                                        child: SingleChildScrollView(
-                                                          child: Column(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                            children: [
+                                              builder: (context) {
+                                                return BackdropFilter(
+                                                  filter: ImageFilter.blur(sigmaY: 4, sigmaX: 4),
+                                                  child: Dialog(
+                                                    insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                                      child: SingleChildScrollView(
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          children: [
+                                                            if (widget.fileData != null) ...{
                                                               AspectRatio(
-                                                                aspectRatio: widget.fileData.width / widget.fileData.height,
+                                                                aspectRatio: widget.fileData!.width / widget.fileData!.height,
                                                                 child: ClipRRect(
                                                                   borderRadius: BorderRadius.circular(25),
                                                                   child: BlocBuilder<ThemeCubit, ThemeModes>(
@@ -266,7 +283,8 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                           borderRadius: BorderRadius.circular(25),
                                                                           border: Border.all(color: Colors.black),
                                                                           color: themeMode == ThemeModes.system
-                                                                              ? MediaQuery.of(context).platformBrightness == Brightness.dark
+                                                                              ? MediaQuery.of(context).platformBrightness ==
+                                                                                      Brightness.dark
                                                                                   ? Colors.white
                                                                                   : Colors.white
                                                                               : themeMode == ThemeModes.light
@@ -276,7 +294,8 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                         child: BackdropFilter(
                                                                           filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
                                                                           blendMode: themeMode == ThemeModes.system
-                                                                              ? MediaQuery.of(context).platformBrightness == Brightness.dark
+                                                                              ? MediaQuery.of(context).platformBrightness ==
+                                                                                      Brightness.dark
                                                                                   ? BlendMode.difference
                                                                                   : BlendMode.darken
                                                                               : themeMode == ThemeModes.light
@@ -286,8 +305,9 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                             filterQuality: FilterQuality.high,
                                                                             minScale: PhotoViewComputedScale.contained * 1.1,
                                                                             maxScale: PhotoViewComputedScale.contained * 2.2,
-                                                                            backgroundDecoration: const BoxDecoration(color: Colors.white),
-                                                                            imageProvider: FileImage(widget.fileData.imageFile),
+                                                                            backgroundDecoration:
+                                                                                const BoxDecoration(color: Colors.white),
+                                                                            imageProvider: FileImage(widget.fileData!.imageFile),
                                                                           ),
                                                                         ),
                                                                       );
@@ -295,116 +315,156 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              const SizedBox(
-                                                                height: 20,
+                                                              const SizedBox(height: 20)
+                                                            },
+                                                            Form(
+                                                              child: Column(
+                                                                children: [
+                                                                  TextFormField(
+                                                                    controller: departmentNameController,
+                                                                    style: Theme.of(context).textTheme.headlineMedium,
+                                                                    decoration: InputDecoration(
+                                                                        prefixIcon: Icon(Icons.class_outlined,
+                                                                            color: Theme.of(context).textTheme.titleLarge?.color),
+                                                                        label: const Text(
+                                                                          "Department",
+                                                                          style: TextStyle(letterSpacing: 1),
+                                                                        )),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 20,
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child: TextFormField(
+                                                                          controller: classroomController,
+                                                                          style: Theme.of(context).textTheme.headlineMedium,
+                                                                          decoration: InputDecoration(
+                                                                              prefixIcon: Icon(Icons.badge,
+                                                                                  color: Theme.of(context)
+                                                                                      .textTheme
+                                                                                      .titleLarge
+                                                                                      ?.color),
+                                                                              label: const Text(
+                                                                                "classroom",
+                                                                                style: TextStyle(letterSpacing: 0),
+                                                                              )),
+                                                                        ),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width: 20,
+                                                                      ),
+                                                                      Expanded(
+                                                                        child: TextFormField(
+                                                                          controller: classNameController,
+                                                                          style: Theme.of(context).textTheme.headlineMedium,
+                                                                          decoration: InputDecoration(
+                                                                              prefixIcon: Icon(Icons.people_outline_rounded,
+                                                                                  color: Theme.of(context)
+                                                                                      .textTheme
+                                                                                      .titleLarge
+                                                                                      ?.color),
+                                                                              label: const Text(
+                                                                                "Class",
+                                                                                style: TextStyle(letterSpacing: 1),
+                                                                              )),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(height: 10),
+                                                                  Column(
+                                                                    children: [
+                                                                      const Text("Semester"),
+                                                                      ToggleSwitch(
+                                                                        labels: const ["1", "2", "3", "4", "5", "6", "7", "8"],
+                                                                        customWidths: [
+                                                                          deviceWidth * 0.1,
+                                                                          deviceWidth * 0.1,
+                                                                          deviceWidth * 0.1,
+                                                                          deviceWidth * 0.1,
+                                                                          deviceWidth * 0.1,
+                                                                          deviceWidth * 0.1,
+                                                                          deviceWidth * 0.1,
+                                                                          deviceWidth * 0.1
+                                                                        ],
+                                                                        initialLabelIndex: semester,
+                                                                        totalSwitches: 8,
+                                                                        activeBgColor: [deadColor],
+                                                                        cornerRadius: 15,
+                                                                        inactiveBgColor: Colors.transparent,
+                                                                        inactiveFgColor: deadColor,
+                                                                        animate: true,
+                                                                        animationDuration: 200,
+                                                                        onToggle: (index) {
+                                                                          semester = index! + 1;
+                                                                          setState(() {});
+                                                                        },
+                                                                      )
+                                                                    ],
+                                                                  )
+                                                                ],
                                                               ),
-                                                              Form(
-                                                                child: Column(
+                                                            ),
+                                                            const SizedBox(height: 20),
+                                                            Padding(
+                                                              padding: const EdgeInsets.only(top: 5),
+                                                              child: IntrinsicHeight(
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                                   children: [
-                                                                    TextFormField(
-                                                                      controller: departmentNameController,
-                                                                      style: Theme.of(context).textTheme.headlineMedium,
-                                                                      decoration: InputDecoration(
-                                                                          prefixIcon:
-                                                                              Icon(Icons.class_outlined, color: Theme.of(context).textTheme.titleLarge?.color),
-                                                                          label: const Text(
-                                                                            "Department",
-                                                                            style: TextStyle(letterSpacing: 1),
-                                                                          )),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height: 20,
-                                                                    ),
-                                                                    Row(
-                                                                      children: [
-                                                                        Expanded(
-                                                                          child: TextFormField(
-                                                                            controller: semesterController,
-                                                                            style: Theme.of(context).textTheme.headlineMedium,
-                                                                            decoration: InputDecoration(
-                                                                                prefixIcon:
-                                                                                    Icon(Icons.badge, color: Theme.of(context).textTheme.titleLarge?.color),
-                                                                                label: const Text(
-                                                                                  "Semester",
-                                                                                  style: TextStyle(letterSpacing: 1),
-                                                                                )),
-                                                                          ),
+                                                                    Expanded(
+                                                                      child: TextButton(
+                                                                        style: ButtonStyle(
+                                                                          overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                                                              (Set<MaterialState> states) {
+                                                                            if (states.contains(MaterialState.focused)) {
+                                                                              return Colors.transparent;
+                                                                            }
+                                                                            if (states.contains(MaterialState.hovered)) {
+                                                                              return Colors.transparent;
+                                                                            }
+                                                                            if (states.contains(MaterialState.pressed)) {
+                                                                              return Colors.transparent;
+                                                                            }
+                                                                            return Colors
+                                                                                .transparent; // Defer to the widget's default.
+                                                                          }),
                                                                         ),
-                                                                        const SizedBox(
-                                                                          width: 20,
-                                                                        ),
-                                                                        Expanded(
-                                                                          child: TextFormField(
-                                                                            controller: classNameController,
-                                                                            style: Theme.of(context).textTheme.headlineMedium,
-                                                                            decoration: InputDecoration(
-                                                                                prefixIcon: Icon(Icons.people_outline_rounded,
-                                                                                    color: Theme.of(context).textTheme.titleLarge?.color),
-                                                                                label: const Text(
-                                                                                  "Class",
-                                                                                  style: TextStyle(letterSpacing: 1),
-                                                                                )),
-                                                                          ),
-                                                                        ),
-                                                                      ],
+                                                                        child: Text("Cancel",
+                                                                            style: Theme.of(context).textTheme.bodyMedium,
+                                                                            textAlign: TextAlign.center),
+                                                                        onPressed: () {
+                                                                          Navigator.of(context).pop();
+                                                                        },
+                                                                      ),
                                                                     ),
+                                                                    Expanded(
+                                                                      child: ElevatedButton(
+                                                                        onPressed: () {
+                                                                          timeTable!.className = classNameController.text;
+                                                                          timeTable!.department = departmentNameController.text;
+                                                                          timeTable!.semester = semester;
+                                                                          timeTable!.classRoom = classroomController.text;
+                                                                          // TODO: Upload To the Fire-Base !!!!
+                                                                        },
+                                                                        child: Text("Save",
+                                                                            style: Theme.of(context).textTheme.titleMedium,
+                                                                            textAlign: TextAlign.center),
+                                                                      ),
+                                                                    )
                                                                   ],
                                                                 ),
                                                               ),
-                                                              const SizedBox(
-                                                                height: 20,
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(top: 5),
-                                                                child: IntrinsicHeight(
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: TextButton(
-                                                                          style: ButtonStyle(
-                                                                            overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                                                              if (states.contains(MaterialState.focused)) {
-                                                                                return Colors.transparent;
-                                                                              }
-                                                                              if (states.contains(MaterialState.hovered)) {
-                                                                                return Colors.transparent;
-                                                                              }
-                                                                              if (states.contains(MaterialState.pressed)) {
-                                                                                return Colors.transparent;
-                                                                              }
-                                                                              return Colors.transparent; // Defer to the widget's default.
-                                                                            }),
-                                                                          ),
-                                                                          child: Text("Cancel",
-                                                                              style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
-                                                                          onPressed: () {
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                        ),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: ElevatedButton(
-                                                                          onPressed: () {
-                                                                            timeTable!.className =
-                                                                                "${semesterController.text} ${departmentNameController.text} ${classNameController.text}";
-
-                                                                            // TODO: Upload To the Fire-Base !!!!
-                                                                          },
-                                                                          child: Text("Save",
-                                                                              style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
+                                                            )
+                                                          ],
                                                         ),
                                                       ),
                                                     ),
-                                                  ));
+                                                  ),
+                                                );
+                                              });
                                         }
                                       },
                                       style: ButtonStyle(
@@ -471,9 +531,16 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         textAlign: TextAlign.center,
                                       );
                                     } else if (state is FileDataFetchLoaded) {
-                                      double successRate = 100 - ((countEmptyData() / RetrieveRate.countTotalValues(state.timeTable.toJson())) * 100);
+                                      double successRate = 100 -
+                                          ((countEmptyData() / RetrieveRate.countTotalValues(state.timeTable.toJson())) * 100);
                                       return Text(
                                         "${successRate.toStringAsFixed(2)}% Data\nRetrieved",
+                                        style: Theme.of(context).textTheme.titleLarge,
+                                        textAlign: TextAlign.center,
+                                      );
+                                    } else if (state is FileDataFetchInitial) {
+                                      return Text(
+                                        "Create Table",
                                         style: Theme.of(context).textTheme.titleLarge,
                                         textAlign: TextAlign.center,
                                       );
@@ -496,8 +563,10 @@ class _ConstructorPageState extends State<ConstructorPage> {
                     builder: (context, state) {
                       if (state is FileDataFetchLoading) {
                         return const Center(child: CircularProgressIndicator());
-                      } else if (state is FileDataFetchLoaded) {
-                        timeTable = state.timeTable;
+                      } else if (state is FileDataFetchLoaded || state is FileDataFetchInitial) {
+                        if (state is FileDataFetchLoaded) {
+                          timeTable = state.timeTable;
+                        }
                         numberOfEmpty = countEmptyData();
                         return ExpandablePageView(
                           pageController: controller,
@@ -522,26 +591,30 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         ? const SizedBox()
                                         : IconButton(
                                             onPressed: () {
-                                              controller.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOutCubic);
+                                              controller.previousPage(
+                                                  duration: const Duration(milliseconds: 200), curve: Curves.easeInOutCubic);
                                               setState(() {});
                                             },
                                             icon: const Icon(Icons.chevron_left)),
-                                    Text(timeTable!.weekDays![indexPage].day!.toUpperCase(), style: Theme.of(context).textTheme.titleMedium),
+                                    Text(timeTable!.weekDays![indexPage].day!.toUpperCase(),
+                                        style: Theme.of(context).textTheme.titleMedium),
                                     indexPage == timeTable!.weekDays!.length - 1
                                         ? const SizedBox()
                                         : IconButton(
                                             onPressed: () {
-                                              controller.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOutCubic);
+                                              controller.nextPage(
+                                                  duration: const Duration(milliseconds: 200), curve: Curves.easeInOutCubic);
                                             },
                                             icon: const Icon(Icons.chevron_right))
                                   ],
                                 ),
                                 ListView.builder(
-                                  itemCount: timeTable!.weekDays![indexPage].sessions!.length,
+                                  itemCount: timeTable!.weekDays![indexPage].sessions?.length ?? 0,
                                   physics: physics,
                                   shrinkWrap: true,
                                   itemBuilder: (context, indexList) {
-                                    timeTable!.weekDays![indexPage].sessions!.sort((a, b) => TimeUtil.compareTime(a.time ?? "0:00", b.time ?? "0:00"));
+                                    timeTable!.weekDays![indexPage].sessions
+                                        ?.sort((a, b) => TimeUtil.compareTime(a.time ?? "0:00", b.time ?? "0:00"));
                                     //Data to json
                                     if (!(timeTable?.weekDays?[indexPage].sessions?[indexList].isLab ?? false)) {
                                       //It's a lecture
@@ -562,6 +635,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                       lectureData: timeTable!.weekDays![indexPage].sessions![indexList],
                                                       onChanged: (session) {
                                                         timeTable!.weekDays![indexPage].sessions![indexList] = session;
+
                                                         numberOfEmpty = countEmptyData();
                                                         editingFlag = true;
                                                         setState(() {});
@@ -569,9 +643,11 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                     ));
                                           } else {
                                             if (selectedItems
-                                                .where((element) => element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
+                                                .where((element) =>
+                                                    element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
                                                 .isNotEmpty) {
-                                              selectedItems.removeWhere((element) => element.id == timeTable!.weekDays![indexPage].sessions![indexList].id);
+                                              selectedItems.removeWhere((element) =>
+                                                  element.id == timeTable!.weekDays![indexPage].sessions![indexList].id);
                                             } else {
                                               selectedItems.add(timeTable!.weekDays![indexPage].sessions![indexList]);
                                             }
@@ -579,9 +655,11 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                           }
                                         },
                                         child: ConstructorTileLecture(
-                                          numberOfEmpty: RetrieveRate.countNullEmptyValues(timeTable!.weekDays![indexPage].sessions![indexList].toJson()),
+                                          numberOfEmpty: RetrieveRate.countNullEmptyValues(
+                                              timeTable!.weekDays![indexPage].sessions![indexList].toJson()),
                                           isSelected: selectedItems
-                                              .where((element) => element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
+                                              .where((element) =>
+                                                  element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
                                               .isNotEmpty,
                                           lectureData: timeTable!.weekDays![indexPage].sessions![indexList],
                                         ),
@@ -612,9 +690,11 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                     ));
                                           } else {
                                             if (selectedItems
-                                                .where((element) => element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
+                                                .where((element) =>
+                                                    element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
                                                 .isNotEmpty) {
-                                              selectedItems.removeWhere((element) => element.id == timeTable!.weekDays![indexPage].sessions![indexList].id);
+                                              selectedItems.removeWhere((element) =>
+                                                  element.id == timeTable!.weekDays![indexPage].sessions![indexList].id);
                                             } else {
                                               selectedItems.add(timeTable!.weekDays![indexPage].sessions![indexList]);
                                             }
@@ -622,10 +702,11 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                           }
                                         },
                                         child: ConstructorTileLab(
-                                          numberOfEmpty: countEmptyDataFromLab(timeTable!.weekDays?[indexPage].sessions![indexList]),
-                                          fileData: widget.fileData,
+                                          numberOfEmpty:
+                                              countEmptyDataFromLab(timeTable!.weekDays?[indexPage].sessions![indexList]),
                                           isSelected: selectedItems
-                                              .where((element) => element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
+                                              .where((element) =>
+                                                  element.id == timeTable!.weekDays![indexPage].sessions![indexList].id)
                                               .isNotEmpty,
                                           labData: timeTable!.weekDays?[indexPage].sessions?[indexList],
                                         ),
@@ -645,7 +726,10 @@ class _ConstructorPageState extends State<ConstructorPage> {
                     },
                   ),
                 ),
-              ]))),
+              ]
+              )
+          )
+      ),
     );
   }
 }

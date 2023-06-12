@@ -44,7 +44,7 @@ class _CreateChooserState extends State<CreateChooser> {
                         fit: BoxFit.fill,
                       ),
                       onPressed: () async {
-                        Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                           Navigator.pushNamed(context, RouteNames.pdfSelect,arguments: true);
                       }),
                 );
@@ -69,7 +69,10 @@ class _CreateChooserState extends State<CreateChooser> {
                                   ? 'assets/images/iconImages/buildScheduleDark.png'
                                   : 'assets/images/iconImages/buildScheduleLight.png'),
                           fit: BoxFit.fill),
-                    onPressed: (){},
+                    onPressed: (){
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, RouteNames.pdfConstructor);
+                    },
                   )
                 );
               },

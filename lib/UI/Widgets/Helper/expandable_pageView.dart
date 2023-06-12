@@ -67,13 +67,14 @@ class _ExpandablePageViewState extends State<ExpandablePageView>
     widget.pageController.addListener(() {
         final newPage = widget.pageController.page?.round() ?? 0;
         if (_currentPage != newPage) {
-          setState(() => _currentPage = newPage);
+            _currentPage = newPage;
+            if(mounted){
+          setState(() {});
         }
+      }
       });
 
   }
-
-
 
 
   @override

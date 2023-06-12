@@ -63,6 +63,7 @@ dependencies:
   toggle_switch: ^2.1.0
   page_view_dot_indicator: ^2.1.0
   path_provider: ^2.0.15
+  numberpicker: ^2.1.2
 
 dev_dependencies:
   flutter_test:

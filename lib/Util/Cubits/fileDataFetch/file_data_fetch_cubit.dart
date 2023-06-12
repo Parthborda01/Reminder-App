@@ -16,12 +16,15 @@ class FileDataFetchCubit extends Cubit<FileDataFetchState> {
   void fetchData(File image, double width, double height) async {
     emit(FileDataFetchLoading());
     try {
-      TimeTable timeTable = await textExtractor.fetchTimeTable(
-          image: image, width: width, height: height);
+      TimeTable timeTable = await textExtractor.fetchTimeTable(image: image, width: width, height: height);
       emit(FileDataFetchLoaded(timeTable));
     } catch (error) {
       emit(FileDataFetchError(error.toString()));
       debugPrint(error.toString());
     }
+  }
+
+  void clearData() async {
+    emit(FileDataFetchInitial());
   }
 }

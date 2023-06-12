@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:student_dudes/UI/Widgets/TaskTile.dart';
@@ -23,10 +22,10 @@ class _HomePageState extends State<HomePage> {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
-    ScrollController _sliverScrollController = ScrollController();
-    _sliverScrollController.addListener(() {
-      if (_sliverScrollController.offset >= 100 &&
-          !_sliverScrollController.position.outOfRange) {
+    ScrollController sliverScrollController = ScrollController();
+    sliverScrollController.addListener(() {
+      if (sliverScrollController.offset >= 100 &&
+          !sliverScrollController.position.outOfRange) {
         BlocProvider.of<SliverScrolled>(context).Add();
       } else {
         BlocProvider.of<SliverScrolled>(context).clear();
@@ -48,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                 boxShadow: [BoxShadow(spreadRadius: 1,color: Theme.of(context).scaffoldBackgroundColor)]
             ),
             child: CustomScrollView(
-              controller: _sliverScrollController,
+              controller: sliverScrollController,
               slivers: [
                 SliverAppBar(
                   pinned: true,
@@ -73,17 +72,17 @@ class _HomePageState extends State<HomePage> {
                                       const EdgeInsets.symmetric(horizontal: 20),
                                   child: AnimatedOpacity(
                                       opacity: state ? 1.0 : 0.0,
-                                      duration: Duration(milliseconds: 200),
+                                      duration: const Duration(milliseconds: 200),
                                       child: Text("Tasks",
                                           style: Theme.of(context).textTheme.titleSmall)),
                                 )),
-                        Spacer(),
+                        const Spacer(),
                         IconButton(
                             onPressed: () {},
-                            icon: Icon(Icons.add)),
+                            icon: const Icon(Icons.add)),
                         IconButton(
                             onPressed: () {},
-                            icon: Icon(Icons.edit)),
+                            icon: const Icon(Icons.edit)),
                       ],
                     ),
                   ),

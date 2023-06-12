@@ -24,7 +24,6 @@ class _PDFChooserState extends State<PDFChooser> {
 
   @override
   void initState() {
-    // TODO: implement initState
     selectMatch();
     super.initState();
   }
@@ -108,7 +107,7 @@ class _PDFChooserState extends State<PDFChooser> {
                                   action: () {
                                     if(widget.args?? true) {
 
-                                    Navigator.pushReplacementNamed(context, RouteNames.tableBuild,arguments: fileData);
+                                    Navigator.pushReplacementNamed(context, RouteNames.pdfConstructor,arguments: fileData);
                                     }
                                     else{
                                       Navigator.pop(context,fileData);

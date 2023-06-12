@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_dudes/UI/Pages/HomePage/home_page.dart';
+import 'package:student_dudes/UI/Pages/NewCreatePage/build_information.dart';
 import 'package:student_dudes/UI/Pages/NewCreatePage/constructor_page.dart';
 import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
 import '../Pages/NewCreatePage/PDF_chooser.dart';
@@ -11,8 +12,10 @@ class RouteNames {
   static const String home = '/home_page';
   static const String setting = '/setting_page';
   static const String pdfSelect = '/pdf_select';
+  static const String buildInfo = '/build_info';
+  static const String manualBuild = '/manual_build';
   static const String logIn = '/login_page';
-  static const String tableBuild = '/tableBuild';
+  static const String pdfConstructor = '/tableBuild';
 }
 
 class RouteGenerator {
@@ -21,15 +24,17 @@ class RouteGenerator {
     var args = settings.arguments;
     switch(settings.name){
       case RouteNames.home:
-        return _createRoute(HomePage());
+        return _createRoute(const HomePage());
       case RouteNames.setting:
-        return _createRoute(SettingPage());
+        return _createRoute(const SettingPage());
       case RouteNames.pdfSelect:
         return _createRoute(PDFChooser(args as bool));
+      case RouteNames.buildInfo:
+        return _createRoute(const BuildInformation());
       // case RouteNames.logIn:
       //   return _createRoute();
-      case RouteNames.tableBuild:
-        return _createRoute(ConstructorPage(fileData: args as FileData));
+      case RouteNames.pdfConstructor:
+        return _createRoute(ConstructorPage(fileData: args as FileData?));
       default:
         return null;
     }
@@ -39,10 +44,10 @@ class RouteGenerator {
 Route _createRoute(page) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionDuration: Duration(milliseconds: 100),
+    transitionDuration: const Duration(milliseconds: 100),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var tween = Tween(
-        begin: Offset(0,0.2),
+        begin: const Offset(0,0.2),
         end: Offset.zero,
       ).chain(CurveTween(curve: Curves.easeOutQuad));
       return SlideTransition(

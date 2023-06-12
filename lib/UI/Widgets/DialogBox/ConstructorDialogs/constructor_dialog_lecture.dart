@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -13,20 +12,15 @@ import 'package:student_dudes/Util/time_util.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class ConstructorDialogLecture extends StatefulWidget {
-  const ConstructorDialogLecture(
-      {super.key,
-      required this.lectureData,
-      required this.onChanged,
-      required this.fileData, required this.dayOfWeek});
+  const ConstructorDialogLecture({super.key, required this.lectureData, required this.onChanged, this.fileData, required this.dayOfWeek});
 
   final String dayOfWeek;
-  final FileData fileData;
+  final FileData? fileData;
   final Session lectureData;
   final Function(Session) onChanged;
 
   @override
-  State<ConstructorDialogLecture> createState() =>
-      _ConstructorDialogLectureState();
+  State<ConstructorDialogLecture> createState() => _ConstructorDialogLectureState();
 }
 
 class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
@@ -48,6 +42,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
   }
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
@@ -61,55 +56,51 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text("For ${widget.dayOfWeek}",style: Theme.of(context).textTheme.headlineMedium,textAlign: TextAlign.center),
-                const SizedBox(
-                  height: 10,
-                ),
-                AspectRatio(
-                  aspectRatio: widget.fileData.width / widget.fileData.height,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-
-                    child: BlocBuilder<ThemeCubit, ThemeModes>(
-                      builder: (context, themeMode) {
-                        return Container(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(25),border: Border.all(color: Colors.black),color: themeMode == ThemeModes.system
-                              ? MediaQuery.of(context).platformBrightness ==
-                              Brightness.dark
-                              ? Colors.white
-                              : Colors.white
-                              : themeMode == ThemeModes.light
-                              ? Colors.transparent
-                              : Theme.of(context).dividerColor,),
-
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                            blendMode: themeMode == ThemeModes.system
-                                ? MediaQuery.of(context).platformBrightness ==
-                                        Brightness.dark
-                                    ? BlendMode.difference
-                                    : BlendMode.darken
-                                : themeMode == ThemeModes.light
-                                    ? BlendMode.multiply
-                                    : BlendMode.darken,
-                            child: PhotoView(
-                              filterQuality: FilterQuality.high,
-                              minScale: PhotoViewComputedScale.contained * 1.1,
-                              maxScale: PhotoViewComputedScale.contained * 2.2,
-                              backgroundDecoration: const BoxDecoration(
-                                  color: Colors.white),
-                              imageProvider:
-                                  FileImage(widget.fileData.imageFile),
+                Text("For ${widget.dayOfWeek}", style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
+                const SizedBox(height: 10),
+                if (widget.fileData != null) ...{
+                  AspectRatio(
+                    aspectRatio: widget.fileData!.width / widget.fileData!.height,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: BlocBuilder<ThemeCubit, ThemeModes>(
+                        builder: (context, themeMode) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(color: Colors.black),
+                              color: themeMode == ThemeModes.system
+                                  ? MediaQuery.of(context).platformBrightness == Brightness.dark
+                                      ? Colors.white
+                                      : Colors.white
+                                  : themeMode == ThemeModes.light
+                                      ? Colors.transparent
+                                      : Theme.of(context).dividerColor,
                             ),
-                          ),
-                        );
-                      },
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                              blendMode: themeMode == ThemeModes.system
+                                  ? MediaQuery.of(context).platformBrightness == Brightness.dark
+                                      ? BlendMode.difference
+                                      : BlendMode.darken
+                                  : themeMode == ThemeModes.light
+                                      ? BlendMode.multiply
+                                      : BlendMode.darken,
+                              child: PhotoView(
+                                filterQuality: FilterQuality.high,
+                                minScale: PhotoViewComputedScale.contained * 1.1,
+                                maxScale: PhotoViewComputedScale.contained * 2.2,
+                                backgroundDecoration: const BoxDecoration(color: Colors.white),
+                                imageProvider: FileImage(widget.fileData!.imageFile),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                  const SizedBox(height: 20),
+                },
                 Form(
                   key: _key,
                   child: Column(
@@ -128,11 +119,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                                 }
                               },
                               decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.subject,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.color),
+                                  prefixIcon: Icon(Icons.subject, color: Theme.of(context).textTheme.titleLarge?.color),
                                   label: const Text(
                                     "Subject",
                                     style: TextStyle(letterSpacing: 1),
@@ -153,11 +140,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                                 }
                               },
                               decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.person_outline_rounded,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.color),
+                                  prefixIcon: Icon(Icons.person_outline_rounded, color: Theme.of(context).textTheme.titleLarge?.color),
                                   label: const Text(
                                     "Faculty",
                                     style: TextStyle(letterSpacing: 1),
@@ -180,9 +163,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                             }
                           },
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.location_pin,
-                                  color:
-                                      Theme.of(context).textTheme.titleLarge?.color),
+                              prefixIcon: Icon(Icons.location_pin, color: Theme.of(context).textTheme.titleLarge?.color),
                               label: const Text(
                                 "Location",
                                 style: TextStyle(letterSpacing: 1),
@@ -195,16 +176,14 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TimePickerSpinner(
-                            highlightedTextStyle:
-                                Theme.of(context).textTheme.headlineLarge,
+                            highlightedTextStyle: Theme.of(context).textTheme.headlineLarge,
                             normalTextStyle: Theme.of(context).textTheme.bodySmall,
                             spacing: 20,
                             itemHeight: 40,
                             is24HourMode: false,
                             isForce2Digits: true,
                             minutesInterval: 15,
-                            time: TimeUtil.convertToDateTime(
-                                TimeUtil.convertToTimeOfDay(time), DateTime.now()),
+                            time: TimeUtil.convertToDateTime(TimeUtil.convertToTimeOfDay(time), DateTime.now()),
                             onTimeChange: (p0) {
                               time = DateFormat("hh:mm").format(p0);
                               setState(() {});
@@ -212,8 +191,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                           ),
                           Column(
                             children: [
-                              Text("Hours⏱️",
-                                  style: Theme.of(context).textTheme.labelLarge),
+                              Text("Hours⏱️", style: Theme.of(context).textTheme.labelLarge),
                               ToggleSwitch(
                                 isVertical: true,
                                 labels: const ["One", "Two"],
@@ -245,9 +223,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                         Expanded(
                           child: TextButton(
                             style: ButtonStyle(
-                              overlayColor:
-                                  MaterialStateProperty.resolveWith<Color>(
-                                      (Set<MaterialState> states) {
+                              overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                                 if (states.contains(MaterialState.focused)) {
                                   return Colors.transparent;
                                 }
@@ -257,13 +233,10 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                                 if (states.contains(MaterialState.pressed)) {
                                   return Colors.transparent;
                                 }
-                                return Colors
-                                    .transparent; // Defer to the widget's default.
+                                return Colors.transparent; // Defer to the widget's default.
                               }),
                             ),
-                            child: Text("Cancel",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center),
+                            child: Text("Cancel", style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -283,9 +256,7 @@ class _ConstructorDialogLectureState extends State<ConstructorDialogLecture> {
                                 Navigator.of(context).pop();
                               }
                             },
-                            child: Text("Save",
-                                style: Theme.of(context).textTheme.titleMedium,
-                                textAlign: TextAlign.center),
+                            child: Text("Save", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
                           ),
                         )
                       ],

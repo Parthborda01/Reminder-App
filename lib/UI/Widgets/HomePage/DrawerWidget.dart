@@ -99,8 +99,6 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                       dashGapLength: 4,
                       dashLength: 2),
 
-
-
                   const Spacer(),
                   Material(
                     color: Theme.of(context).colorScheme.background,

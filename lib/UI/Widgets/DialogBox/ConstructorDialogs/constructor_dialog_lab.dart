@@ -14,16 +14,12 @@ import 'package:student_dudes/Util/lab_session_util.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class ConstructorDialogLab extends StatefulWidget {
-  const ConstructorDialogLab(
-      {super.key,
-      this.labData,
-      required this.onChanged,
-      required this.fileData, required this.dayOfWeek});
+  const ConstructorDialogLab({super.key, this.labData, required this.onChanged, this.fileData, required this.dayOfWeek});
 
   final String dayOfWeek;
   final Function(Session) onChanged;
   final Session? labData;
-  final FileData fileData;
+  final FileData? fileData;
 
   @override
   State<ConstructorDialogLab> createState() => _ConstructorDialogLabState();
@@ -63,57 +59,51 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("For ${widget.dayOfWeek}",style: Theme.of(context).textTheme.headlineMedium,textAlign: TextAlign.center),
-                const SizedBox(
-                  height: 10,
-                ),
-                AspectRatio(
-                  aspectRatio: widget.fileData.width / widget.fileData.height,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: BlocBuilder<ThemeCubit, ThemeModes>(
-                      builder: (context, themeMode) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            border: Border.all(color: Colors.black),
-                            color: themeMode == ThemeModes.system
-                                ? MediaQuery.of(context).platformBrightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.white
-                                : themeMode == ThemeModes.light
-                                    ? Colors.transparent
-                                    : Theme.of(context).dividerColor,
-                          ),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                            blendMode: themeMode == ThemeModes.system
-                                ? MediaQuery.of(context).platformBrightness ==
-                                        Brightness.dark
-                                    ? BlendMode.difference
-                                    : BlendMode.darken
-                                : themeMode == ThemeModes.light
-                                    ? BlendMode.multiply
-                                    : BlendMode.darken,
-                            child: PhotoView(
-                              filterQuality: FilterQuality.high,
-                              minScale: PhotoViewComputedScale.contained * 1.1,
-                              maxScale: PhotoViewComputedScale.contained * 2.2,
-                              backgroundDecoration:
-                                  const BoxDecoration(color: Colors.white),
-                              imageProvider:
-                                  FileImage(widget.fileData.imageFile),
+                Text("For ${widget.dayOfWeek}", style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
+                const SizedBox(height: 10),
+                if (widget.fileData != null) ...{
+                  AspectRatio(
+                    aspectRatio: widget.fileData!.width / widget.fileData!.height,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: BlocBuilder<ThemeCubit, ThemeModes>(
+                        builder: (context, themeMode) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(color: Colors.black),
+                              color: themeMode == ThemeModes.system
+                                  ? MediaQuery.of(context).platformBrightness == Brightness.dark
+                                      ? Colors.white
+                                      : Colors.white
+                                  : themeMode == ThemeModes.light
+                                      ? Colors.transparent
+                                      : Theme.of(context).dividerColor,
                             ),
-                          ),
-                        );
-                      },
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                              blendMode: themeMode == ThemeModes.system
+                                  ? MediaQuery.of(context).platformBrightness == Brightness.dark
+                                      ? BlendMode.difference
+                                      : BlendMode.darken
+                                  : themeMode == ThemeModes.light
+                                      ? BlendMode.multiply
+                                      : BlendMode.darken,
+                              child: PhotoView(
+                                filterQuality: FilterQuality.high,
+                                minScale: PhotoViewComputedScale.contained * 1.1,
+                                maxScale: PhotoViewComputedScale.contained * 2.2,
+                                backgroundDecoration: const BoxDecoration(color: Colors.white),
+                                imageProvider: FileImage(widget.fileData!.imageFile),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                  const SizedBox(height: 20),
+                },
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -122,8 +112,7 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                         time = DateFormat("hh:mm").format(p0);
                         setState(() {});
                       },
-                      highlightedTextStyle:
-                          Theme.of(context).textTheme.headlineLarge,
+                      highlightedTextStyle: Theme.of(context).textTheme.headlineLarge,
                       normalTextStyle: Theme.of(context).textTheme.bodySmall,
                       spacing: 20,
                       itemHeight: 40,
@@ -131,16 +120,12 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                       isForce2Digits: true,
                       minutesInterval: 15,
                       time: widget.labData?.time != null
-                          ? TimeUtil.convertToDateTime(
-                              TimeUtil.convertToTimeOfDay(
-                                  widget.labData?.time ?? ""),
-                              DateTime.now())
+                          ? TimeUtil.convertToDateTime(TimeUtil.convertToTimeOfDay(widget.labData?.time ?? ""), DateTime.now())
                           : DateTime.now(),
                     ),
                     Column(
                       children: [
-                        Text("Hours⏱️",
-                            style: Theme.of(context).textTheme.labelLarge),
+                        Text("Hours⏱️", style: Theme.of(context).textTheme.labelLarge),
                         ToggleSwitch(
                           isVertical: true,
                           labels: const ["One", "Two"],
@@ -167,11 +152,7 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                         onPressed: data.length > 1
                             ? () {
                                 controller.animateToPage(selectedPage,
-                                    duration: Duration(
-                                        milliseconds:
-                                            (selectedPage - data.length).abs() *
-                                                100),
-                                    curve: Curves.easeInOutCubic);
+                                    duration: Duration(milliseconds: (selectedPage - data.length).abs() * 100), curve: Curves.easeInOutCubic);
                                 data.removeAt(selectedPage);
                                 setState(() {});
                               }
@@ -182,15 +163,9 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                           if (_key.currentState!.validate()) {
                             data.add(Session());
                             controller.animateToPage(data.length - 1,
-                                duration: Duration(
-                                    milliseconds:
-                                        (selectedPage - data.length).abs() *
-                                            100),
-                                curve: Curves.easeInOutCubic);
+                                duration: Duration(milliseconds: (selectedPage - data.length).abs() * 100), curve: Curves.easeInOutCubic);
                           } else {
-                            controller.animateToPage(errorPage,
-                                duration: const Duration(milliseconds: 100),
-                                curve: Curves.easeInOutCubic);
+                            controller.animateToPage(errorPage, duration: const Duration(milliseconds: 100), curve: Curves.easeInOutCubic);
                           }
                           setState(() {});
                         },
@@ -208,9 +183,7 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                           selectedPage = page;
                         });
                         if (!_key.currentState!.validate()) {
-                          controller.animateToPage(errorPage,
-                              duration: const Duration(milliseconds: 150),
-                              curve: Curves.easeInOutCubic);
+                          controller.animateToPage(errorPage, duration: const Duration(milliseconds: 150), curve: Curves.easeInOutCubic);
                         }
                       },
                       children: [
@@ -225,9 +198,7 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                   currentItem: selectedPage,
                   count: data.length,
                   unselectedColor: deadColor,
-                  selectedColor:
-                      Theme.of(context).textTheme.titleMedium?.color ??
-                          Colors.transparent,
+                  selectedColor: Theme.of(context).textTheme.titleMedium?.color ?? Colors.transparent,
                   duration: const Duration(milliseconds: 200),
                   unselectedSize: const Size(5, 5),
                   size: const Size(8, 8),
@@ -242,9 +213,7 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                         Expanded(
                           child: TextButton(
                             style: ButtonStyle(
-                              overlayColor:
-                                  MaterialStateProperty.resolveWith<Color>(
-                                      (Set<MaterialState> states) {
+                              overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                                 if (states.contains(MaterialState.focused)) {
                                   return Colors.transparent;
                                 }
@@ -254,13 +223,10 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                                 if (states.contains(MaterialState.pressed)) {
                                   return Colors.transparent;
                                 }
-                                return Colors
-                                    .transparent; // Defer to the widget's default.
+                                return Colors.transparent; // Defer to the widget's default.
                               }),
                             ),
-                            child: Text("Cancel",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                textAlign: TextAlign.center),
+                            child: Text("Cancel", style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -274,20 +240,16 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                                   widget.onChanged(Session(
                                       id: widget.labData!.id,
                                       isLab: true,
-                                      subjectName:
-                                          LabUtils.labDataToString(data),
+                                      subjectName: LabUtils.labDataToString(data),
                                       duration: numberOfHours,
                                       location: widget.labData?.location,
                                       facultyName: widget.labData?.facultyName,
                                       time: time));
                                 } else {
                                   widget.onChanged(Session(
-                                      id: DateTime.now()
-                                          .microsecondsSinceEpoch
-                                          .toString(),
+                                      id: DateTime.now().microsecondsSinceEpoch.toString(),
                                       isLab: true,
-                                      subjectName:
-                                          LabUtils.labDataToString(data),
+                                      subjectName: LabUtils.labDataToString(data),
                                       duration: numberOfHours,
                                       location: "unused",
                                       facultyName: "unused",
@@ -296,16 +258,10 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                                 Navigator.of(context).pop();
                               } else {
                                 controller.animateToPage(errorPage,
-                                    duration: Duration(
-                                        milliseconds:
-                                            (selectedPage - errorPage).abs() *
-                                                100),
-                                    curve: Curves.easeInOutCubic);
+                                    duration: Duration(milliseconds: (selectedPage - errorPage).abs() * 100), curve: Curves.easeInOutCubic);
                               }
                             },
-                            child: Text("Save",
-                                style: Theme.of(context).textTheme.titleMedium,
-                                textAlign: TextAlign.center),
+                            child: Text("Save", style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
                           ),
                         )
                       ],
@@ -321,23 +277,15 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
   }
 
   Widget editFields(Session labInfo, int page) {
-    TextEditingController batchNameController =
-        TextEditingController(text: labInfo.time ?? "");
-    TextEditingController subjectNameController =
-        TextEditingController(text: labInfo.subjectName ?? "");
-    TextEditingController locationController =
-        TextEditingController(text: labInfo.location ?? "");
-    TextEditingController facultyNameController =
-        TextEditingController(text: labInfo.facultyName ?? "");
+    TextEditingController batchNameController = TextEditingController(text: labInfo.time ?? "");
+    TextEditingController subjectNameController = TextEditingController(text: labInfo.subjectName ?? "");
+    TextEditingController locationController = TextEditingController(text: labInfo.location ?? "");
+    TextEditingController facultyNameController = TextEditingController(text: labInfo.facultyName ?? "");
 
-    batchNameController.selection = TextSelection.fromPosition(
-        TextPosition(offset: batchNameController.text.length));
-    subjectNameController.selection = TextSelection.fromPosition(
-        TextPosition(offset: subjectNameController.text.length));
-    locationController.selection = TextSelection.fromPosition(
-        TextPosition(offset: locationController.text.length));
-    facultyNameController.selection = TextSelection.fromPosition(
-        TextPosition(offset: facultyNameController.text.length));
+    batchNameController.selection = TextSelection.fromPosition(TextPosition(offset: batchNameController.text.length));
+    subjectNameController.selection = TextSelection.fromPosition(TextPosition(offset: subjectNameController.text.length));
+    locationController.selection = TextSelection.fromPosition(TextPosition(offset: locationController.text.length));
+    facultyNameController.selection = TextSelection.fromPosition(TextPosition(offset: facultyNameController.text.length));
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -368,10 +316,8 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                     labInfo.time = a;
                   },
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.people_alt_rounded,
-                          color: Theme.of(context).textTheme.titleLarge?.color),
-                      label: const Text("Batch",
-                          style: TextStyle(letterSpacing: 1))),
+                      prefixIcon: Icon(Icons.people_alt_rounded, color: Theme.of(context).textTheme.titleLarge?.color),
+                      label: const Text("Batch", style: TextStyle(letterSpacing: 1))),
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
@@ -392,10 +338,8 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                   labInfo.subjectName = a;
                 },
                 decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.subject,
-                        color: Theme.of(context).textTheme.titleLarge?.color),
-                    label: const Text("Subject",
-                        style: TextStyle(letterSpacing: 1))),
+                    prefixIcon: Icon(Icons.subject, color: Theme.of(context).textTheme.titleLarge?.color),
+                    label: const Text("Subject", style: TextStyle(letterSpacing: 1))),
                 style: Theme.of(context).textTheme.headlineMedium,
               )),
             ],
@@ -420,10 +364,8 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                   labInfo.location = a;
                 },
                 decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.location_pin,
-                        color: Theme.of(context).textTheme.titleLarge?.color),
-                    label: const Text("Location",
-                        style: TextStyle(letterSpacing: 1))),
+                    prefixIcon: Icon(Icons.location_pin, color: Theme.of(context).textTheme.titleLarge?.color),
+                    label: const Text("Location", style: TextStyle(letterSpacing: 1))),
                 style: Theme.of(context).textTheme.headlineMedium,
               )),
               const SizedBox(width: 10),
@@ -443,10 +385,8 @@ class _ConstructorDialogLabState extends State<ConstructorDialogLab> {
                   labInfo.facultyName = a;
                 },
                 decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.person_outline_rounded,
-                        color: Theme.of(context).textTheme.titleLarge?.color),
-                    label: const Text("Faculty",
-                        style: TextStyle(letterSpacing: 1))),
+                    prefixIcon: Icon(Icons.person_outline_rounded, color: Theme.of(context).textTheme.titleLarge?.color),
+                    label: const Text("Faculty", style: TextStyle(letterSpacing: 1))),
                 style: Theme.of(context).textTheme.headlineMedium,
               )),
             ],
