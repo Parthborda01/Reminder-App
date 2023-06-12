@@ -10,12 +10,12 @@ class ImageConverter{
     return base64Image;
   }
   Future<File> stringToImage(String imgString) async {
-    var newbytes = base64Decode(imgString);
-    String tempath = (await getTemporaryDirectory()).path;
-    File imgfile=File('$tempath/AddFile.png');
-    await imgfile.writeAsBytes(
-        newbytes.buffer.asUint8List(newbytes.offsetInBytes, newbytes.lengthInBytes));
-    return imgfile;
+    var newBytes = base64Decode(imgString);
+    String temPath = (await getTemporaryDirectory()).path;
+    File imgFile=File('$temPath/AddFile.png');
+    await imgFile.writeAsBytes(
+        newBytes.buffer.asUint8List(newBytes.offsetInBytes, newBytes.lengthInBytes));
+    return imgFile;
   }
 
 

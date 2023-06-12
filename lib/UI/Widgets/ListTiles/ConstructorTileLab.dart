@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:student_dudes/Data/Model/timeTableModel.dart';
+import 'package:student_dudes/Data/Model/time_table_model.dart';
 import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
-import 'package:student_dudes/Util/Util.dart';
+import 'package:student_dudes/Util/lab_session_util.dart';
+import 'package:student_dudes/Util/time_util.dart';
 
-import '../../../Util/LabSessionHelper.dart';
 
 class ConstructorTileLab extends StatelessWidget {
   const ConstructorTileLab(
-      {super.key, required this.labData, required this.isSelected, required this.fileData});
+      {super.key, required this.labData, required this.isSelected, required this.fileData, required this.numberOfEmpty});
 
 
   final bool isSelected;  final Session? labData;
   final FileData fileData;
+  final int numberOfEmpty;
 
   bool checkError(String input) {
     return input.isEmpty;
@@ -22,13 +23,14 @@ class ConstructorTileLab extends StatelessWidget {
     List<Session> data = LabUtils.labToSessions(labData!);
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: const EdgeInsets.only(bottom: 20, left: 10,right: 10),
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
               color: isSelected
                   ? Colors.blue.withOpacity(0.8)
+                  : numberOfEmpty > 0 ? Colors.amber
                   : Colors.transparent)),
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
@@ -41,7 +43,7 @@ class ConstructorTileLab extends StatelessWidget {
                 Text(
                     labData?.time != null &&
                             labData!.time!.trim().isNotEmpty
-                        ? Util.calculatePeriod(labData!.time!, labData!.duration!)
+                        ? TimeUtil.calculatePeriod(labData!.time!, labData!.duration!)
                         : "⚠️⚠️⚠️",
                     style: Theme.of(context).textTheme.headlineSmall,
                     textAlign: TextAlign.start)

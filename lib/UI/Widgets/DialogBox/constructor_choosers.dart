@@ -1,9 +1,9 @@
-import 'dart:ui';
 
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
-import '../../../Util/Cubits/Theme/ThemeManager.dart';
+import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
 
 class CreateChooser extends StatefulWidget {
   const CreateChooser({Key? key}) : super(key: key);
@@ -18,9 +18,9 @@ class _CreateChooserState extends State<CreateChooser> {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
       child: AlertDialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 10),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 10),
         elevation: 5,
-        title: Text("Create new by"),
+        title: const Text("Create new by"),
         content: Row(
           children: [
             Expanded(child: BlocBuilder<ThemeCubit, ThemeModes>(
@@ -44,7 +44,8 @@ class _CreateChooserState extends State<CreateChooser> {
                         fit: BoxFit.fill,
                       ),
                       onPressed: () async {
-                          Navigator.pushNamed(context, RouteNames.pdfSelect).then((value) => Navigator.of(context).pop());
+                        Navigator.of(context).pop();
+                          Navigator.pushNamed(context, RouteNames.pdfSelect,arguments: true);
                       }),
                 );
               },

@@ -38,9 +38,12 @@ class _SizeReportingWidgetState extends State<SizeReportingWidget> {
 class ExpandablePageView extends StatefulWidget {
   final List<Widget> children;
   final Function(int)? onPageChanged;
+  final PageController pageController;
+  final GlobalKey<FormFieldState>? pageKey;
+
   const ExpandablePageView({
     Key? key,
-    required this.children, this.onPageChanged,
+    required this.children, this.onPageChanged, required this.pageController, this.pageKey,
   }) : super(key: key);
 
   @override
@@ -49,9 +52,10 @@ class ExpandablePageView extends StatefulWidget {
 
 class _ExpandablePageViewState extends State<ExpandablePageView>
     with TickerProviderStateMixin {
-  late PageController _pageController;
+
   late List<double> _heights;
   int _currentPage = 0;
+
 
   double get _currentHeight => _heights[_currentPage];
 
@@ -59,30 +63,29 @@ class _ExpandablePageViewState extends State<ExpandablePageView>
   void initState() {
     _heights = widget.children.map((e) => 0.0).toList();
     super.initState();
-    _pageController = PageController()
-      ..addListener(() {
-        final newPage = _pageController.page?.round() ?? 0;
+
+    widget.pageController.addListener(() {
+        final newPage = widget.pageController.page?.round() ?? 0;
         if (_currentPage != newPage) {
           setState(() => _currentPage = newPage);
         }
       });
+
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
+      key: widget.pageKey,
       curve: Curves.easeInOutCubic,
       duration: const Duration(milliseconds: 100),
       tween: Tween<double>(begin: _heights[0], end: _currentHeight),
       builder: (context, value, child) => SizedBox(height: value, child: child),
       child: PageView(
-        controller: _pageController,
+        controller: widget.pageController,
         onPageChanged: widget.onPageChanged,
         children: _sizeReportingChildren
             .asMap() //

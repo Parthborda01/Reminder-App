@@ -1,6 +1,7 @@
-import 'package:student_dudes/Data/Model/timeTableModel.dart';
+import 'package:student_dudes/Data/Model/time_table_model.dart';
 
 class LabUtils {
+
   LabUtils._();
 
   static List<Session> labToSessions(Session labData) {
@@ -11,7 +12,6 @@ class LabUtils {
     for (String i in labels) {
       if (i.isNotEmpty) {
         i = "$i)";
-        print("$i<<-------------------------------");
         data.add(Session(
           id: labData.id,
           duration: labData.duration,
@@ -54,7 +54,6 @@ class LabUtils {
     // Split the input string by ":" to get the relevant portion
     List<String> parts = input.split(":");
     if (parts.length >= 2) {
-      String relevantPortion = parts[1].trim();
       // Extract the element by removing unwanted characters
       RegExp regex = RegExp(r"[A-Za-z0-9]+(?=[\s-]|$)");
       Match? match = regex.firstMatch(input);

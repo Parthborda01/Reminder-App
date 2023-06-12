@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
-import 'package:student_dudes/Data/Model/timeTableModel.dart';
-import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/ConstructorDialogLecture.dart';
-import 'package:student_dudes/Util/Util.dart';
+import 'package:student_dudes/Data/Model/time_table_model.dart';
+import 'package:student_dudes/Util/time_util.dart';
 
 class ConstructorTileLecture extends StatefulWidget {
-  const ConstructorTileLecture({super.key, required this.lectureData, required this.isSelected});
+  const ConstructorTileLecture({super.key, required this.lectureData, required this.isSelected, required this.numberOfEmpty});
   final bool isSelected;
   final Session lectureData;
-
+  final int numberOfEmpty;
   @override
   State<ConstructorTileLecture> createState() => _ConstructorTileLectureState();
 }
@@ -17,18 +16,16 @@ class _ConstructorTileLectureState extends State<ConstructorTileLecture> {
 
   @override
   Widget build(BuildContext context) {
-    var deviceWidth = MediaQuery.of(context).size.width;
-    var deviceHeight = MediaQuery.of(context).size.height;
-
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: const EdgeInsets.only(bottom: 20, left: 10,right: 10),
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
           borderRadius: BorderRadius.circular(25),
           border: Border.all(
               color: widget.isSelected
                   ? Colors.blue.withOpacity(0.8)
+                  : widget.numberOfEmpty > 0 ? Colors.amber
                   : Colors.transparent)),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
@@ -75,7 +72,7 @@ class _ConstructorTileLectureState extends State<ConstructorTileLecture> {
                     widget.lectureData.time != null &&
 
                             widget.lectureData.time!.trim().isNotEmpty
-                        ? Util.calculatePeriod(widget.lectureData.time!, widget.lectureData.duration!)
+                        ? TimeUtil.calculatePeriod(widget.lectureData.time!, widget.lectureData.duration!)
                         : "⚠️⚠️⚠️",
                     style: Theme.of(context).textTheme.headlineSmall,
                   )

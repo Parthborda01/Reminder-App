@@ -4,11 +4,11 @@
   "image": "",
   "days": [
     {
-      "day": "Sun",
+      "day": "Monday",
       "session": [
         {
           "id": "",
-          "isLab": true,
+          "isLab": false,
           "subjectName": "CN",
           "facultyName": "",
           "location": "",
@@ -16,18 +16,22 @@
           "duration" : 1
         },
         {
-          "isLab": true,
+          "id": "",
+          "isLab": false,
           "subjectName": "CN",
           "facultyName": "",
           "location": "",
-          "time": "8:30 to 9:30"
+          "time": "8:30 to 9:30",
+          "duration" : 1
         },
         {
+          "id": "",
           "isLab": true,
           "subjectName": "CN",
           "facultyName": "",
           "location": "",
-          "time": "8:30 to 9:30"
+          "time": "8:30 to 9:30",
+          "duration" : 2
         }
       ]
     }

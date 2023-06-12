@@ -1,9 +1,6 @@
 import 'dart:convert';
 
-import 'lecturePositionModel.dart';
-
 TimeTable timeTableFromJson(String str) => TimeTable.fromJson(json.decode(str));
-
 String timeTableToJson(TimeTable data) => json.encode(data.toJson());
 
 class TimeTable {
@@ -46,7 +43,14 @@ class DayOfWeek {
         List<Session>.from(json["session"].map((x) => Session.fromJson(x)));
   }
 
-  Map<String, dynamic> toJson() => {"day": day, "session": Session};
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['day'] = day;
+    if (sessions != null) {
+      data['session'] = sessions!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
 class Session {

@@ -95,15 +95,49 @@ class ThemeConstants {
         thumbColor: MaterialStateProperty.all<Color>(Colors.lightBlueAccent),
         trackColor: MaterialStateProperty.all<Color>(Colors.transparent),
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(TextStyle(
+              letterSpacing: 2,
+              fontSize: 24,
+              color: lightTextSecondary,
+              fontWeight: FontWeight.w400
+          )),
+          overlayColor: MaterialStateProperty
+              .resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                if (states
+                    .contains(MaterialState.focused)) {
+                  return Colors.white70;
+                }
+                if (states
+                    .contains(MaterialState.hovered)) {
+                  return Colors.white70;
+                }
+                if (states
+                    .contains(MaterialState.pressed)) {
+                  return Colors.white70;
+                }
+                return Colors
+                    .white70; // Defer to the widget's default.
+              }),
+        )
+      ),
       dividerColor: deadColor,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(TextStyle(
+              letterSpacing: 2,
+              fontSize: 26,
+              color: lightTextPrimary,
+              fontWeight: FontWeight.w400
+          )),
           backgroundColor: MaterialStateProperty.all(lightBackgroundSecondary),
           surfaceTintColor: MaterialStateProperty.all(lightBackgroundPrimary),
           iconColor: MaterialStateProperty.all(lightTextPrimary),
           overlayColor: MaterialStateProperty.all(deadColor.withOpacity(0.2)),
           padding: MaterialStateProperty.all(
-              EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
         ),
       ),
       textSelectionTheme: TextSelectionThemeData(
@@ -113,10 +147,19 @@ class ThemeConstants {
       ),
       dialogBackgroundColor: lightBackgroundSecondary,
       dialogTheme: DialogTheme(
+        contentTextStyle: TextStyle(
+            fontSize: 20,
+            color: lightTextSecondary),
+        titleTextStyle: TextStyle(
+            letterSpacing: 0,
+            fontSize: 24,
+            color: lightTextPrimary.withOpacity(0.6),
+            fontWeight: FontWeight.w400),
           surfaceTintColor: lightBackgroundSecondary.withOpacity(0.8),
           backgroundColor: lightBackgroundSecondary.withOpacity(0.8)
       ),
       inputDecorationTheme: InputDecorationTheme(
+          errorStyle: const TextStyle(fontSize: 12,color: Colors.red),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(
@@ -208,14 +251,45 @@ class ThemeConstants {
         trackColor: MaterialStateProperty.all<Color>(Colors.transparent),
       ),
       dividerColor: deadColor,
+      textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            textStyle: MaterialStateProperty.all(TextStyle(
+                letterSpacing: 2,
+                fontSize: 24,
+                color: darkTextSecondary,
+                fontWeight: FontWeight.w400
+            )),
+            overlayColor:
+            MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.focused)) {
+                    return Colors.transparent;
+                  }
+                  if (states.contains(MaterialState.hovered)) {
+                    return Colors.transparent;
+                  }
+                  if (states.contains(MaterialState.pressed)) {
+                    return Colors.transparent;
+                  }
+                  return Colors
+                      .transparent; // Defer to the widget's default.
+                }),
+          )
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(TextStyle(
+              letterSpacing: 2,
+              fontSize: 26,
+              color: darkTextPrimary,
+              fontWeight: FontWeight.w400
+          )),
           backgroundColor: MaterialStateProperty.all(darkBackgroundSecondary),
           surfaceTintColor: MaterialStateProperty.all(darkBackgroundPrimary),
           iconColor: MaterialStateProperty.all(darkTextPrimary),
           overlayColor: MaterialStateProperty.all(deadColor.withOpacity(0.2)),
           padding: MaterialStateProperty.all(
-              EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
         ),
       ),
       textSelectionTheme: TextSelectionThemeData(
@@ -225,10 +299,19 @@ class ThemeConstants {
       ),
       dialogBackgroundColor: darkBackgroundSecondary,
       dialogTheme: DialogTheme(
+          contentTextStyle: TextStyle(
+              fontSize: 20,
+              color: darkTextSecondary),
+          titleTextStyle: TextStyle(
+              letterSpacing: 0,
+              fontSize: 24,
+              color: darkTextPrimary.withOpacity(0.6),
+              fontWeight: FontWeight.w400),
         surfaceTintColor: darkBackgroundSecondary.withOpacity(0.9),
         backgroundColor: darkBackgroundSecondary.withOpacity(0.9)
       ),
       inputDecorationTheme: InputDecorationTheme(
+        errorStyle: const TextStyle(fontSize: 12,color: Colors.red),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(

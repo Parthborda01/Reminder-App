@@ -1,11 +1,9 @@
-import 'dart:convert';
+
 import 'dart:io';
-
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:student_dudes/Util/ImageHelper/ImageConverter.dart';
-
-import '../Model/lecturePositionModel.dart';
-import '../Model/timeTableModel.dart';
+import 'package:student_dudes/Data/Model/text_position_model.dart';
+import 'package:student_dudes/Data/Model/time_table_model.dart';
+import 'package:student_dudes/Util/ImageHelper/image_converter.dart';
 
 class TextExtractor {
   String? classRoom;
@@ -25,23 +23,23 @@ class TextExtractor {
   }
 
   Future<TimeTable> _textOcr({required File image}) async {
-    //vertical positions of the all days monday to saturaday
+    //vertical positions of the all days monday to saturday
     List xPositionsOfDays = [0, 0, 0, 0, 0, 0, 0];
     double xPosSemester = 0;
     String className = "";
     //ending position that will tell the model the last block to  fetch
-    double endpos = 0.0;
-    double ylunch = 0.0;
-    double ybreak = 0.0;
+    double endPos = 0.0;
+    double yLunch = 0.0;
+    double yBreak = 0.0;
     //this will store the result on ml_kit_image_to_text in string format
 
-    List<Textblock> time = [];
-    List<Textblock> mon = [];
-    List<Textblock> tue = [];
-    List<Textblock> wed = [];
-    List<Textblock> thu = [];
-    List<Textblock> fri = [];
-    List<Textblock> sat = [];
+    List<TextBlockObject> time = [];
+    List<TextBlockObject> mon = [];
+    List<TextBlockObject> tue = [];
+    List<TextBlockObject> wed = [];
+    List<TextBlockObject> thu = [];
+    List<TextBlockObject> fri = [];
+    List<TextBlockObject> sat = [];
 
     //this will store the image taken from class variable
     final InputImage inputImage = InputImage.fromFile(image);
@@ -49,7 +47,7 @@ class TextExtractor {
     //initialize the text detector from ml_kit_image_to_text
     final TextRecognizer textDetector = GoogleMlKit.vision.textRecognizer();
 
-    //this linw will process the image and store the fetched data in recognizedText format
+    //this line will process the image and store the fetched data in recognizedText format
     final RecognizedText recognizedText =
         await textDetector.processImage(inputImage);
 
@@ -99,13 +97,13 @@ class TextExtractor {
       if (text.toLowerCase() == 'subject' ||
           text.toLowerCase() == 'subject name' ||
           text.toLowerCase() == 'subject\nname') {
-        endpos = yPosMean;
+        endPos = yPosMean;
       }
       if (text.toLowerCase() == 'lunch break') {
-        ylunch = yPosMean;
+        yLunch = yPosMean;
       }
       if (text.toLowerCase() == 'break') {
-        ybreak = yPosMean;
+        yBreak = yPosMean;
       }
       if (text.toLowerCase().contains("classroom")) {
         classRoom = text;
@@ -114,193 +112,178 @@ class TextExtractor {
 
     for (final TextBlock block in recognizedText.blocks) {
       final String text = block.text;
-      final yup = block.boundingBox.top;
-      final ydown = block.boundingBox.bottom;
-      final xleft = block.boundingBox.left;
-      final xright = block.boundingBox.right;
+      final yUp = block.boundingBox.top;
+      final yDown = block.boundingBox.bottom;
+      final xLeft = block.boundingBox.left;
+      final xRight = block.boundingBox.right;
       final double yPosMean =
           ((block.boundingBox.top) + (block.boundingBox.bottom)) / 2;
       final xPosMean =
           ((block.boundingBox.left) + (block.boundingBox.right)) / 2;
-      endpos = endpos - endpos * 0.0010;
+      endPos = endPos - endPos * 0.0010;
       if (-(width / 200) < xPosMean - xPositionsOfDays[0] &&
           xPosMean - xPositionsOfDays[0] < (width / 200) &&
-          yPosMean < endpos) {
-        if (-(width / 400) < ybreak - yPosMean &&
-            ybreak - yPosMean < width / 400) {
-        } else if (-(width / 400) < ylunch - yPosMean &&
-            ylunch - yPosMean < width / 400) {
+          yPosMean < endPos) {
+        if (-(width / 400) < yBreak - yPosMean &&
+            yBreak - yPosMean < width / 400) {
+        } else if (-(width / 400) < yLunch - yPosMean &&
+            yLunch - yPosMean < width / 400) {
         } else {
-          time.add(Textblock(
+          time.add(TextBlockObject(
             text: text,
-            yup: yup,
-            ydown: ydown,
-            ymean: yPosMean,
-            xleft: xleft,
-            xright: xright,
-            xmean: xPosMean,
+            yUp: yUp,
+            yDown: yDown,
+            yMean: yPosMean,
+            xLeft: xLeft,
+            xRight: xRight,
+            xMean: xPosMean,
           ));
         }
       }
       if (-(width / 200) < xPosMean - xPositionsOfDays[1] &&
           xPosMean - xPositionsOfDays[1] < (width / 200) &&
-          yPosMean < endpos) {
-        mon.add(Textblock(
+          yPosMean < endPos) {
+        mon.add(TextBlockObject(
           text: text,
-          yup: yup,
-          ydown: ydown,
-          ymean: yPosMean,
-          xleft: xleft,
-          xright: xright,
-          xmean: xPosMean,
+          yUp: yUp,
+          yDown: yDown,
+          yMean: yPosMean,
+          xLeft: xLeft,
+          xRight: xRight,
+          xMean: xPosMean,
         ));
       }
       if (-(width / 200) < xPosMean - xPositionsOfDays[2] &&
           xPosMean - xPositionsOfDays[2] < (width / 200) &&
-          yPosMean < endpos) {
-        tue.add(Textblock(
+          yPosMean < endPos) {
+        tue.add(TextBlockObject(
           text: text,
-          yup: yup,
-          ydown: ydown,
-          ymean: yPosMean,
-          xleft: xleft,
-          xright: xright,
-          xmean: xPosMean,
+          yUp: yUp,
+          yDown: yDown,
+          yMean: yPosMean,
+          xLeft: xLeft,
+          xRight: xRight,
+          xMean: xPosMean,
         ));
       }
       if (-(width / 200) < xPosMean - xPositionsOfDays[3] &&
           xPosMean - xPositionsOfDays[3] < (width / 200) &&
-          yPosMean < endpos) {
-        wed.add(Textblock(
+          yPosMean < endPos) {
+        wed.add(TextBlockObject(
           text: text,
-          yup: yup,
-          ydown: ydown,
-          ymean: yPosMean,
-          xleft: xleft,
-          xright: xright,
-          xmean: xPosMean,
+          yUp: yUp,
+          yDown: yDown,
+          yMean: yPosMean,
+          xLeft: xLeft,
+          xRight: xRight,
+          xMean: xPosMean,
         ));
       }
       if (-(width / 200) < xPosMean - xPositionsOfDays[4] &&
           xPosMean - xPositionsOfDays[4] < (width / 200) &&
-          yPosMean < endpos) {
-        thu.add(Textblock(
+          yPosMean < endPos) {
+        thu.add(TextBlockObject(
           text: text,
-          yup: yup,
-          ydown: ydown,
-          ymean: yPosMean,
-          xleft: xleft,
-          xright: xright,
-          xmean: xPosMean,
+          yUp: yUp,
+          yDown: yDown,
+          yMean: yPosMean,
+          xLeft: xLeft,
+          xRight: xRight,
+          xMean: xPosMean,
         ));
       }
       if (-(width / 200) < xPosMean - xPositionsOfDays[5] &&
           xPosMean - xPositionsOfDays[5] < (width / 200) &&
-          yPosMean < endpos) {
-        fri.add(Textblock(
+          yPosMean < endPos) {
+        fri.add(TextBlockObject(
           text: text,
-          yup: yup,
-          ydown: ydown,
-          ymean: yPosMean,
-          xleft: xleft,
-          xright: xright,
-          xmean: xPosMean,
+          yUp: yUp,
+          yDown: yDown,
+          yMean: yPosMean,
+          xLeft: xLeft,
+          xRight: xRight,
+          xMean: xPosMean,
         ));
       }
       if (-(width / 200) < xPosMean - xPositionsOfDays[6] &&
           xPosMean - xPositionsOfDays[6] < (width / 200) &&
-          yPosMean < endpos) {
-        sat.add(Textblock(
+          yPosMean < endPos) {
+        sat.add(TextBlockObject(
           text: text,
-          yup: yup,
-          ydown: ydown,
-          ymean: yPosMean,
-          xleft: xleft,
-          xright: xright,
-          xmean: xPosMean,
+          yUp: yUp,
+          yDown: yDown,
+          yMean: yPosMean,
+          xLeft: xLeft,
+          xRight: xRight,
+          xMean: xPosMean,
         ));
       }
       if (-(width / 200) < xPosMean - xPosSemester &&
           xPosMean - xPosSemester < (width / 200) &&
-          yPosMean < endpos) {
+          yPosMean < endPos) {
         className = text;
       }
     }
 
     for (var i in time) {
       i.text = i.text.replaceAll("\n", " ");
-
-      // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-    lecset(mon);
+    lecSet(mon);
     for (var i in mon) {
       i.text = i.text.replaceAll("\n", " ");
-
-      // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-    lecset(tue);
+    lecSet(tue);
     for (var i in tue) {
       i.text = i.text.replaceAll("\n", " ");
-
-      // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-    lecset(wed);
+    lecSet(wed);
     for (var i = 0; i < wed.length; i++) {
       wed[i].text = wed[i].text.replaceAll("\n", " ");
-
-      // print("${wed[i].text} 🟩 ${wed[i].ymean}");
       if (wed[i].text.toLowerCase() == "break" ||
           wed[i].text.toLowerCase() == "lunch break") {
-        // print(" ${wed[i].text} removed🟩");
         wed.removeAt(i);
       }
     }
 
-    lecset(thu);
+    lecSet(thu);
     for (var i in thu) {
       i.text = i.text.replaceAll("\n", " ");
-
-      // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-    lecset(fri);
+    lecSet(fri);
     for (var i in fri) {
       i.text = i.text.replaceAll("\n", " ");
-
-      // print("${i.text} 🟩${i.ymean} 🟩");
     }
 
-    lecset(sat);
+    lecSet(sat);
     for (var i in sat) {
       i.text = i.text.replaceAll("\n", " ");
-
-      // print("${i.text} 🟩${i.ymean} 🟩");
     }
     List<DayOfWeek> dayList = [
-      dayMaker(time, mon, "monday"),
-      dayMaker(time, tue, "tuesday"),
-      dayMaker(time, wed, "wednesday"),
-      dayMaker(time, thu, "thursday"),
-      dayMaker(time, fri, "friday"),
-      dayMaker(time, sat, "saturday"),
+      dayMaker(time, mon, "Monday"),
+      dayMaker(time, tue, "Tuesday"),
+      dayMaker(time, wed, "Wednesday"),
+      dayMaker(time, thu, "Thursday"),
+      dayMaker(time, fri, "Friday"),
+      dayMaker(time, sat, "Saturday"),
     ];
     return TimeTable(image: ImageConverter().imageToString(image),
         weekDays: dayList, className: className, classRoom: classRoom);
   }
 
-  void lecset(List daylist) {
+  void lecSet(List dayList) {
 
-    for (var i = 0; i < daylist.length - 1; i++) {
-      Textblock current = daylist[i];
-      Textblock next = daylist[i + 1];
+    for (var i = 0; i < dayList.length - 1; i++) {
+      TextBlockObject current = dayList[i];
+      TextBlockObject next = dayList[i + 1];
       current.text.trim();
       next.text.trim();
-      RegExp facultynamepattern = RegExp(r"^\([A-Z]+\)$");
+      RegExp facultyNamePattern = RegExp(r"^\([A-Z]+\)$");
 
-      //check if textblock text start from B(0-9)
+      //check if textBlock text start from B(0-9)
       if (current.text[0] == "B" &&
           (RegExp(r"[1-9]+").hasMatch(current.text[1]))) {
         // if start from B(0-9) and ends with ; then text
@@ -317,44 +300,44 @@ class TextExtractor {
         else {
           var k = i;
 
-          while (k < daylist.length - 1 &&
-              daylist[k].text[daylist[k].text.length - 1] != ";") {
-            if (daylist[k + 1].text[daylist[k + 1].text.length - 1] == ";") {
-              daylist[k].append(daylist[k + 1]);
-              daylist.remove(daylist[k + 1]);
+          while (k < dayList.length - 1 &&
+              dayList[k].text[dayList[k].text.length - 1] != ";") {
+            if (dayList[k + 1].text[dayList[k + 1].text.length - 1] == ";") {
+              dayList[k].append(dayList[k + 1]);
+              dayList.remove(dayList[k + 1]);
               break;
             } else {
-              daylist[k].append(daylist[k + 1]);
-              daylist.remove(daylist[k + 1]);
+              dayList[k].append(dayList[k + 1]);
+              dayList.remove(dayList[k + 1]);
             }
           }
         }
-      } else if (facultynamepattern.hasMatch(next.text.trim()) &&
-          !facultynamepattern.hasMatch(current.text.trim()) &&
-          next.ymean - current.ymean < height / 30) {
+      } else if (facultyNamePattern.hasMatch(next.text.trim()) &&
+          !facultyNamePattern.hasMatch(current.text.trim()) &&
+          next.yMean - current.yMean < height / 30) {
         current.append(next);
-        daylist.remove(next);
+        dayList.remove(next);
       }
     }
   }
 
-  DayOfWeek dayMaker(List<Textblock> time, List<Textblock> day, String d) {
+  DayOfWeek dayMaker(List<TextBlockObject> time, List<TextBlockObject> day, String d) {
 
     List<Session> session = [];
 
-    for (int itime = 1; itime < time.length; itime++) {
-      for (int iday = 1; iday < day.length; iday++) {
+    for (int timeList = 1; timeList < time.length; timeList++) {
+      for (int aDayList = 1; aDayList < day.length; aDayList++) {
 
-        Textblock time1 = time[itime];
-        Textblock? time2;
+        TextBlockObject time1 = time[timeList];
+        TextBlockObject? time2;
 
-        if (itime < time.length - 1) {
-          time2 = time[itime + 1];
+        if (timeList < time.length - 1) {
+          time2 = time[timeList + 1];
         }
 
-        Textblock current = day[iday];
+        TextBlockObject current = day[aDayList];
         String id = DateTime.now().microsecondsSinceEpoch.toString();
-        if ((time1.ymean - current.ymean).abs() < 25) {
+        if ((time1.yMean - current.yMean).abs() < 25) {
 
 
           // Is one hour Lecture
@@ -363,40 +346,28 @@ class TextExtractor {
             isLab: false,
             facultyName: RegExp(r'\((.*?)\)')
                 .stringMatch(current.text)
-                ?.replaceAll(RegExp(r'[()]'), ''),
+                ?.replaceAll(RegExp(r'[()]'), '').trim(),
 
             location: RegExp(r'\b([A-Z]-\d+(?:,\d+)?)\b')
                     .firstMatch(current.text)
                     ?.group(1) ??
                 (classRoom?.substring(
                         classRoom!.indexOf(":") + 1, classRoom!.indexOf(")")))
-                    ?.replaceAll(" ", ""),
+                    ?.replaceAll(":", "").trim(),
 
             subjectName: current.text.contains("(")
                 ? RegExp(r"([A-Z]-\d+)$").hasMatch(current.text.substring(0, current.text.indexOf("(")).trim())
-                ? current.text
-                .substring(0, current.text.indexOf("("))
-                .substring(
-                0,
-                current.text
-                    .substring(0, current.text.indexOf("("))
-                    .indexOf("-") -
-                    1)
-                : current.text.substring(0, current.text.indexOf("("))
+                ? current.text.substring(0, current.text.indexOf("(")).substring(0, current.text.substring(0, current.text.indexOf("(")).indexOf("-") - 1).trim()
+                : current.text.substring(0, current.text.indexOf("(")).trim()
                 : current.text.contains(RegExp(r"([A-Z]-/d+)$"))
-                ? current.text.substring(
-                0,
-                current.text
-                    .substring(0, current.text.indexOf("("))
-                    .indexOf("-") -
-                    1)
-                : current.text,
+                ? current.text.substring(0, current.text.substring(0, current.text.indexOf("(")).indexOf("-") - 1).trim()
+                : current.text.trim(),
             time: time1.text.trim().replaceAll(" ", "").split("to").first,
             duration: 1,
           ));
 
         } else if (time2 != null &&
-            ((((time1.ymean + time2.ymean) / 2) - current.ymean).abs() < 25)) {
+            ((((time1.yMean + time2.yMean) / 2) - current.yMean).abs() < 25)) {
 
           if (!RegExp(r'^B\d:').hasMatch(current.text)) {
             // Is Two hour Lecture
@@ -405,33 +376,21 @@ class TextExtractor {
               isLab: false,
               facultyName: RegExp(r'\((.*?)\)')
                   .stringMatch(current.text)
-                  ?.replaceAll(RegExp(r'[()]'), ''),
+                  ?.replaceAll(RegExp(r'[()]'), '').trim(),
               location: RegExp(r'\b([A-Z]-\d+(?:,\d+)?)\b')
                       .firstMatch(current.text)
                       ?.group(1) ??
                   (classRoom?.substring(
                           classRoom!.indexOf(":") + 1, classRoom!.indexOf(")")))
-                      ?.replaceAll(" ", ""),
+                      ?.replaceAll(":", "").trim(),
               subjectName: current.text.contains("(")
                   ? RegExp(r"([A-Z]-\d+)$").hasMatch(current.text.substring(0, current.text.indexOf("(")).trim())
-                  ? current.text
-                  .substring(0, current.text.indexOf("("))
-                  .substring(
-                  0,
-                  current.text
-                      .substring(0, current.text.indexOf("("))
-                      .indexOf("-") -
-                      1)
-                  : current.text.substring(0, current.text.indexOf("("))
+                  ? current.text.substring(0, current.text.indexOf("(")).substring(0, current.text.substring(0, current.text.indexOf("(")).indexOf("-") - 1).trim()
+                  : current.text.substring(0, current.text.indexOf("(")).trim()
                   : current.text.contains(RegExp(r"([A-Z]-/d+)$"))
-                  ? current.text.substring(
-                  0,
-                  current.text.
-                  substring(0, current.text.indexOf("("))
-                      .indexOf("-") -
-                      1)
-                  : current.text,
-              time: time1.text.trim().replaceAll(" ", "").split("to").first,
+                  ? current.text.substring(0, current.text.substring(0, current.text.indexOf("(")).indexOf("-") - 1).trim()
+                  : current.text.trim(),
+              time: time1.text.trim().replaceAll(" ", "").split("to").first.trim(),
               duration: 2,
             ));
           } else {
@@ -441,9 +400,9 @@ class TextExtractor {
               isLab: true,
               location: (classRoom?.substring(
                       classRoom!.indexOf(":") + 1, classRoom!.indexOf(")")))
-                  ?.replaceAll(" ", ""),
+                  ?.replaceAll(":", "").trim(),
               subjectName: current.text,
-              time: time1.text.trim().replaceAll(" ", "").split("to").first,
+              time: time1.text.trim().replaceAll(" ", "").split("to").first.trim(),
               duration: 2,
             ));
           }
@@ -451,7 +410,7 @@ class TextExtractor {
       }
     }
 
-    DayOfWeek dayfinal = DayOfWeek(day: d, sessions: session);
-    return dayfinal;
+    DayOfWeek dayFinal = DayOfWeek(day: d, sessions: session);
+    return dayFinal;
   }
 } /**/

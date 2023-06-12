@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
-import 'package:student_dudes/Data/Model/timeTableModel.dart';
-import 'package:student_dudes/Data/Repositories/dataExtractor.dart';
+import 'package:student_dudes/Data/Model/time_table_model.dart';
+import 'package:student_dudes/Data/Repositories/data_extractor.dart';
 
 part 'file_data_fetch_state.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
-import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
+import 'package:student_dudes/UI/Theme/theme_constants.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
 import 'package:student_dudes/Util/Cubits/fileDataFetch/file_data_fetch_cubit.dart';
 import 'Util/Cubits/AnimationHelper/animationHelperCubit.dart';

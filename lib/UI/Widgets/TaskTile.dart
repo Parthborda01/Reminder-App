@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:student_dudes/UI/Theme/ThemeConstants.dart';
+import 'package:student_dudes/UI/Theme/theme_constants.dart';
 
 class TaskLectureTile extends StatefulWidget {
   const TaskLectureTile(
@@ -22,11 +22,9 @@ class _TaskLectureTileState extends State<TaskLectureTile> {
 
   @override
   Widget build(BuildContext context) {
-    var DeviceWidth = MediaQuery.of(context).size.width;
-    var DeviceHeight = MediaQuery.of(context).size.height;
 
-    if (RegExp(r"\(|\)").hasMatch(widget.Lecture)) {
-      List lecture = widget.Lecture.split(RegExp(r"\(|\)"));
+    if (RegExp(r"[()]").hasMatch(widget.Lecture)) {
+      List lecture = widget.Lecture.split(RegExp(r"[()]"));
       lecturename = lecture[0];
       lecturename = lecturename.replaceAll("\n", "");
       facultyname = lecture[1];

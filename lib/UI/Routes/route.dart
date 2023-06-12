@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:student_dudes/UI/Pages/HomePage/HomePage.dart';
-import 'package:student_dudes/UI/Pages/NewCreatePage/ConstructorPage.dart';
+import 'package:student_dudes/UI/Pages/HomePage/home_page.dart';
+import 'package:student_dudes/UI/Pages/NewCreatePage/constructor_page.dart';
 import 'package:student_dudes/Util/ImageHelper/PickHelper.dart';
-import '../Pages/NewCreatePage/PDFChooser.dart';
-import '../Pages/SettingPage/SettingPage.dart';
+import '../Pages/NewCreatePage/PDF_chooser.dart';
+import '../Pages/SettingPage/setting_page.dart';
 
 class RouteNames {
   RouteNames._();
@@ -25,7 +25,7 @@ class RouteGenerator {
       case RouteNames.setting:
         return _createRoute(SettingPage());
       case RouteNames.pdfSelect:
-        return _createRoute(PDFChooser());
+        return _createRoute(PDFChooser(args as bool));
       // case RouteNames.logIn:
       //   return _createRoute();
       case RouteNames.tableBuild:

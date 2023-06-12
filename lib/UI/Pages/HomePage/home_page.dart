@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
-import 'package:student_dudes/UI/Widgets/HomePage/TaskTile.dart';
+import 'package:student_dudes/UI/Widgets/TaskTile.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 
 import '../../Widgets/HomePage/DrawerWidget.dart';
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SliderDrawer(
-          slider: SlidingDrawer(drwerButtonkey: _drwerButtonkey),
+          slider: SlidingDrawer(drawerButtonKey: _drwerButtonkey),
           key: _drwerButtonkey,
           appBar: Container(),
           isDraggable: true,
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                           builder: (context, state) {
                             return AnimatedOpacity(
                               opacity: state ? 0.0 : 1.0,
-                              duration: Duration(milliseconds: 100),
+                              duration: const Duration(milliseconds: 100),
                               child: Text(
                                 "Reminder",
                                 style: Theme.of(context).textTheme.titleLarge,
@@ -147,36 +147,6 @@ class _HomePageState extends State<HomePage> {
                             LectureLocation: 'E-306',
                           ),
                         ],
-                      ),
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          height: deviceHeight * 0.6,
-                          color: Theme.of(context).colorScheme.background,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          height: deviceHeight * 0.6,
-                          color: Theme.of(context).colorScheme.background,
-                        ),
                       ),
                     ),
                   ),
