@@ -1,6 +1,6 @@
 
 import 'dart:io';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:student_dudes/Data/Model/text_position_model.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
 import 'package:student_dudes/Util/ImageHelper/image_converter.dart';
@@ -45,7 +45,7 @@ class TextExtractor {
     final InputImage inputImage = InputImage.fromFile(image);
 
     //initialize the text detector from ml_kit_image_to_text
-    final TextRecognizer textDetector = GoogleMlKit.vision.textRecognizer();
+    final TextRecognizer textDetector = TextRecognizer();
 
     //this line will process the image and store the fetched data in recognizedText format
     final RecognizedText recognizedText =

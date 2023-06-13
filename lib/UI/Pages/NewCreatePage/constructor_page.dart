@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
 import 'package:student_dudes/Data/Repositories/calc_success_rate.dart';
+import 'package:student_dudes/Firebase/service.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/UI/Theme/theme_constants.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/ConstructorDialogs/constructor_dialog_lab.dart';
@@ -447,7 +449,12 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                           timeTable!.department = departmentNameController.text;
                                                                           timeTable!.semester = semester;
                                                                           timeTable!.classRoom = classroomController.text;
-                                                                          // TODO: Upload To the Fire-Base !!!!
+                                                                          timeTable!.image = null;
+
+                                                                          print(json.encode(timeTable!.toJson()));
+
+                                                                          FirebaseServices.addTimeTable(timeTable!);
+
                                                                         },
                                                                         child: Text("Save",
                                                                             style: Theme.of(context).textTheme.titleMedium,
