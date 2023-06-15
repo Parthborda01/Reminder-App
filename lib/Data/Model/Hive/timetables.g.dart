@@ -119,13 +119,14 @@ class SessionHiveAdapter extends TypeAdapter<SessionHive> {
       location: fields[4] as String,
       time: fields[5] as String,
       duration: fields[6] as int,
+      alert: fields[7] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, SessionHive obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -139,7 +140,9 @@ class SessionHiveAdapter extends TypeAdapter<SessionHive> {
       ..writeByte(5)
       ..write(obj.time)
       ..writeByte(6)
-      ..write(obj.duration);
+      ..write(obj.duration)
+      ..writeByte(7)
+      ..write(obj.alert);
   }
 
   @override

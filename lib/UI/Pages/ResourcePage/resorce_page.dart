@@ -394,7 +394,7 @@ class _ResourcePageState extends State<ResourcePage> {
                                                                           _repository.updateTimeTable(i,box.values.toList()[i]);
                                                                         }
                                                                         await _repository.storeTimeTable(
-                                                                          ModelConverter.convertToHive(selected, true),
+                                                                          ModelConverter.convertToHive(timetable: selected,isSelected:  true),
                                                                         );
 
                                                                         if (!mounted) return;

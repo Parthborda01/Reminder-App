@@ -30,7 +30,7 @@ class SessionTile {
             children: [
               Text(session.location,style: Theme.of(context).textTheme.headlineMedium),
               CupertinoSwitch(
-                  value: true,
+                  value: switchValue,
                   onChanged: onChange
               )
             ],

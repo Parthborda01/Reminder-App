@@ -40,7 +40,7 @@ class TimeTableHive extends HiveObject {
     this.image,
     required this.days,
     required this.id,
-    required this.isSelected
+    required this.isSelected,
   });
 }
 
@@ -81,6 +81,9 @@ class SessionHive extends HiveObject {
   @HiveField(6)
   int duration;
 
+  @HiveField(7)
+  late bool alert;
+
   SessionHive({
     required this.id,
     required this.isLab,
@@ -89,5 +92,6 @@ class SessionHive extends HiveObject {
     required this.location,
     required this.time,
     required this.duration,
+    required this.alert,
   });
 }

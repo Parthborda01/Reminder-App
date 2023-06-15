@@ -2,7 +2,7 @@ import 'package:student_dudes/Data/Model/Hive/timetables.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
 
 class ModelConverter {
-  static TimeTableHive convertToHive(TimeTable timetable,bool isSelected) {
+  static TimeTableHive convertToHive({required TimeTable timetable, required bool isSelected}) {
     return TimeTableHive(
       isSelected: isSelected,
       classroom: timetable.classRoom ?? '',
@@ -17,6 +17,7 @@ class ModelConverter {
           day: dayOfWeek.day ?? '',
           session: dayOfWeek.sessions?.map((session) {
             return SessionHive(
+              alert: true,
               id: session.id ?? '',
               isLab: session.isLab ?? false,
               subjectName: session.subjectName ?? '',

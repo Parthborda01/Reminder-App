@@ -121,8 +121,6 @@ class _HomePageState extends State<HomePage> {
                                       child: Text("Tasks", style: Theme.of(context).textTheme.titleSmall)),
                                 )),
                         const Spacer(),
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
-                        IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
                       ],
                     ),
                   ),
@@ -196,10 +194,15 @@ class _HomePageState extends State<HomePage> {
                                   itemBuilder: (context, indexList) {
                                     timeTableHive.days[indexPage].session.sort((a, b) => TimeUtil.compareTime(a.time, b.time));
                                     return SessionTile.sessionTile(
-                                        context: context,
-                                        session: timeTableHive.days[indexPage].session[indexList],
-                                        switchValue: true,
-                                        onChange: (value) {});
+                                      context: context,
+                                      session: timeTableHive.days[indexPage].session[indexList],
+                                      switchValue: timeTableHive.days[indexPage].session[indexList].alert,
+                                      onChange: (value) {
+                                        timeTableHive.days[indexPage].session[indexList].alert = value;
+
+                                        setState(() {});
+                                      },
+                                    );
                                   },
                                 ),
                               ],
