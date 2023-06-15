@@ -20,8 +20,6 @@ class TimeTablesRepository {
     return _timeTableBox.getAt(index)!;
   }
 
-
-
   Future<void> updateTimeTable(int index, TimeTableHive updatedClassroom) async {
     await _timeTableBox.putAt(index, updatedClassroom);
   }
@@ -29,4 +27,9 @@ class TimeTablesRepository {
   Future<void> deleteTimeTable(int index) async {
     await _timeTableBox.deleteAt(index);
   }
+
+  Future<void> closeBox() async {
+    await _timeTableBox.close();
+  }
+
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:student_dudes/Data/Model/Hive/timetables.dart';
-import 'package:student_dudes/Data/Repositories/time_tables_repository.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/constructor_choosers.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
@@ -11,22 +10,16 @@ import 'package:student_dudes/Util/string_util.dart';
 
 class SlidingDrawer extends StatefulWidget {
   final GlobalKey<SliderDrawerState> drawerButtonKey;
+  final List<TimeTableHive> list;
+  final Function(int) onTap;
 
-  const SlidingDrawer({Key? key, required this.drawerButtonKey}) : super(key: key);
+  const SlidingDrawer({Key? key, required this.drawerButtonKey, required this.list, required this.onTap}) : super(key: key);
 
   @override
   State<SlidingDrawer> createState() => _SlidingDrawerState();
 }
 
 class _SlidingDrawerState extends State<SlidingDrawer> {
-  final TimeTablesRepository repository = TimeTablesRepository();
-  List<TimeTableHive> list = [];
-
-  @override
-  void initState() {
-    list = repository.getAllTimeTables();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,22 +102,28 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                   const SizedBox(height: 20),
                   Expanded(
                     child: ListView.builder(
-                      // shrinkWrap: true,
-                      // physics: const NeverScrollableScrollPhysics(),
-                      itemCount: list.length,
+                      itemCount: widget.list.length,
                       itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(
-                                    "${StringUtils.getOrdinal(list[index].semester)} ${list[index].department} ${list[index].classname} (${list[index].id.substring(list[index].id.length - 2)})",
-                                  style: Theme.of(context).textTheme.headlineMedium,
-                                ),
-                              leading: const Icon(Icons.calendar_month_rounded),
-                              trailing: list[index].isSelected ? const Icon(Icons.check_circle_outline_rounded) : const SizedBox(),
-                            )
-                          ],
+                        return ListTile(
+                          selected: widget.list[index].isSelected,
+                          onTap: () {
+                            int getIndex(int index){
+                              List<int> a = [];
+                              for (int i = widget.list.length - 1; i >= 0; i--) {
+                                a.add(i);
+                              }
+                              return a[index];
+                            }
+                            widget.onTap(getIndex(index));
+                            setState(() {});
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                                "${StringUtils.getOrdinal(widget.list[index].semester)} ${widget.list[index].department} ${widget.list[index].classname} (${widget.list[index].id.substring(widget.list[index].id.length - 2)})",
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                          leading: const Icon(Icons.calendar_month_rounded),
+                          trailing: widget.list[index].isSelected ? const Icon(Icons.check_circle_outline_rounded) : const SizedBox(),
                         );
                       },
                     ),
@@ -137,6 +136,7 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                       title: Text('Add Time Table', style: Theme.of(context).textTheme.titleSmall, textAlign: TextAlign.center),
                       tileColor: Theme.of(context).scaffoldBackgroundColor,
                       onTap: () {
+                        widget.drawerButtonKey.currentState?.toggle();
                         Navigator.pushNamed(context, RouteNames.resource);
                       },
                     ),

@@ -18,14 +18,28 @@ final HexColor darkBackgroundDip = HexColor("#2e2e2e");
 
 class ThemeConstants {
   static final lightTheme = ThemeData(
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      refreshBackgroundColor: deadColor,
+      color: lightTextPrimary
+    ),
       useMaterial3: true,
       androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
       scaffoldBackgroundColor: lightBackgroundPrimary,
       colorScheme: ColorScheme.light(
-        brightness: Brightness.light,
+          primary: lightTextPrimary,
+          secondary: lightTextSecondary,
+          brightness: Brightness.light,
         background: lightBackgroundSecondary
       ),
       canvasColor: lightBackgroundDip,
+      appBarTheme: AppBarTheme(
+        actionsIconTheme: IconThemeData(
+          color: lightTextPrimary,
+        ),
+        iconTheme: IconThemeData(
+          color: lightTextPrimary,
+        )
+      ),
       iconTheme: IconThemeData(
         color: lightTextPrimary,
       ),
@@ -183,10 +197,15 @@ class ThemeConstants {
       androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
       scaffoldBackgroundColor: darkBackgroundPrimary,
       colorScheme: ColorScheme.light(
+        primary: darkTextPrimary,
         brightness: Brightness.dark,
           background: darkBackgroundSecondary
       ),
       canvasColor: darkBackgroundDip,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+          refreshBackgroundColor: deadColor,
+          color: darkTextPrimary
+      ),
       iconTheme: IconThemeData(color: darkTextPrimary),
       brightness: Brightness.dark,
       textTheme: TextTheme(

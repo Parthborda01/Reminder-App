@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:student_dudes/Data/Repositories/time_tables_repository.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/UI/Theme/theme_constants.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
@@ -25,10 +26,9 @@ void main() async {
     Hive.registerAdapter(TimeTableHiveAdapter());
     Hive.registerAdapter(DayOfWeekHiveAdapter());
     Hive.registerAdapter(SessionHiveAdapter());
-
-  Box<TimeTableHive> box =  await Hive.openBox<TimeTableHive>('time_tables');
-
-   for (var element in box.values) {
+  await Hive.openBox<TimeTableHive>('time_tables');
+  final TimeTablesRepository repository = TimeTablesRepository();
+   for (var element in repository.getAllTimeTables()) {
      if(element.isSelected){
        isBoxEmpty = true;
      }

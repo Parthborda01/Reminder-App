@@ -63,6 +63,7 @@ dependencies:
   firebase_core: ^2.13.1
   cloud_firestore: ^4.8.0
   hive_flutter: ^1.1.0
+  expandable_page_view: ^1.0.17
 
 
 dev_dependencies:

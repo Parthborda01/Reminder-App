@@ -23,7 +23,6 @@ class ResourcePage extends StatefulWidget {
 }
 
 class _ResourcePageState extends State<ResourcePage> {
-
   final TimeTablesRepository _repository = TimeTablesRepository();
 
   TimeTable getFinalTimeTable(TimeTable n, String batch) {
@@ -144,13 +143,64 @@ class _ResourcePageState extends State<ResourcePage> {
                     surfaceTintColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
                     elevation: 0,
                     expandedHeight: 300,
-                    leading: Navigator.canPop(context)? IconButton(onPressed: (){
-                      Navigator.pop(context);
-                    }, icon: const Icon(Icons.arrow_back_ios_new_rounded)) : null,
+                    leading: Navigator.canPop(context)
+                        ? IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            color: Theme.of(context).iconTheme.color,
+                            icon: const Icon(Icons.arrow_back_ios_new_rounded))
+                        : null,
                     actions: [
-                      IconButton(onPressed: (){
-                        //TODO: show Dialog to add TimeTable;
-                      }, icon: const Icon(Icons.add))
+                      IconButton(
+                        onPressed: () {
+                          //TODO: show Dialog to add TimeTable;
+                        },
+                        color: Theme.of(context).iconTheme.color,
+                        icon: const Icon(Icons.add),
+                      ),
+                      BlocBuilder<ThemeCubit, ThemeModes>(
+                        builder: (context, themeMode) {
+                          final themeCubit = BlocProvider.of<ThemeCubit>(context);
+                          if (themeMode == ThemeModes.system) {
+                            if (MediaQuery.of(context).platformBrightness == Brightness.dark) {
+                              return IconButton(
+                                icon: const Icon(Icons.dark_mode),
+                                color: Theme.of(context).iconTheme.color,
+                                onPressed: () {
+                                  themeCubit.setThemeMode(ThemeModes.light);
+                                },
+                              );
+                            } else {
+                              return IconButton(
+                                icon: const Icon(Icons.light_mode),
+                                color: Theme.of(context).iconTheme.color,
+                                onPressed: () {
+                                  themeCubit.setThemeMode(ThemeModes.dark);
+                                },
+                              );
+                            }
+                          } else if (themeMode == ThemeModes.dark) {
+                            return IconButton(
+                              icon: const Icon(Icons.dark_mode),
+                              color: Theme.of(context).iconTheme.color,
+                              onPressed: () {
+                                themeCubit.setThemeMode(ThemeModes.light);
+                              },
+                            );
+                          } else if (themeMode == ThemeModes.light) {
+                            return IconButton(
+                              icon: const Icon(Icons.light_mode),
+                              color: Theme.of(context).iconTheme.color,
+                              onPressed: () {
+                                themeCubit.setThemeMode(ThemeModes.dark);
+                              },
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
                     ],
                     bottom: PreferredSize(
                       preferredSize: Size(deviceWidth, 24),
@@ -174,7 +224,7 @@ class _ResourcePageState extends State<ResourcePage> {
                                 },
                                 decoration: InputDecoration(
                                     hintText: "Search",
-                                    hintStyle: Theme.of(context).textTheme.labelLarge,
+                                    hintStyle: Theme.of(context).textTheme.titleMedium,
                                     contentPadding: const EdgeInsets.only(left: 30, bottom: 10, top: 10),
                                     prefixIconConstraints: const BoxConstraints(minWidth: 60),
                                     suffixIconConstraints: const BoxConstraints(minWidth: 60),
@@ -339,12 +389,14 @@ class _ResourcePageState extends State<ResourcePage> {
                                                                       batch: batches[index],
                                                                       onConform: () async {
                                                                         selected = getFinalTimeTable(selected, batches[index]);
-                                                                        for (var element in box.values) {
-                                                                          element.isSelected = false;
+                                                                        for (var i = 0; i < box.values.length; i++) {
+                                                                          box.values.toList()[i].isSelected = false;
+                                                                          _repository.updateTimeTable(i,box.values.toList()[i]);
                                                                         }
                                                                         await _repository.storeTimeTable(
                                                                           ModelConverter.convertToHive(selected, true),
                                                                         );
+
                                                                         if (!mounted) return;
                                                                         Navigator.pop(context);
                                                                         Navigator.pushNamedAndRemoveUntil(
@@ -358,8 +410,7 @@ class _ResourcePageState extends State<ResourcePage> {
                                                                 }
                                                               },
                                                               child: Container(
-                                                                padding:
-                                                                    const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                                                                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                                                                 decoration: BoxDecoration(
                                                                     color: deadColor.withOpacity(0.2),
                                                                     borderRadius: const BorderRadius.horizontal(
