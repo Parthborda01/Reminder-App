@@ -17,6 +17,4 @@ class ImageConverter{
         newBytes.buffer.asUint8List(newBytes.offsetInBytes, newBytes.lengthInBytes));
     return imgFile;
   }
-
-
 }

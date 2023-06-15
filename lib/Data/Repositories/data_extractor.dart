@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:student_dudes/Data/Model/text_position_model.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
-import 'package:student_dudes/Util/ImageHelper/image_converter.dart';
 
 class TextExtractor {
   String? classRoom;
@@ -270,8 +269,7 @@ class TextExtractor {
       dayMaker(time, fri, "Friday"),
       dayMaker(time, sat, "Saturday"),
     ];
-    return TimeTable(image: ImageConverter().imageToString(image),
-        weekDays: dayList, className: className, classRoom: classRoom);
+    return TimeTable(weekDays: dayList, className: className, classRoom: classRoom);
   }
 
   void lecSet(List dayList) {

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:student_dudes/UI/Widgets/Drawer/DrawerWidget.dart';
 import 'package:student_dudes/UI/Widgets/TaskTile.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
-
-import '../../Widgets/HomePage/DrawerWidget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  final GlobalKey<SliderDrawerState> _drwerButtonkey = GlobalKey<SliderDrawerState>();
+  final GlobalKey<SliderDrawerState> _drawerButtonKey = GlobalKey<SliderDrawerState>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +31,12 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    return Scaffold(
+    return
+      Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SliderDrawer(
-          slider: SlidingDrawer(drawerButtonKey: _drwerButtonkey),
-          key: _drwerButtonkey,
+          slider: SlidingDrawer(drawerButtonKey: _drawerButtonKey),
+          key: _drawerButtonKey,
           appBar: Container(),
           isDraggable: true,
           isCupertino: true,
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                   expandedHeight: 300,
                   leading: IconButton(
                       onPressed: () {
-                        _drwerButtonkey.currentState?.toggle();
+                        _drawerButtonKey.currentState?.toggle();
                       },
                       highlightColor: Colors.transparent,
                       icon: Icon(Icons.menu,color: Theme.of(context).iconTheme.color,)),

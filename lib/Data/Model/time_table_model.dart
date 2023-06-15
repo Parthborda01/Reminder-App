@@ -7,16 +7,20 @@ class TimeTable {
   String? classRoom;
   String? className;
   int? semester;
+  String? id;
+  String? createdTime;
   String? department;
   String? image;
   List<DayOfWeek>? weekDays;
 
-  TimeTable({this.classRoom,this.image, this.className, this.weekDays});
+  TimeTable({this.classRoom,this.image, this.className, this.weekDays, this.createdTime, this.semester, this.department, this.id});
 
   TimeTable.fromJson(Map<String, dynamic> json) {
     classRoom = json['classroom'];
     className = json['classname'];
     department = json['department'];
+    id = json['id'];
+    createdTime = json['createdTime'];
     semester = json['semester'];
     image = json['image'];
     weekDays = List<DayOfWeek>.from(json["days"].map((x) => DayOfWeek.fromJson(x)));
@@ -27,6 +31,8 @@ class TimeTable {
     data['department'] = department;
     data['semester'] = semester;
     data['classname'] = className;
+    data['id'] = id;
+    data['createdTime'] = createdTime;
     data['classroom'] = classRoom;
     data['image'] = image;
     if (weekDays != null) {

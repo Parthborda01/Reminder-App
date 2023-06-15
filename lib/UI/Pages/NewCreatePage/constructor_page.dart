@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -444,17 +444,26 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                     ),
                                                                     Expanded(
                                                                       child: ElevatedButton(
-                                                                        onPressed: () {
+                                                                        onPressed: () async {
                                                                           timeTable!.className = classNameController.text;
                                                                           timeTable!.department = departmentNameController.text;
                                                                           timeTable!.semester = semester;
                                                                           timeTable!.classRoom = classroomController.text;
-                                                                          timeTable!.image = null;
-
-                                                                          print(json.encode(timeTable!.toJson()));
-
+                                                                          timeTable!.createdTime = (DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000).toString();
+                                                                          timeTable!.id = DateTime.now().microsecondsSinceEpoch.toString();
+                                                                          if (widget.fileData?.imageFile != null) {
+                                                                            await FirebaseServices.addImageToFirebase(
+                                                                                    widget.fileData!.imageFile,
+                                                                                    "${timeTable?.semester}_${timeTable?.department}_${timeTable?.className}")
+                                                                                .then(
+                                                                              (value) {
+                                                                                timeTable!.image = "${timeTable?.semester}_${timeTable?.department}_${timeTable?.className}";
+                                                                              },
+                                                                            );
+                                                                          } else {
+                                                                            timeTable!.image = null;
+                                                                          }
                                                                           FirebaseServices.addTimeTable(timeTable!);
-
                                                                         },
                                                                         child: Text("Save",
                                                                             style: Theme.of(context).textTheme.titleMedium,
@@ -579,6 +588,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                           pageController: controller,
                           onPageChanged: (page) => currentPage = page,
                           children: List.generate(timeTable!.weekDays!.length, (indexPage) {
+
                             ScrollPhysics physics = const NeverScrollableScrollPhysics();
                             sliverScrollController.addListener(() {
                               if (sliverScrollController.offset >= 120 && !sliverScrollController.position.outOfRange) {
@@ -589,6 +599,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                 physics = const NeverScrollableScrollPhysics();
                               }
                             });
+
                             return Column(
                               children: [
                                 Row(
@@ -733,10 +744,7 @@ class _ConstructorPageState extends State<ConstructorPage> {
                     },
                   ),
                 ),
-              ]
-              )
-          )
-      ),
+              ]))),
     );
   }
 }

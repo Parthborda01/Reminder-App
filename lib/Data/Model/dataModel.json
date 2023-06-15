@@ -1,6 +1,9 @@
 {
   "classroom": "E-306",
-  "classname": "3-IT-A",
+  "classname": "A",
+  "department": "IT",
+  "semester": 1,
+  "createdTime": 1686724200,
   "image": "",
   "days": [
     {
