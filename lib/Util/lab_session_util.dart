@@ -5,8 +5,7 @@ class LabUtils {
   LabUtils._();
 
   static List<Session> labToSessions(Session labData) {
-    List<String>? labels =
-        labData.subjectName!.replaceAll(";", "").trim().split(")");
+    List<String>? labels = labData.subjectName!.trim().split(")");
     labels.removeLast();
     List<Session> data = [];
     for (String i in labels) {
@@ -14,6 +13,7 @@ class LabUtils {
         i = "$i)";
         data.add(Session(
           id: labData.id,
+          isLab: true,
           duration: labData.duration,
           time: i.split(":")[0],
           subjectName: extractSub(i),
