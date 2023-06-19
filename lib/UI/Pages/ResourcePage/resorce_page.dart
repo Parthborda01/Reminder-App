@@ -12,8 +12,10 @@ import 'package:student_dudes/UI/Theme/theme_constants.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/dialog_box.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
+import 'package:student_dudes/Util/Notification/notification.dart';
 import 'package:student_dudes/Util/lab_session_util.dart';
 import 'package:student_dudes/Util/string_util.dart';
+import 'package:student_dudes/Util/time_util.dart';
 
 class ResourcePage extends StatefulWidget {
   const ResourcePage({super.key});
@@ -45,7 +47,7 @@ class _ResourcePageState extends State<ResourcePage> {
                     location: labSession.location);
                 isDone = true;
               } else {
-                ((t.weekDays ?? [])[i].sessions ?? [])[j] = Session(id: "🟥🟥🟥");
+                ((t.weekDays ?? [])[i].sessions ?? [])[j] = Session(id: "%^&*(@x!)");
               }
             }
           }
@@ -53,9 +55,10 @@ class _ResourcePageState extends State<ResourcePage> {
       }
     }
 
+
     for (int i = 0; i < (t.weekDays ?? []).length; i++) {
         ((t.weekDays ?? [])[i].sessions ?? []).removeWhere((element) {
-          return element.id == "🟥🟥🟥";
+          return element.id == "%^&*(@x!)";
         });
       }
     t.id = "${t.id} $batch";
@@ -91,7 +94,6 @@ class _ResourcePageState extends State<ResourcePage> {
   }
 
   String search = "";
-
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
@@ -404,11 +406,17 @@ class _ResourcePageState extends State<ResourcePage> {
                                                                           box.values.toList()[i].isSelected = false;
                                                                           _repository.updateTimeTable(i, box.values.toList()[i]);
                                                                         }
-                                                                        await _repository.storeTimeTable(
-                                                                          ModelConverter.convertToHive(
-                                                                              timetable: selected, isSelected: true),
-                                                                        );
 
+                                                                        await _repository.storeTimeTable(
+                                                                          ModelConverter.convertToHive(timetable: selected, isSelected: true),
+                                                                        );
+                                                                        DateTime now = TimeUtil.getLastMonday();
+                                                                        for(DayOfWeek i in selected.weekDays!){
+                                                                          for(Session j in i.sessions!){
+                                                                              LocalNotification.show(j,now);
+                                                                          }
+                                                                          now = now.add(const Duration(days: 1));
+                                                                        }
                                                                         if (!mounted) return;
                                                                         Navigator.pop(context);
                                                                         Navigator.pushNamedAndRemoveUntil(

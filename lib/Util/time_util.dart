@@ -54,7 +54,13 @@ class TimeUtil {
     return parsedTime1.compareTo(parsedTime2);
   }
 
-
+  static DateTime getLastMonday() {
+    DateTime now = DateTime.now().add(Duration(days: 2));
+    int weekday = now.weekday;
+    int daysAgo = (weekday + 6) % 7; // Number of days ago from the current weekday to Monday
+    DateTime lastMonday = now.subtract(Duration(days: daysAgo));
+    return lastMonday;
+  }
 
 
 }

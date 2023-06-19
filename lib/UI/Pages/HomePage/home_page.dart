@@ -7,6 +7,7 @@ import 'package:student_dudes/Data/Repositories/time_tables_repository.dart';
 import 'package:student_dudes/UI/Widgets/Drawer/DrawerWidget.dart';
 import 'package:student_dudes/UI/Widgets/ListTiles/session_tile.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
+import 'package:student_dudes/Util/Notification/notification.dart';
 import 'package:student_dudes/Util/time_util.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     currentPage = controller.initialPage;
     initMethod();
+    LocalNotification.initialization();
     super.initState();
   }
 
@@ -199,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                                       switchValue: timeTableHive.days[indexPage].session[indexList].alert,
                                       onChange: (value) {
                                         timeTableHive.days[indexPage].session[indexList].alert = value;
-
+                                        //TODO: update on Hive
                                         setState(() {});
                                       },
                                     );
