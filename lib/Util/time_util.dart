@@ -62,5 +62,19 @@ class TimeUtil {
     return lastMonday;
   }
 
+  static DateTime? getNextOccurrenceOfDay(String dayString) {
+    DateTime now = DateTime.now(); // Get the current date and time
+    DateTime? nextOccurrence;
+
+    // Calculate the next occurrence of the given day
+    for (int i = 1; i <= 7; i++) {
+      DateTime date = now.add(Duration(days: i));
+      if (DateFormat('EEEE').format(date) == dayString) {
+        nextOccurrence = date;
+        break;
+      }
+    }
+    return nextOccurrence;
+  }
 
 }

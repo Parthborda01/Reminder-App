@@ -18,6 +18,7 @@ final HexColor darkBackgroundDip = HexColor("#2e2e2e");
 
 class ThemeConstants {
   static final lightTheme = ThemeData(
+    splashColor: lightBackgroundPrimary.withOpacity(0.1),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       refreshBackgroundColor: deadColor,
       color: lightTextPrimary
@@ -195,6 +196,7 @@ class ThemeConstants {
   static final darkTheme = ThemeData(
       useMaterial3: true,
       androidOverscrollIndicator: AndroidOverscrollIndicator.stretch,
+      splashColor: darkBackgroundPrimary.withOpacity(0.1),
       scaffoldBackgroundColor: darkBackgroundPrimary,
       colorScheme: ColorScheme.light(
         primary: darkTextPrimary,

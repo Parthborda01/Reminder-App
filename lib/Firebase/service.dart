@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
 
@@ -36,5 +38,40 @@ class FirebaseServices {
   static Stream<List<TimeTable>> getFirebaseData() {
     return FirebaseFirestore.instance.collection("TimeTables").snapshots().map((event) => event.docs.map((e) => TimeTable.fromJson(e.data())).toList());
   }
+
+  static Future tokenSave(List<String> timeTableName) async {
+
+    String id = "";
+    String token = "";
+
+    token = await FirebaseMessaging.instance.getToken()?? "";
+
+    if(Platform.isAndroid){
+      id= await DeviceInfoPlugin().androidInfo.then((value) => value.id?? "");
+
+    }else if(Platform.isIOS){
+      id = await DeviceInfoPlugin().iosInfo.then((value) => value.identifierForVendor?? "");
+    }
+
+    if(id.isNotEmpty && token.isNotEmpty){
+      DocumentReference reference = FirebaseFirestore.instance
+          .collection("Tokens")
+          .doc(id);
+      try {
+        await reference.set({"name": timeTableName.join(","),"token": token }).then((value) {
+          print("FCM Token Saved ✅✅✅✅");
+        });
+      } on Exception catch (e) {
+        return (e);
+      }
+    }
+
+    //RKQ1.201004.002
+    //
+
+    //
+
+  }
+
 
 }

@@ -47,10 +47,10 @@ class PickHelper {
       //file making
       var bytes = pageImage!.bytes;
       // this will get a temporary path for saving the file
-      String tempath = (await getTemporaryDirectory()).path;
+      String temPath = (await getTemporaryDirectory()).path;
       // save the file
       int uniqueNumber = DateTime.now().microsecondsSinceEpoch;
-      File imageFile = File('$tempath/$uniqueNumber');
+      File imageFile = File('$temPath/$uniqueNumber');
 
       // save the image
       await imageFile.writeAsBytes(

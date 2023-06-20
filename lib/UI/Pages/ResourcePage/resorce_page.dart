@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:student_dudes/Data/Model/Hive/timetables.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
@@ -9,6 +8,7 @@ import 'package:student_dudes/Data/Repositories/time_tables_repository.dart';
 import 'package:student_dudes/Firebase/service.dart';
 import 'package:student_dudes/UI/Routes/route.dart';
 import 'package:student_dudes/UI/Theme/theme_constants.dart';
+import 'package:student_dudes/UI/Widgets/DialogBox/constructor_choosers.dart';
 import 'package:student_dudes/UI/Widgets/DialogBox/dialog_box.dart';
 import 'package:student_dudes/Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 import 'package:student_dudes/Util/Cubits/Theme/ThemeManager.dart';
@@ -35,7 +35,7 @@ class _ResourcePageState extends State<ResourcePage> {
           List<Session> labSessions = LabUtils.labToSessions(((t.weekDays ?? [])[i].sessions ?? [])[j]);
           bool isDone = false;
           for (Session labSession in labSessions) {
-            if(!isDone){
+            if (!isDone) {
               if (labSession.time?.trim() == batch) {
                 ((t.weekDays ?? [])[i].sessions ?? [])[j] = Session(
                     id: labSession.id,
@@ -55,12 +55,11 @@ class _ResourcePageState extends State<ResourcePage> {
       }
     }
 
-
     for (int i = 0; i < (t.weekDays ?? []).length; i++) {
-        ((t.weekDays ?? [])[i].sessions ?? []).removeWhere((element) {
-          return element.id == "%^&*(@x!)";
-        });
-      }
+      ((t.weekDays ?? [])[i].sessions ?? []).removeWhere((element) {
+        return element.id == "%^&*(@x!)";
+      });
+    }
     t.id = "${t.id} $batch";
     return t;
   }
@@ -94,6 +93,7 @@ class _ResourcePageState extends State<ResourcePage> {
   }
 
   String search = "";
+
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
@@ -167,7 +167,7 @@ class _ResourcePageState extends State<ResourcePage> {
                     actions: [
                       IconButton(
                         onPressed: () {
-                          //TODO: show Dialog to add TimeTable;
+                          showDialog(context: context, builder: (context) => const CreateChooser());
                         },
                         color: Theme.of(context).iconTheme.color,
                         icon: const Icon(Icons.add),
@@ -306,155 +306,103 @@ class _ResourcePageState extends State<ResourcePage> {
                                   }
                                 }
 
-                                return BlocBuilder<ThemeCubit, ThemeModes>(
-                                  builder: (context, themeMode) {
-                                    return FutureBuilder(
-                                      future: FirebaseServices.fireImage(timeTable.image!),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.data != null) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(bottom: 20),
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(25),
-                                              child: Column(
-                                                children: [
-                                                  Stack(
-                                                    children: [
-                                                      Container(
-                                                        width: deviceWidth,
-                                                        height: 240,
-                                                        decoration: BoxDecoration(
-                                                          image: DecorationImage(
-                                                            image: NetworkImage(snapshot.data!),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: deviceWidth,
-                                                        height: 240,
-                                                        alignment: Alignment.bottomLeft,
-                                                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                                                        decoration: BoxDecoration(
-                                                          gradient: LinearGradient(
-                                                            begin: Alignment.topCenter,
-                                                            end: Alignment.bottomCenter,
-                                                            stops: const [0.15, 0.95],
-                                                            colors: [
-                                                              HexColor("#ffffff").withOpacity(0),
-                                                              HexColor("#ffffff"),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        child: Text(
-                                                          "${StringUtils.getOrdinal(timeTable.semester ?? 0)} ${timeTable.department} ${timeTable.className}",
-                                                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                                              color: HexColor("#000000"),
-                                                              letterSpacing: 2,
-                                                              fontWeight: FontWeight.w700,
-                                                              shadows: [
-                                                                const Shadow(
-                                                                    color: Colors.black12, blurRadius: 8, offset: Offset(2, 2))
-                                                              ]),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    width: deviceWidth,
-                                                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                                    color: HexColor("#ffffff"),
-                                                    child: Wrap(
-                                                      spacing: 15,
-                                                      runSpacing: 5,
-                                                      alignment: WrapAlignment.start,
-                                                      children: List.generate(
-                                                          batches.length,
-                                                          (index) => GestureDetector(
-                                                              onTap: () async {
-                                                                TimeTable selected = TimeTable.fromJson(timeTable.toJson());
-                                                                final box = await Hive.openBox<TimeTableHive>('time_tables');
-                                                                bool success = false;
-                                                                for (TimeTableHive i in box.values.toList()) {
-                                                                  if (i.id == "${selected.id} ${batches[index]}") {
-                                                                    success = true;
-                                                                  }
-                                                                }
-                                                                if (!mounted) return;
-                                                                if (success) {
-                                                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                                      behavior: SnackBarBehavior.floating,
-                                                                      backgroundColor: Theme.of(context)
-                                                                          .textTheme
-                                                                          .labelMedium
-                                                                          ?.color
-                                                                          ?.withOpacity(0.9),
-                                                                      content: Text(
-                                                                        '''${StringUtils.getOrdinal(selected.semester ?? 0)} ${selected.department} ${selected.className} Exist in your Device''',
-                                                                        style: Theme.of(context).textTheme.headlineMedium,
-                                                                      )));
-                                                                } else {
-                                                                  showDialog(
-                                                                    context: context,
-                                                                    builder: (context) => DialogBox.installConform(
-                                                                      context,
-                                                                      timeTableName:
-                                                                          "${StringUtils.getOrdinal(selected.semester ?? 0)} ${selected.department} ${selected.className}",
-                                                                      batch: batches[index],
-                                                                      onConform: () async {
-                                                                        selected = getFinalTimeTable(selected, batches[index]);
-                                                                        for (var i = 0; i < box.values.length; i++) {
-                                                                          box.values.toList()[i].isSelected = false;
-                                                                          _repository.updateTimeTable(i, box.values.toList()[i]);
-                                                                        }
+                                return Card(
+                                  color: Theme.of(context).colorScheme.background,
+                                  surfaceTintColor: Theme.of(context).colorScheme.background,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                                  child: ExpansionTile(
+                                    iconColor: Theme.of(context).iconTheme.color,
+                                    collapsedIconColor: Theme.of(context).iconTheme.color,
+                                    collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                                    childrenPadding: const EdgeInsets.symmetric(vertical: 10),
+                                    tilePadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                    backgroundColor: Theme.of(context).colorScheme.background,
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+                                    title: Text(
+                                      "${StringUtils.getOrdinal(timeTable.semester ?? 0)} ${timeTable.department} ${timeTable.className}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                          letterSpacing: 2,
+                                          fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    children: [
+                                      Wrap(
+                                        spacing: 5,
+                                        alignment: WrapAlignment.start,
+                                        children: List.generate(
+                                            batches.length,
+                                            (index) => GestureDetector(
+                                                onTap: () async {
+                                                  TimeTable selected = TimeTable.fromJson(timeTable.toJson());
+                                                  final box = await Hive.openBox<TimeTableHive>('time_tables');
+                                                  bool success = false;
+                                                  for (TimeTableHive i in box.values.toList()) {
+                                                    if (i.id == "${selected.id} ${batches[index]}") {
+                                                      success = true;
+                                                    }
+                                                  }
+                                                  if (!mounted) return;
+                                                  if (success) {
+                                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                        behavior: SnackBarBehavior.floating,
+                                                        backgroundColor:
+                                                            Theme.of(context).textTheme.labelMedium?.color?.withOpacity(0.9),
+                                                        content: Text(
+                                                          '''${StringUtils.getOrdinal(selected.semester ?? 0)} ${selected.department} ${selected.className} Exist in your Device''',
+                                                          style: Theme.of(context).textTheme.headlineMedium,
+                                                        )));
+                                                  } else {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) => DialogBox.installConform(
+                                                        context,
+                                                        timeTableName:
+                                                            "${StringUtils.getOrdinal(selected.semester ?? 0)} ${selected.department} ${selected.className}",
+                                                        batch: batches[index],
+                                                        onConform: () async {
+                                                          LocalNotification.clearAllNotifications();
+                                                          selected = getFinalTimeTable(selected, batches[index]);
+                                                          for (var i = 0; i < box.values.length; i++) {
+                                                            box.values.toList()[i].isSelected = false;
+                                                            _repository.updateTimeTable(i, box.values.toList()[i]);
+                                                          }
 
-                                                                        await _repository.storeTimeTable(
-                                                                          ModelConverter.convertToHive(timetable: selected, isSelected: true),
-                                                                        );
-                                                                        DateTime now = TimeUtil.getLastMonday();
-                                                                        for(DayOfWeek i in selected.weekDays!){
-                                                                          for(Session j in i.sessions!){
-                                                                              LocalNotification.show(j,now);
-                                                                          }
-                                                                          now = now.add(const Duration(days: 1));
-                                                                        }
-                                                                        if (!mounted) return;
-                                                                        Navigator.pop(context);
-                                                                        Navigator.pushNamedAndRemoveUntil(
-                                                                          context,
-                                                                          RouteNames.home,
-                                                                          (route) => false,
-                                                                        );
-                                                                      },
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              },
-                                                              child: Container(
-                                                                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                                                                decoration: BoxDecoration(
-                                                                    color: deadColor.withOpacity(0.2),
-                                                                    borderRadius: const BorderRadius.horizontal(
-                                                                        left: Radius.circular(20), right: Radius.circular(20))),
-                                                                child: Text(batches[index],
-                                                                    style: Theme.of(context)
-                                                                        .textTheme
-                                                                        .headlineMedium
-                                                                        ?.copyWith(color: HexColor("#000000"))),
-                                                              ))),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        } else if (snapshot.hasError) {
-                                          return const SizedBox();
-                                        } else {
-                                          return const SizedBox();
-                                        }
-                                      },
-                                    );
-                                  },
+                                                          await _repository.storeTimeTable(
+                                                            ModelConverter.convertToHive(timetable: selected, isSelected: true),
+                                                          );
+                                                          DateTime now = TimeUtil.getLastMonday();
+                                                          for (DayOfWeek i in selected.weekDays!) {
+                                                            for (Session j in i.sessions!) {
+                                                              LocalNotification.scheduleNotification(j, now);
+                                                            }
+                                                            now = now.add(const Duration(days: 1));
+                                                          }
+                                                          if (!mounted) return;
+                                                          Navigator.pop(context);
+                                                          Navigator.pushNamedAndRemoveUntil(
+                                                            context,
+                                                            RouteNames.home,
+                                                            (route) => false,
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                                                  decoration: BoxDecoration(
+                                                      color: deadColor.withOpacity(0.2),
+                                                      borderRadius: const BorderRadius.horizontal(
+                                                          left: Radius.circular(20), right: Radius.circular(20))),
+                                                  child: Text(batches[index], style: Theme.of(context).textTheme.headlineMedium),
+                                                ))),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               },
                             ),

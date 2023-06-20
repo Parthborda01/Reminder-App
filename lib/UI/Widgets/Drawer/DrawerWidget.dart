@@ -12,14 +12,24 @@ class SlidingDrawer extends StatefulWidget {
   final GlobalKey<SliderDrawerState> drawerButtonKey;
   final List<TimeTableHive> list;
   final Function(int) onTap;
+  final Function(int) onLongPress;
 
-  const SlidingDrawer({Key? key, required this.drawerButtonKey, required this.list, required this.onTap}) : super(key: key);
+  const SlidingDrawer({Key? key, required this.drawerButtonKey, required this.list, required this.onTap, required this.onLongPress}) : super(key: key);
 
   @override
   State<SlidingDrawer> createState() => _SlidingDrawerState();
 }
 
 class _SlidingDrawerState extends State<SlidingDrawer> {
+
+  int getIndex(int index){
+    List<int> a = [];
+    for (int i = widget.list.length - 1; i >= 0; i--) {
+      a.add(i);
+    }
+    return a[index];
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,15 +115,12 @@ class _SlidingDrawerState extends State<SlidingDrawer> {
                       itemCount: widget.list.length,
                       itemBuilder: (context, index) {
                         return ListTile(
+                          onLongPress: (){
+                            widget.onLongPress(getIndex(index));
+                            setState(() {});
+                          },
                           selected: widget.list[index].isSelected,
                           onTap: () {
-                            int getIndex(int index){
-                              List<int> a = [];
-                              for (int i = widget.list.length - 1; i >= 0; i--) {
-                                a.add(i);
-                              }
-                              return a[index];
-                            }
                             widget.onTap(getIndex(index));
                             setState(() {});
                           },

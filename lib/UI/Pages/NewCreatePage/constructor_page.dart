@@ -463,7 +463,10 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                                                           } else {
                                                                             timeTable!.image = null;
                                                                           }
-                                                                          FirebaseServices.addTimeTable(timeTable!);
+                                                                          FirebaseServices.addTimeTable(timeTable!).then((value) => Navigator.of(context).pop);
+                                                                          if(!mounted){return;}
+                                                                          Navigator.of(context).pop();
+                                                                          Navigator.of(context).pop();
                                                                         },
                                                                         child: Text("Save",
                                                                             style: Theme.of(context).textTheme.titleMedium,
