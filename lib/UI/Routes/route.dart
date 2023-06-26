@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:student_dudes/Data/Model/time_table_model.dart';
 import 'package:student_dudes/UI/Pages/HomePage/home_page.dart';
 import 'package:student_dudes/UI/Pages/NewCreatePage/constructor_page.dart';
 import 'package:student_dudes/UI/Pages/ResourcePage/resorce_page.dart';
@@ -31,7 +32,7 @@ class RouteGenerator {
       case RouteNames.resource:
         return _createRoute(const ResourcePage());
       case RouteNames.pdfConstructor:
-        return _createRoute(ConstructorPage(fileData: args as FileData?));
+        return _createRoute(ConstructorPage(fileData:(args as Map)["fileData"] as FileData?,table:args["table"] as TimeTable?));
       default:
         return null;
     }

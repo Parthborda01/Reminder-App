@@ -1,10 +1,7 @@
-
 import 'package:hive/hive.dart';
 import 'package:student_dudes/Data/Model/Hive/timetables.dart';
 
-
 class TimeTablesRepository {
-
   final Box<TimeTableHive> _timeTableBox = Hive.box<TimeTableHive>('time_tables');
 
   Future<void> storeTimeTable(TimeTableHive classroom) async {
@@ -24,6 +21,20 @@ class TimeTablesRepository {
     await _timeTableBox.putAt(index, updatedClassroom);
   }
 
+  Future<void> updateTimeTableById(TimeTableHive updatedClassroom) async {
+    List<TimeTableHive> a = getAllTimeTables();
+    int? index;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].id == updatedClassroom.id) {
+        index = i;
+      }
+    }
+
+    if (index != null) {
+      await _timeTableBox.putAt(index, updatedClassroom);
+    }
+  }
+
   Future<void> deleteTimeTable(int index) async {
     await _timeTableBox.deleteAt(index);
   }
@@ -31,5 +42,4 @@ class TimeTablesRepository {
   Future<void> closeBox() async {
     await _timeTableBox.close();
   }
-
 }

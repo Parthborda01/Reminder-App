@@ -4,7 +4,6 @@ import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 import 'package:student_dudes/Data/Model/time_table_model.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-// import 'package:student_dudes/Data/Model/time_table_model.dart';
 
 @pragma('vm:entry-point')
 Future<void> _onNotificationButtonPressed(NotificationResponse res) async {
@@ -20,16 +19,38 @@ class LocalNotification {
 
   static Future<void> initialization() async {
     const InitializationSettings initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+      android: AndroidInitializationSettings("ic_launcher"),
       iOS: DarwinInitializationSettings(
         requestAlertPermission: true,
-        requestBadgePermission: true,
         requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestCriticalPermission: false,
+        defaultPresentAlert: true,
+        defaultPresentSound: true,
+        defaultPresentBadge: true,
       ),
     );
-    await _notificationsPlugin.initialize(initializationSettings,
-        onDidReceiveBackgroundNotificationResponse: _onNotificationButtonPressed,
-        onDidReceiveNotificationResponse: _onNotificationButtonPressed);
+    await _notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveBackgroundNotificationResponse: _onNotificationButtonPressed,
+      onDidReceiveNotificationResponse: _onNotificationButtonPressed,
+    );
+  }
+
+  static void showNotification(String title, String message) {
+    _notificationsPlugin.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        message,
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+          "update",
+          "Update channel",
+          category: AndroidNotificationCategory.alarm,
+          channelDescription: "description",
+          importance: Importance.max,
+          priority: Priority.high,
+        )));
   }
 
   static void scheduleNotification(Session session, DateTime time) async {
@@ -68,18 +89,21 @@ class LocalNotification {
         0,
       );
 
-      await _notificationsPlugin.zonedSchedule(
-          int.parse(session.id!.split(" ").first.substring(10, session.id!.split(" ").first.length)),
-          "${session.subjectName} (${session.facultyName})",
-          "Your ${session.isLab! ? "Lab session" : "Lecture"} at ${session.location} in 10 minutes",
-          tz.TZDateTime.from(a.subtract(const Duration(minutes: 10)), tz.local),
-          notificationDetails,
-          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          // ignore: deprecated_member_use
-          androidAllowWhileIdle: true,
-          matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime).then((value) {
-            print("✅✅ Notification Assigned");
+      await _notificationsPlugin
+          .zonedSchedule(
+              int.parse(session.id!.split(" ").first.substring(10, session.id!.split(" ").first.length)),
+              "${session.subjectName} (by ${session.facultyName})",
+              "Your ${session.isLab! ? "Lab session" : "Lecture"} at ${session.location} in 10 minutes, Don't forget to silent phone",
+              tz.TZDateTime.from(a.subtract(const Duration(minutes: 10)), tz.local),
+              notificationDetails,
+              payload: session.toJson().toString(),
+              uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+              androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+              // ignore: deprecated_member_use
+              androidAllowWhileIdle: true,
+              matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime)
+          .then((value) {
+            print("✅✅Assigned");
       });
     } on Exception catch (e) {
       debugPrint(e.toString());
@@ -107,4 +131,5 @@ class LocalNotification {
     List<PendingNotificationRequest> notifications = await _notificationsPlugin.pendingNotificationRequests();
     return notifications.any((element) => element.id == id);
   }
+
 }

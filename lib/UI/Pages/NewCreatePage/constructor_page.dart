@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -23,8 +22,9 @@ import 'package:student_dudes/Util/time_util.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class ConstructorPage extends StatefulWidget {
-  const ConstructorPage({Key? key, this.fileData}) : super(key: key);
+  const ConstructorPage({Key? key, this.fileData, this.table}) : super(key: key);
   final FileData? fileData;
+  final TimeTable? table;
 
   @override
   State<ConstructorPage> createState() => _ConstructorPageState();
@@ -32,14 +32,16 @@ class ConstructorPage extends StatefulWidget {
 
 class _ConstructorPageState extends State<ConstructorPage> {
   int semester = 0;
-  TimeTable? timeTable = TimeTable(weekDays: [
-    DayOfWeek(day: "Monday", sessions: []),
-    DayOfWeek(day: "Tuesday", sessions: []),
-    DayOfWeek(day: "Wednesday", sessions: []),
-    DayOfWeek(day: "Thursday", sessions: []),
-    DayOfWeek(day: "Friday", sessions: []),
-    DayOfWeek(day: "Saturday", sessions: []),
-  ]);
+  TimeTable? timeTable = TimeTable(
+    weekDays: [
+      DayOfWeek(day: "Monday", sessions: []),
+      DayOfWeek(day: "Tuesday", sessions: []),
+      DayOfWeek(day: "Wednesday", sessions: []),
+      DayOfWeek(day: "Thursday", sessions: []),
+      DayOfWeek(day: "Friday", sessions: []),
+      DayOfWeek(day: "Saturday", sessions: []),
+    ],
+  );
   int currentPage = 0;
   List<Session> selectedItems = [];
   PageController controller = PageController();
@@ -83,6 +85,12 @@ class _ConstructorPageState extends State<ConstructorPage> {
   void initState() {
     if (widget.fileData != null) {
       initMethod(widget.fileData!);
+    } else if (widget.table != null) {
+      timeTable = TimeTable.fromJson(widget.table!.toJson());
+      departmentNameController.text = (widget.table?.department ?? "").toString();
+      classNameController.text = (widget.table?.className ?? "").toString();
+      classroomController.text = (widget.table?.classRoom ?? "").toString();
+      semester = int.parse((widget.table?.semester == null ? 0 : widget.table!.semester! - 1).toString());
     } else {
       BlocProvider.of<FileDataFetchCubit>(context).clearData();
     }
@@ -126,411 +134,466 @@ class _ConstructorPageState extends State<ConstructorPage> {
         ) ??
         false;
   }
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: showExitPopup,
       child: Scaffold(
-          body: Container(
-              decoration:
-                  BoxDecoration(boxShadow: [BoxShadow(spreadRadius: 1, color: Theme.of(context).scaffoldBackgroundColor)]),
-              child: CustomScrollView(controller: sliverScrollController, slivers: [
-                SliverAppBar(
-                  pinned: true,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
-                  elevation: 0,
-                  expandedHeight: 300,
-                  actions: [
-                    IconButton(
-                        onPressed: () async {
-                          FileData? a = await Navigator.pushNamed(context, RouteNames.pdfSelect, arguments: false) as FileData?;
-                          if (a != null) {
-                            initMethod(a);
-                            setState(() {});
-                          }
-                        },
-                        highlightColor: Colors.transparent,
-                        icon: Icon(
-                          widget.fileData != null ? Icons.refresh_rounded : Icons.add_photo_alternate_rounded,
-                          color: Theme.of(context).iconTheme.color,
-                        ))
-                  ],
-                  leading: IconButton(
-                      onPressed: () {
-                        showExitPopup().then((f) {
-                          if (f) {
-                            Navigator.pop(context);
-                          }
-                        });
+        body: !isLoading? Container(
+          decoration: BoxDecoration(boxShadow: [BoxShadow(spreadRadius: 1, color: Theme.of(context).scaffoldBackgroundColor)]),
+          child: CustomScrollView(
+            controller: sliverScrollController,
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
+                elevation: 0,
+                expandedHeight: 300,
+                actions: [
+                  widget.table != null
+                      ? const SizedBox()
+                      : IconButton(
+                          onPressed: () async {
+                            FileData? a = await Navigator.pushNamed(context, RouteNames.pdfSelect, arguments: false) as FileData?;
+                            if (a != null) {
+                              initMethod(a);
+                              setState(() {});
+                            }
+                          },
+                          highlightColor: Colors.transparent,
+                          icon: Icon(
+                            widget.fileData != null ? Icons.refresh_rounded : Icons.add_photo_alternate_rounded,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        )
+                ],
+                leading: IconButton(
+                  onPressed: () {
+                    showExitPopup().then(
+                      (f) {
+                        if (f) {
+                          Navigator.pop(context);
+                        }
                       },
-                      highlightColor: Colors.transparent,
-                      icon: Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: Theme.of(context).iconTheme.color,
-                      )),
-                  bottom: PreferredSize(
-                    preferredSize: Size(deviceWidth, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        BlocBuilder<SliverScrolled, bool>(
-                            builder: (context, state) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                                  child: AnimatedOpacity(
-                                      opacity: state ? 1.0 : 0.0,
-                                      duration: const Duration(milliseconds: 200),
-                                      child: Text("Tasks", style: Theme.of(context).textTheme.titleSmall)),
-                                )),
-                        const Spacer(),
-                        selectedItems.isEmpty
-                            ? Row(
-                                children: [
-                                  PopupMenuButton(
-                                    onSelected: (value) {
-                                      if (value == "Lecture") {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => ConstructorDialogLecture(
-                                                  dayOfWeek: timeTable!.weekDays![currentPage].day ?? "",
-                                                  fileData: widget.fileData,
-                                                  lectureData:
-                                                      Session(id: DateTime.now().microsecondsSinceEpoch.toString(), time: "0:00"),
-                                                  onChanged: (session) {
-                                                    timeTable!.weekDays![currentPage].sessions!.add(session);
-                                                    editingFlag = true;
-                                                    numberOfEmpty = countEmptyData();
-                                                    setState(() {});
-                                                  },
-                                                ));
-                                      } else if (value == "Lab") {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => ConstructorDialogLab(
-                                            dayOfWeek: timeTable!.weekDays![currentPage].day ?? "",
-                                            onChanged: (session) {
-                                              timeTable!.weekDays![currentPage].sessions!.add(session);
-                                              editingFlag = true;
-                                              numberOfEmpty = countEmptyData();
-                                              setState(() {});
-                                            },
-                                            fileData: widget.fileData,
+                    );
+                  },
+                  highlightColor: Colors.transparent,
+                  icon: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                ),
+                bottom: PreferredSize(
+                  preferredSize: Size(deviceWidth, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      BlocBuilder<SliverScrolled, bool>(
+                        builder: (context, state) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: AnimatedOpacity(
+                            opacity: state ? 1.0 : 0.0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Text("Tasks", style: Theme.of(context).textTheme.titleSmall),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      selectedItems.isEmpty
+                          ? Row(
+                              children: [
+                                PopupMenuButton(
+                                  onSelected: (value) {
+                                    if (value == "Lecture") {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => ConstructorDialogLecture(
+                                          dayOfWeek: timeTable!.weekDays![currentPage].day ?? "",
+                                          fileData: widget.fileData,
+                                          lectureData:
+                                              Session(id: DateTime.now().microsecondsSinceEpoch.toString(), time: "0:00"),
+                                          onChanged: (session) {
+                                            timeTable!.weekDays![currentPage].sessions!.add(session);
+                                            editingFlag = true;
+                                            numberOfEmpty = countEmptyData();
+                                            setState(() {});
+                                          },
+                                        ),
+                                      );
+                                    } else if (value == "Lab") {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => ConstructorDialogLab(
+                                          dayOfWeek: timeTable!.weekDays![currentPage].day ?? "",
+                                          onChanged: (session) {
+                                            timeTable!.weekDays![currentPage].sessions!.add(session);
+                                            editingFlag = true;
+                                            numberOfEmpty = countEmptyData();
+                                            setState(() {});
+                                          },
+                                          fileData: widget.fileData,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  color: Theme.of(context).colorScheme.background,
+                                  surfaceTintColor: Colors.transparent,
+                                  shape: ShapeBorder.lerp(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), 10),
+                                  icon: Icon(Icons.add, color: Theme.of(context).iconTheme.color),
+                                  tooltip: "Add sessions",
+                                  itemBuilder: (BuildContext context) => [
+                                    PopupMenuItem(
+                                      value: "Lab",
+                                      height: 40,
+                                      padding: const EdgeInsets.only(top: 10, left: 20),
+                                      child: Text("Lab", style: Theme.of(context).textTheme.headlineMedium),
+                                    ),
+                                    PopupMenuItem(
+                                      value: 'Lecture',
+                                      height: 40,
+                                      padding: const EdgeInsets.only(bottom: 10, left: 20),
+                                      child: Text("Lecture", style: Theme.of(context).textTheme.headlineMedium),
+                                    )
+                                  ],
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      if (numberOfEmpty > 0) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: Theme.of(context).canvasColor.withOpacity(0.9),
+                                            behavior: SnackBarBehavior.floating,
+                                            content: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "$numberOfEmpty Field Remaining to fill",
+                                                  style: Theme.of(context).textTheme.headlineMedium,
+                                                ),
+                                                const Icon(Icons.warning, color: Colors.amber),
+                                              ],
+                                            ),
                                           ),
                                         );
-                                      }
-                                    },
-                                    color: Theme.of(context).colorScheme.background,
-                                    surfaceTintColor: Colors.transparent,
-                                    shape: ShapeBorder.lerp(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), 10),
-                                    icon: Icon(Icons.add, color: Theme.of(context).iconTheme.color),
-                                    tooltip: "Add sessions",
-                                    itemBuilder: (BuildContext context) => [
-                                      PopupMenuItem(
-                                        value: "Lab",
-                                        height: 40,
-                                        padding: const EdgeInsets.only(top: 10, left: 20),
-                                        child: Text("Lab", style: Theme.of(context).textTheme.headlineMedium),
-                                      ),
-                                      PopupMenuItem(
-                                        value: 'Lecture',
-                                        height: 40,
-                                        padding: const EdgeInsets.only(bottom: 10, left: 20),
-                                        child: Text("Lecture", style: Theme.of(context).textTheme.headlineMedium),
-                                      )
-                                    ],
-                                  ),
-                                  TextButton(
-                                      onPressed: () {
-                                        if (numberOfEmpty > 0) {
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              backgroundColor: Theme.of(context).canvasColor.withOpacity(0.9),
-                                              behavior: SnackBarBehavior.floating,
-                                              content: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "$numberOfEmpty Field Remaining to fill",
-                                                    style: Theme.of(context).textTheme.headlineMedium,
-                                                  ),
-                                                  const Icon(Icons.warning, color: Colors.amber),
-                                                ],
-                                              )));
-                                        } else {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return BackdropFilter(
-                                                  filter: ImageFilter.blur(sigmaY: 4, sigmaX: 4),
-                                                  child: Dialog(
-                                                    insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                                      child: SingleChildScrollView(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                          children: [
-                                                            if (widget.fileData != null) ...{
-                                                              AspectRatio(
-                                                                aspectRatio: widget.fileData!.width / widget.fileData!.height,
-                                                                child: ClipRRect(
-                                                                  borderRadius: BorderRadius.circular(25),
-                                                                  child: BlocBuilder<ThemeCubit, ThemeModes>(
-                                                                    builder: (context, themeMode) {
-                                                                      return Container(
-                                                                        decoration: BoxDecoration(
-                                                                          borderRadius: BorderRadius.circular(25),
-                                                                          border: Border.all(color: Colors.black),
-                                                                          color: themeMode == ThemeModes.system
-                                                                              ? MediaQuery.of(context).platformBrightness ==
-                                                                                      Brightness.dark
-                                                                                  ? Colors.white
-                                                                                  : Colors.white
-                                                                              : themeMode == ThemeModes.light
-                                                                                  ? Colors.transparent
-                                                                                  : Theme.of(context).dividerColor,
+                                      } else {
+
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return BackdropFilter(
+                                              filter: ImageFilter.blur(sigmaY: 4, sigmaX: 4),
+                                              child: Dialog(
+                                                insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      children: [
+                                                        if (widget.fileData != null) ...{
+                                                          AspectRatio(
+                                                            aspectRatio: widget.fileData!.width / widget.fileData!.height,
+                                                            child: ClipRRect(
+                                                              borderRadius: BorderRadius.circular(25),
+                                                              child: BlocBuilder<ThemeCubit, ThemeModes>(
+                                                                builder: (context, themeMode) {
+                                                                  return Container(
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(25),
+                                                                      border: Border.all(color: Colors.black),
+                                                                      color: themeMode == ThemeModes.system
+                                                                          ? MediaQuery.of(context).platformBrightness ==
+                                                                                  Brightness.dark
+                                                                              ? Colors.white
+                                                                              : Colors.white
+                                                                          : themeMode == ThemeModes.light
+                                                                              ? Colors.transparent
+                                                                              : Theme.of(context).dividerColor,
+                                                                    ),
+                                                                    child: BackdropFilter(
+                                                                      filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                                                                      blendMode: themeMode == ThemeModes.system
+                                                                          ? MediaQuery.of(context).platformBrightness ==
+                                                                                  Brightness.dark
+                                                                              ? BlendMode.difference
+                                                                              : BlendMode.darken
+                                                                          : themeMode == ThemeModes.light
+                                                                              ? BlendMode.multiply
+                                                                              : BlendMode.darken,
+                                                                      child: PhotoView(
+                                                                        filterQuality: FilterQuality.high,
+                                                                        minScale: PhotoViewComputedScale.contained * 1.1,
+                                                                        maxScale: PhotoViewComputedScale.contained * 2.2,
+                                                                        backgroundDecoration:
+                                                                            const BoxDecoration(color: Colors.white),
+                                                                        imageProvider: FileImage(widget.fileData!.imageFile),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 20)
+                                                        },
+                                                        Form(
+                                                          child: Column(
+                                                            children: [
+                                                              TextFormField(
+                                                                controller: departmentNameController,
+                                                                style: Theme.of(context).textTheme.headlineMedium,
+                                                                decoration: InputDecoration(
+                                                                  prefixIcon: Icon(Icons.class_outlined,
+                                                                      color: Theme.of(context).textTheme.titleLarge?.color),
+                                                                  label: const Text(
+                                                                    "Department",
+                                                                    style: TextStyle(letterSpacing: 1),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: TextFormField(
+                                                                      controller: classroomController,
+                                                                      style: Theme.of(context).textTheme.headlineMedium,
+                                                                      decoration: InputDecoration(
+                                                                        prefixIcon: Icon(Icons.badge,
+                                                                            color: Theme.of(context).textTheme.titleLarge?.color),
+                                                                        label: const Text(
+                                                                          "classroom",
+                                                                          style: TextStyle(letterSpacing: 0),
                                                                         ),
-                                                                        child: BackdropFilter(
-                                                                          filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
-                                                                          blendMode: themeMode == ThemeModes.system
-                                                                              ? MediaQuery.of(context).platformBrightness ==
-                                                                                      Brightness.dark
-                                                                                  ? BlendMode.difference
-                                                                                  : BlendMode.darken
-                                                                              : themeMode == ThemeModes.light
-                                                                                  ? BlendMode.multiply
-                                                                                  : BlendMode.darken,
-                                                                          child: PhotoView(
-                                                                            filterQuality: FilterQuality.high,
-                                                                            minScale: PhotoViewComputedScale.contained * 1.1,
-                                                                            maxScale: PhotoViewComputedScale.contained * 2.2,
-                                                                            backgroundDecoration:
-                                                                                const BoxDecoration(color: Colors.white),
-                                                                            imageProvider: FileImage(widget.fileData!.imageFile),
-                                                                          ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    width: 20,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: TextFormField(
+                                                                      controller: classNameController,
+                                                                      style: Theme.of(context).textTheme.headlineMedium,
+                                                                      decoration: InputDecoration(
+                                                                        prefixIcon: Icon(Icons.people_outline_rounded,
+                                                                            color: Theme.of(context).textTheme.titleLarge?.color),
+                                                                        label: const Text(
+                                                                          "Class",
+                                                                          style: TextStyle(letterSpacing: 1),
                                                                         ),
-                                                                      );
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(height: 10),
+                                                              Column(
+                                                                children: [
+                                                                  const Text("Semester"),
+                                                                  ToggleSwitch(
+                                                                    labels: const ["1", "2", "3", "4", "5", "6", "7", "8"],
+                                                                    customWidths: [
+                                                                      deviceWidth * 0.1,
+                                                                      deviceWidth * 0.1,
+                                                                      deviceWidth * 0.1,
+                                                                      deviceWidth * 0.1,
+                                                                      deviceWidth * 0.1,
+                                                                      deviceWidth * 0.1,
+                                                                      deviceWidth * 0.1,
+                                                                      deviceWidth * 0.1
+                                                                    ],
+                                                                    initialLabelIndex: semester,
+                                                                    totalSwitches: 8,
+                                                                    activeBgColor: [deadColor],
+                                                                    cornerRadius: 15,
+                                                                    inactiveBgColor: Colors.transparent,
+                                                                    inactiveFgColor: deadColor,
+                                                                    animate: true,
+                                                                    animationDuration: 200,
+                                                                    onToggle: (index) {
+                                                                      semester = index! + 1;
+                                                                      setState(() {});
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(height: 20),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 5),
+                                                          child: IntrinsicHeight(
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                              children: [
+                                                                Expanded(
+                                                                  child: TextButton(
+                                                                    style: ButtonStyle(
+                                                                      overlayColor: MaterialStateProperty.resolveWith<Color>(
+                                                                          (Set<MaterialState> states) {
+                                                                        if (states.contains(MaterialState.focused)) {
+                                                                          return Colors.transparent;
+                                                                        }
+                                                                        if (states.contains(MaterialState.hovered)) {
+                                                                          return Colors.transparent;
+                                                                        }
+                                                                        if (states.contains(MaterialState.pressed)) {
+                                                                          return Colors.transparent;
+                                                                        }
+                                                                        return Colors
+                                                                            .transparent; // Defer to the widget's default.
+                                                                      }),
+                                                                    ),
+                                                                    child: Text("Cancel",
+                                                                        style: Theme.of(context).textTheme.bodyMedium,
+                                                                        textAlign: TextAlign.center),
+                                                                    onPressed: () {
+                                                                      Navigator.of(context).pop();
                                                                     },
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              const SizedBox(height: 20)
-                                                            },
-                                                            Form(
-                                                              child: Column(
-                                                                children: [
-                                                                  TextFormField(
-                                                                    controller: departmentNameController,
-                                                                    style: Theme.of(context).textTheme.headlineMedium,
-                                                                    decoration: InputDecoration(
-                                                                        prefixIcon: Icon(Icons.class_outlined,
-                                                                            color: Theme.of(context).textTheme.titleLarge?.color),
-                                                                        label: const Text(
-                                                                          "Department",
-                                                                          style: TextStyle(letterSpacing: 1),
-                                                                        )),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 20,
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: TextFormField(
-                                                                          controller: classroomController,
-                                                                          style: Theme.of(context).textTheme.headlineMedium,
-                                                                          decoration: InputDecoration(
-                                                                              prefixIcon: Icon(Icons.badge,
-                                                                                  color: Theme.of(context)
-                                                                                      .textTheme
-                                                                                      .titleLarge
-                                                                                      ?.color),
-                                                                              label: const Text(
-                                                                                "classroom",
-                                                                                style: TextStyle(letterSpacing: 0),
-                                                                              )),
-                                                                        ),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        width: 20,
-                                                                      ),
-                                                                      Expanded(
-                                                                        child: TextFormField(
-                                                                          controller: classNameController,
-                                                                          style: Theme.of(context).textTheme.headlineMedium,
-                                                                          decoration: InputDecoration(
-                                                                              prefixIcon: Icon(Icons.people_outline_rounded,
-                                                                                  color: Theme.of(context)
-                                                                                      .textTheme
-                                                                                      .titleLarge
-                                                                                      ?.color),
-                                                                              label: const Text(
-                                                                                "Class",
-                                                                                style: TextStyle(letterSpacing: 1),
-                                                                              )),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  const SizedBox(height: 10),
-                                                                  Column(
-                                                                    children: [
-                                                                      const Text("Semester"),
-                                                                      ToggleSwitch(
-                                                                        labels: const ["1", "2", "3", "4", "5", "6", "7", "8"],
-                                                                        customWidths: [
-                                                                          deviceWidth * 0.1,
-                                                                          deviceWidth * 0.1,
-                                                                          deviceWidth * 0.1,
-                                                                          deviceWidth * 0.1,
-                                                                          deviceWidth * 0.1,
-                                                                          deviceWidth * 0.1,
-                                                                          deviceWidth * 0.1,
-                                                                          deviceWidth * 0.1
-                                                                        ],
-                                                                        initialLabelIndex: semester,
-                                                                        totalSwitches: 8,
-                                                                        activeBgColor: [deadColor],
-                                                                        cornerRadius: 15,
-                                                                        inactiveBgColor: Colors.transparent,
-                                                                        inactiveFgColor: deadColor,
-                                                                        animate: true,
-                                                                        animationDuration: 200,
-                                                                        onToggle: (index) {
-                                                                          semester = index! + 1;
-                                                                          setState(() {});
-                                                                        },
-                                                                      )
-                                                                    ],
-                                                                  )
-                                                                ],
-                                                              ),
+                                                                Expanded(
+                                                                  child: ElevatedButton(
+                                                                      onPressed: () async {
+                                                                        isLoading = true;
+                                                                        setState(() {});
+                                                                        Navigator.of(context).pop();
+                                                                timeTable!.className = classNameController.text;
+                                                                timeTable!.department = departmentNameController.text;
+                                                                timeTable!.semester = semester;
+                                                                timeTable!.classRoom = classroomController.text;
+                                                                timeTable!.createdTime =
+                                                                    (DateTime
+                                                                        .now()
+                                                                        .toUtc()
+                                                                        .millisecondsSinceEpoch ~/ 1000)
+                                                                        .toString();
+                                                                if (widget.table == null) {
+                                                                  timeTable!.id =
+                                                                      DateTime
+                                                                          .now()
+                                                                          .microsecondsSinceEpoch
+                                                                          .toString();
+                                                                  if (widget.fileData?.imageFile != null) {
+                                                                    await FirebaseServices.addImageToFirebase(
+                                                                        widget.fileData!.imageFile,
+                                                                        "${timeTable?.semester}_${timeTable
+                                                                            ?.department}_${timeTable?.className}")
+                                                                        .then(
+                                                                          (value) {
+                                                                        timeTable!.image =
+                                                                        "${timeTable?.semester}_${timeTable
+                                                                            ?.department}_${timeTable?.className}";
+                                                                      },
+                                                                    );
+                                                                  } else {
+                                                                    timeTable!.image = null;
+                                                                  }
+                                                                  await FirebaseServices.addTimeTable(timeTable!);
+                                                                } else {
+                                                                  timeTable!.semester = timeTable!.semester! + 1;
+                                                                  timeTable!.image = widget.table?.image;
+                                                                  timeTable!.id = widget.table?.id;
+                                                                  if ("${timeTable?.semester ?? ""} ${timeTable?.department ??
+                                                                      ""} ${timeTable?.className ?? ""}" ==
+                                                                      "${widget.table?.semester ?? ""} ${widget.table
+                                                                          ?.department ?? ""} ${widget.table?.className ?? ""}") {
+                                                                    await FirebaseServices.addTimeTable(timeTable!);
+                                                                  } else {
+                                                                    await FirebaseServices.removeTimeTable(
+                                                                        "${widget.table?.semester ?? ""} ${widget.table
+                                                                            ?.department ?? ""} ${widget.table?.className ??
+                                                                            ""}");
+                                                                    await FirebaseServices.addTimeTable(timeTable!);
+                                                                  }
+                                                                  await FirebaseServices.sendFCMMessage(
+                                                                      "${widget.table?.semester ?? ""} ${widget.table
+                                                                          ?.department ?? ""} ${widget.table?.className ?? ""}",
+                                                                      "${widget.table?.semester ?? ""} ${widget.table
+                                                                          ?.department ?? ""} ${widget.table?.className ??
+                                                                          ""} was Updated.",
+                                                                      "Update it, by tap here or restart the app");
+                                                                }
+                                                                        isLoading = false;
+                                                                        setState(() {});
+
+                                                                      },
+                                                                      child: Text("Save",
+                                                                          style: Theme.of(context).textTheme.titleMedium,
+                                                                          textAlign: TextAlign.center)),
+                                                                )
+                                                              ],
                                                             ),
-                                                            const SizedBox(height: 20),
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(top: 5),
-                                                              child: IntrinsicHeight(
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child: TextButton(
-                                                                        style: ButtonStyle(
-                                                                          overlayColor: MaterialStateProperty.resolveWith<Color>(
-                                                                              (Set<MaterialState> states) {
-                                                                            if (states.contains(MaterialState.focused)) {
-                                                                              return Colors.transparent;
-                                                                            }
-                                                                            if (states.contains(MaterialState.hovered)) {
-                                                                              return Colors.transparent;
-                                                                            }
-                                                                            if (states.contains(MaterialState.pressed)) {
-                                                                              return Colors.transparent;
-                                                                            }
-                                                                            return Colors
-                                                                                .transparent; // Defer to the widget's default.
-                                                                          }),
-                                                                        ),
-                                                                        child: Text("Cancel",
-                                                                            style: Theme.of(context).textTheme.bodyMedium,
-                                                                            textAlign: TextAlign.center),
-                                                                        onPressed: () {
-                                                                          Navigator.of(context).pop();
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                    Expanded(
-                                                                      child: ElevatedButton(
-                                                                        onPressed: () async {
-                                                                          timeTable!.className = classNameController.text;
-                                                                          timeTable!.department = departmentNameController.text;
-                                                                          timeTable!.semester = semester;
-                                                                          timeTable!.classRoom = classroomController.text;
-                                                                          timeTable!.createdTime = (DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000).toString();
-                                                                          timeTable!.id = DateTime.now().microsecondsSinceEpoch.toString();
-                                                                          if (widget.fileData?.imageFile != null) {
-                                                                            await FirebaseServices.addImageToFirebase(
-                                                                                    widget.fileData!.imageFile,
-                                                                                    "${timeTable?.semester}_${timeTable?.department}_${timeTable?.className}")
-                                                                                .then(
-                                                                              (value) {
-                                                                                timeTable!.image = "${timeTable?.semester}_${timeTable?.department}_${timeTable?.className}";
-                                                                              },
-                                                                            );
-                                                                          } else {
-                                                                            timeTable!.image = null;
-                                                                          }
-                                                                          FirebaseServices.addTimeTable(timeTable!).then((value) => Navigator.of(context).pop);
-                                                                          if(!mounted){return;}
-                                                                          Navigator.of(context).pop();
-                                                                          Navigator.of(context).pop();
-                                                                        },
-                                                                        child: Text("Save",
-                                                                            style: Theme.of(context).textTheme.titleMedium,
-                                                                            textAlign: TextAlign.center),
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
-                                                );
-                                              });
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ).then((value) {
+                                          Navigator.of(context).pop();
+                                        });
+                                      }
+                                    },
+                                    style: ButtonStyle(
+                                      overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                        if (states.contains(MaterialState.focused)) {
+                                          return Colors.white70;
                                         }
-                                      },
-                                      style: ButtonStyle(
-                                        overlayColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                          if (states.contains(MaterialState.focused)) {
-                                            return Colors.white70;
-                                          }
-                                          if (states.contains(MaterialState.hovered)) {
-                                            return Colors.white70;
-                                          }
-                                          if (states.contains(MaterialState.pressed)) {
-                                            return Colors.white70;
-                                          }
-                                          return Colors.white70; // Defer to the widget's default.
-                                        }),
-                                      ),
-                                      child: Text("Done", style: Theme.of(context).textTheme.titleSmall)),
-                                ],
-                              )
-                            : Row(
-                                children: [
-                                  IconButton(
-                                      icon: const Icon(Icons.delete_forever_rounded),
-                                      onPressed: () {
-                                        for (Session item in selectedItems) {
-                                          for (int i = 0; i < timeTable!.weekDays!.length; i++) {
-                                            timeTable!.weekDays![i].sessions!.removeWhere((element) => element.id == item.id);
-                                          }
+                                        if (states.contains(MaterialState.hovered)) {
+                                          return Colors.white70;
                                         }
-                                        selectedItems.clear();
-                                        setState(() {});
+                                        if (states.contains(MaterialState.pressed)) {
+                                          return Colors.white70;
+                                        }
+                                        return Colors.white70; // Defer to the widget's default.
                                       }),
-                                  IconButton(
-                                      icon: const Icon(Icons.clear),
-                                      onPressed: () {
-                                        selectedItems.clear();
-                                        setState(() {});
-                                      }),
-                                ],
-                              ),
-                        const SizedBox(width: 10)
-                      ],
-                    ),
+                                    ),
+                                    child: Text("Done", style: Theme.of(context).textTheme.titleSmall)),
+                              ],
+                            )
+                          : Row(
+                              children: [
+                                IconButton(
+                                    icon: const Icon(Icons.delete_forever_rounded),
+                                    onPressed: () {
+                                      for (Session item in selectedItems) {
+                                        for (int i = 0; i < timeTable!.weekDays!.length; i++) {
+                                          timeTable!.weekDays![i].sessions!.removeWhere((element) => element.id == item.id);
+                                        }
+                                      }
+                                      selectedItems.clear();
+                                      setState(() {});
+                                    }),
+                                IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    selectedItems.clear();
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                      const SizedBox(width: 10)
+                    ],
                   ),
-                  flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.parallax,
-                    background: Center(child: BlocBuilder<SliverScrolled, bool>(
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.parallax,
+                  background: Center(
+                    child: BlocBuilder<SliverScrolled, bool>(
                       builder: (context, state) {
                         return AnimatedOpacity(
                           opacity: state ? 0.0 : 1.0,
@@ -574,34 +637,38 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                 ),
                         );
                       },
-                    )),
+                    ),
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: BlocBuilder<FileDataFetchCubit, FileDataFetchState>(
-                    builder: (context, state) {
-                      if (state is FileDataFetchLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (state is FileDataFetchLoaded || state is FileDataFetchInitial) {
-                        if (state is FileDataFetchLoaded) {
-                          timeTable = state.timeTable;
-                        }
-                        numberOfEmpty = countEmptyData();
-                        return ExpandablePageView(
-                          pageController: controller,
-                          onPageChanged: (page) => currentPage = page,
-                          children: List.generate(timeTable!.weekDays!.length, (indexPage) {
-
+              ),
+              SliverToBoxAdapter(
+                child: BlocBuilder<FileDataFetchCubit, FileDataFetchState>(
+                  builder: (context, state) {
+                    if (state is FileDataFetchLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is FileDataFetchLoaded || state is FileDataFetchInitial) {
+                      if (state is FileDataFetchLoaded) {
+                        timeTable = state.timeTable;
+                      }
+                      numberOfEmpty = countEmptyData();
+                      return ExpandablePageView(
+                        pageController: controller,
+                        onPageChanged: (page) => currentPage = page,
+                        children: List.generate(
+                          timeTable!.weekDays!.length,
+                          (indexPage) {
                             ScrollPhysics physics = const NeverScrollableScrollPhysics();
-                            sliverScrollController.addListener(() {
-                              if (sliverScrollController.offset >= 120 && !sliverScrollController.position.outOfRange) {
-                                BlocProvider.of<SliverScrolled>(context).Add();
-                                physics = const ScrollPhysics();
-                              } else {
-                                BlocProvider.of<SliverScrolled>(context).clear();
-                                physics = const NeverScrollableScrollPhysics();
-                              }
-                            });
+                            sliverScrollController.addListener(
+                              () {
+                                if (sliverScrollController.offset >= 120 && !sliverScrollController.position.outOfRange) {
+                                  BlocProvider.of<SliverScrolled>(context).Add();
+                                  physics = const ScrollPhysics();
+                                } else {
+                                  BlocProvider.of<SliverScrolled>(context).clear();
+                                  physics = const NeverScrollableScrollPhysics();
+                                }
+                              },
+                            );
 
                             return Column(
                               children: [
@@ -649,19 +716,20 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         onTap: () {
                                           if (selectedItems.isEmpty) {
                                             showDialog(
-                                                context: context,
-                                                builder: (context) => ConstructorDialogLecture(
-                                                      dayOfWeek: timeTable!.weekDays![indexPage].day ?? "",
-                                                      fileData: widget.fileData,
-                                                      lectureData: timeTable!.weekDays![indexPage].sessions![indexList],
-                                                      onChanged: (session) {
-                                                        timeTable!.weekDays![indexPage].sessions![indexList] = session;
+                                              context: context,
+                                              builder: (context) => ConstructorDialogLecture(
+                                                dayOfWeek: timeTable!.weekDays![indexPage].day ?? "",
+                                                fileData: widget.fileData,
+                                                lectureData: timeTable!.weekDays![indexPage].sessions![indexList],
+                                                onChanged: (session) {
+                                                  timeTable!.weekDays![indexPage].sessions![indexList] = session;
 
-                                                        numberOfEmpty = countEmptyData();
-                                                        editingFlag = true;
-                                                        setState(() {});
-                                                      },
-                                                    ));
+                                                  numberOfEmpty = countEmptyData();
+                                                  editingFlag = true;
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            );
                                           } else {
                                             if (selectedItems
                                                 .where((element) =>
@@ -697,18 +765,19 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                         onTap: () {
                                           if (selectedItems.isEmpty) {
                                             showDialog(
-                                                context: context,
-                                                builder: (context) => ConstructorDialogLab(
-                                                      dayOfWeek: timeTable!.weekDays![indexPage].day ?? "",
-                                                      labData: timeTable!.weekDays?[indexPage].sessions?[indexList],
-                                                      onChanged: (session) {
-                                                        timeTable!.weekDays?[indexPage].sessions?[indexList] = session;
-                                                        numberOfEmpty = countEmptyData();
-                                                        editingFlag = true;
-                                                        setState(() {});
-                                                      },
-                                                      fileData: widget.fileData,
-                                                    ));
+                                              context: context,
+                                              builder: (context) => ConstructorDialogLab(
+                                                dayOfWeek: timeTable!.weekDays![indexPage].day ?? "",
+                                                labData: timeTable!.weekDays?[indexPage].sessions?[indexList],
+                                                onChanged: (session) {
+                                                  timeTable!.weekDays?[indexPage].sessions?[indexList] = session;
+                                                  numberOfEmpty = countEmptyData();
+                                                  editingFlag = true;
+                                                  setState(() {});
+                                                },
+                                                fileData: widget.fileData,
+                                              ),
+                                            );
                                           } else {
                                             if (selectedItems
                                                 .where((element) =>
@@ -737,17 +806,21 @@ class _ConstructorPageState extends State<ConstructorPage> {
                                 ),
                               ],
                             );
-                          }),
-                        );
-                      } else if (state is FileDataFetchError) {
-                        return const SizedBox();
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
+                          },
+                        ),
+                      );
+                    } else if (state is FileDataFetchError) {
+                      return const SizedBox();
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
                 ),
-              ]))),
+              ),
+            ],
+          ),
+        ) : const Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }

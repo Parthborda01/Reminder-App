@@ -1,5 +1,5 @@
-import 'package:alarm/alarm.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,34 +17,19 @@ import 'Util/Cubits/AnimationHelper/animationHelperCubit.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
-  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   LocalNotification.initialization();
-  bool isBoxEmpty = false;
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-
   await Hive.initFlutter();
-    Hive.registerAdapter(TimeTableHiveAdapter());
-    Hive.registerAdapter(DayOfWeekHiveAdapter());
-    Hive.registerAdapter(SessionHiveAdapter());
+  Hive.registerAdapter(TimeTableHiveAdapter());
+  Hive.registerAdapter(DayOfWeekHiveAdapter());
+  Hive.registerAdapter(SessionHiveAdapter());
   await Hive.openBox<TimeTableHive>('time_tables');
-  final TimeTablesRepository repository = TimeTablesRepository();
-   for (var element in repository.getAllTimeTables()) {
-     if(element.isSelected){
-       isBoxEmpty = true;
-     }
-   }
-  await Alarm.init();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  FlutterLocalNotificationsPlugin()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestPermission();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent,
@@ -53,10 +38,49 @@ void main() async {
     systemStatusBarContrastEnforced: false,
     statusBarBrightness: Brightness.light,
   ));
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-      overlays: [SystemUiOverlay.top]).then((_) {
-    runApp(MultiBlocProvider(
+  runApp(const MyApp());
+}
+
+getThemeMode(ThemeModes themeMode) {
+  switch (themeMode) {
+    case ThemeModes.system:
+      return ThemeMode.system;
+    case ThemeModes.light:
+      return ThemeMode.light;
+    case ThemeModes.dark:
+      return ThemeMode.dark;
+  }
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp>{
+  bool isBoxEmpty = false;
+  @override
+  void initState() {
+    initMethod();
+    super.initState();
+  }
+
+  initMethod() {
+    final TimeTablesRepository repository = TimeTablesRepository();
+    for (var element in repository.getAllTimeTables()) {
+      if (element.isSelected) {
+        isBoxEmpty = true;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => SliverScrolled(),
@@ -71,7 +95,7 @@ void main() async {
       child: BlocBuilder<ThemeCubit, ThemeModes>(
         builder: (context, themeMode) {
           return MaterialApp(
-            initialRoute: isBoxEmpty? RouteNames.home : RouteNames.resource,
+            initialRoute: isBoxEmpty ? RouteNames.home : RouteNames.resource,
             onGenerateRoute: RouteGenerator.generateRoute,
             debugShowCheckedModeBanner: false,
             themeMode: getThemeMode(themeMode),
@@ -80,16 +104,6 @@ void main() async {
           );
         },
       ),
-    ));
-  });
-}
-getThemeMode(ThemeModes themeMode) {
-  switch(themeMode){
-    case ThemeModes.system:
-      return ThemeMode.system;
-    case ThemeModes.light:
-      return ThemeMode.light;
-    case ThemeModes.dark:
-      return ThemeMode.dark;
+    );
   }
 }

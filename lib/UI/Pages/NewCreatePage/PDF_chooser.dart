@@ -87,7 +87,7 @@ class _PDFChooserState extends State<PDFChooser> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                            Text("Repick",
+                            Text("Retake",
                                 style: Theme.of(context).textTheme.headlineMedium),
                                 const Icon(Icons.refresh_rounded,size: 26
                             )
@@ -107,7 +107,7 @@ class _PDFChooserState extends State<PDFChooser> {
                                   action: () {
                                     if(widget.args?? true) {
 
-                                    Navigator.pushReplacementNamed(context, RouteNames.pdfConstructor,arguments: fileData);
+                                    Navigator.pushReplacementNamed(context, RouteNames.pdfConstructor,arguments: {"fileData":fileData});
                                     }
                                     else{
                                       Navigator.pop(context,fileData);

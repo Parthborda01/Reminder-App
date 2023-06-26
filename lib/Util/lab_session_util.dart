@@ -64,4 +64,42 @@ class LabUtils {
     }
     return extractedElements;
   }
+
+  static TimeTable getFinalTimeTable(TimeTable n, String batch) {
+    TimeTable t = TimeTable.fromJson(n.toJson());
+    for (int i = 0; i < (t.weekDays ?? []).length; i++) {
+      for (int j = 0; j < ((t.weekDays ?? [])[i].sessions ?? []).length; j++) {
+        if (((t.weekDays ?? [])[i].sessions ?? [])[j].isLab ?? false) {
+          List<Session> labSessions = LabUtils.labToSessions(((t.weekDays ?? [])[i].sessions ?? [])[j]);
+          bool isDone = false;
+          for (Session labSession in labSessions) {
+            if (!isDone) {
+              if (labSession.time?.trim() == batch) {
+                ((t.weekDays ?? [])[i].sessions ?? [])[j] = Session(
+                    id: labSession.id,
+                    isLab: true,
+                    duration: 2,
+                    time: n.weekDays![i].sessions![j].time,
+                    subjectName: labSession.subjectName,
+                    facultyName: labSession.facultyName,
+                    location: labSession.location);
+                isDone = true;
+              } else {
+                ((t.weekDays ?? [])[i].sessions ?? [])[j] = Session(id: "%^&*(@x!)");
+              }
+            }
+          }
+        }
+      }
+    }
+
+    for (int i = 0; i < (t.weekDays ?? []).length; i++) {
+      ((t.weekDays ?? [])[i].sessions ?? []).removeWhere((element) {
+        return element.id == "%^&*(@x!)";
+      });
+    }
+    t.id = "${t.id} $batch";
+    return t;
+  }
+
 }

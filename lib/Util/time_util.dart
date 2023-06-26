@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:student_dudes/Data/Model/Hive/timetables.dart';
 
 class TimeUtil {
 
@@ -55,7 +56,7 @@ class TimeUtil {
   }
 
   static DateTime getLastMonday() {
-    DateTime now = DateTime.now().add(Duration(days: 2));
+    DateTime now = DateTime.now().add(const Duration(days: 2));
     int weekday = now.weekday;
     int daysAgo = (weekday + 6) % 7; // Number of days ago from the current weekday to Monday
     DateTime lastMonday = now.subtract(Duration(days: daysAgo));
@@ -77,4 +78,29 @@ class TimeUtil {
     return nextOccurrence;
   }
 
+
+  static String getNameOfWeekDay(int day){
+    return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday"][day -1];
+  }
+
+  static SessionHive? findNextSession(List<SessionHive> dateTimeList,DateTime abc) {
+
+    // Sort the list of DateTime objects in ascending order
+    dateTimeList.sort((a, b) {
+      return convertToDateTime(convertToTimeOfDay(a.time),DateTime.now()).compareTo(convertToDateTime(convertToTimeOfDay(b.time),DateTime.now()));
+    });
+
+    // // Get the current DateTime
+    // DateTime now = abc;
+
+    // Iterate through the sorted list and find the first DateTime that is greater than the current DateTime
+    for (SessionHive session in dateTimeList) {
+      if (convertToDateTime(convertToTimeOfDay(session.time),abc).isAfter(DateTime.now()) && session.alert) {
+        return session;
+      }
+    }
+
+    // If no future DateTime is found, return null or handle the case as per your requirements
+    return null;
+  }
 }
